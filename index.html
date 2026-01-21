@@ -16,17 +16,17 @@ body{
 
 header{
   text-align:center;
-  padding:30px 20px;
+  padding:28px 20px;
   background:#fff;
   border-bottom:1px solid #ccc;
 }
 
-header img{max-height:120px}
+header img{max-height:110px}
 
 main{
   max-width:1100px;
   margin:0 auto;
-  padding:30px 20px;
+  padding:28px 20px;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:24px;
@@ -63,21 +63,24 @@ button{
 
 .paper{
   background:#fff;
-  padding:40px;
+  padding:32px;
   border:1px solid #ccc;
   font-family:"Times New Roman", serif;
   line-height:1.65;
 }
 
-/* ================= PDF / PRINT ================= */
+/* ========== PDF HEADER (HIDDEN ON SCREEN) ========== */
+.pdf-header{display:none}
+
+/* ================= PRINT / PDF ================= */
 @page{
   size:A4;
-  margin:25mm 20mm 25mm 20mm;
+  margin:25mm 20mm;
 }
 
 @media print{
   body{background:#fff}
-  header, .card.form, button{display:none}
+  header,.card.form,button{display:none}
   main{display:block;padding:0}
   .paper{border:none;padding:0}
 
@@ -89,8 +92,16 @@ button{
     margin-bottom:20px;
   }
 
-  .pdf-header img{height:60px;margin-right:20px}
-  .pdf-header h1{font-size:18pt;margin:0}
+  .pdf-header img{
+    height:60px;
+    width:auto;
+    margin-right:18px;
+  }
+
+  .pdf-header h1{
+    font-size:18pt;
+    margin:0;
+  }
 
   .section{
     margin-bottom:20px;
@@ -109,9 +120,7 @@ button{
     page-break-inside:avoid;
   }
 
-  .signature-line{
-    margin-top:30px;
-  }
+  .signature-line{margin-top:30px}
 }
 </style>
 </head>
@@ -175,50 +184,27 @@ button{
 const labels={5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
 
 /* ================= EXEMPLOS RANDOM ================= */
-let ultimoExemplo = -1;
-
-const exemplos = [
-  {
-    nome:"João Silva",
-    funcao:"Trabalhador Agrícola",
-    tipo:"campo",
-    nd:3, na:4,
-    tTrab:"cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização e o ritmo de execução",
-    tAti:"mantém uma atitude positiva, respeita as orientações e colabora com os colegas"
-  },
-  {
-    nome:"Ana Costa",
-    funcao:"Administrativa",
-    tipo:"admin",
-    nd:4, na:4,
-    tTrab:"executa as tarefas administrativas com rigor, organização e cumprimento de prazos",
-    tAti:"apresenta uma postura profissional consistente e adequada ao contexto de trabalho"
-  },
-  {
-    nome:"Carlos Mendes",
-    funcao:"Auxiliar de Armazém",
-    tipo:"campo",
-    nd:2, na:3,
-    tTrab:"apresenta dificuldades na consistência do trabalho, necessitando de acompanhamento mais frequente",
-    tAti:"mantém uma atitude geralmente correta, embora com alguma resistência a mudanças"
-  },
-  {
-    nome:"Sofia Almeida",
-    funcao:"Responsável Administrativa",
-    tipo:"admin",
-    nd:5, na:5,
-    tTrab:"desempenha as suas funções com elevado nível de qualidade, autonomia e sentido de responsabilidade",
-    tAti:"demonstra uma atitude exemplar, promovendo um ambiente de trabalho positivo e colaborativo"
-  }
+let ultimoExemplo=-1;
+const exemplos=[
+  {nome:"João Silva",funcao:"Trabalhador Agrícola",tipo:"campo",nd:3,na:4,
+   tTrab:"cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização e o ritmo de execução",
+   tAti:"mantém uma atitude positiva, respeita as orientações e colabora com os colegas"},
+  {nome:"Ana Costa",funcao:"Administrativa",tipo:"admin",nd:4,na:4,
+   tTrab:"executa as tarefas administrativas com rigor, organização e cumprimento de prazos",
+   tAti:"apresenta uma postura profissional consistente e adequada"},
+  {nome:"Carlos Mendes",funcao:"Auxiliar de Armazém",tipo:"campo",nd:2,na:3,
+   tTrab:"apresenta dificuldades na consistência do trabalho, necessitando de acompanhamento",
+   tAti:"mantém uma atitude correta, embora com alguma resistência a mudanças"},
+  {nome:"Sofia Almeida",funcao:"Responsável Administrativa",tipo:"admin",nd:5,na:5,
+   tTrab:"desempenha funções com elevado nível de qualidade, autonomia e responsabilidade",
+   tAti:"demonstra uma atitude exemplar e promotora de bom ambiente"}
 ];
 
 function preencherExemplo(){
   let i;
-  do { i = Math.floor(Math.random()*exemplos.length); }
-  while(i === ultimoExemplo);
-  ultimoExemplo = i;
-
-  const e = exemplos[i];
+  do{i=Math.floor(Math.random()*exemplos.length)}while(i===ultimoExemplo);
+  ultimoExemplo=i;
+  const e=exemplos[i];
   nome.value=e.nome;
   funcao.value=e.funcao;
   tipo.value=e.tipo;
@@ -231,28 +217,27 @@ function preencherExemplo(){
 
 /* ================= TEXTO LONGO ================= */
 function blocoLongo(titulo,nota,texto){
-  return `
+return `
 <div class="section">
 <h2>${titulo}: ${nota}/5 — ${labels[nota]}</h2>
 <p>
-Ao longo do período avaliado, o colaborador demonstrou um nível de desempenho enquadrado como ${labels[nota].toLowerCase()}. 
-A forma como as responsabilidades foram assumidas reflete a prática diária observada durante o ano. 
-A execução das tarefas revelou consistência ao longo do período em análise. 
-De forma geral, o trabalho desenvolvido encontra-se alinhado com as exigências da função desempenhada. 
-O avaliador refere que ${texto}. 
-Em alguns momentos, foram identificadas oportunidades de melhoria que devem ser consideradas. 
-Ainda assim, o desempenho global manteve-se estável e coerente. 
-A avaliação atribuída resulta da observação contínua e do acompanhamento realizado. 
+Ao longo do período avaliado, o colaborador demonstrou um nível enquadrado como ${labels[nota].toLowerCase()}.
+A forma como as responsabilidades foram assumidas reflete o desempenho observado no dia a dia.
+A execução das tarefas manteve um grau de consistência adequado ao longo do período analisado.
+De forma geral, o trabalho desenvolvido encontra-se alinhado com as exigências da função desempenhada.
+O avaliador refere que ${texto}.
+Em alguns momentos, foram identificadas oportunidades de melhoria relevantes.
+Ainda assim, o desempenho global revelou-se estável e coerente.
+A avaliação atribuída resulta da observação contínua e do acompanhamento realizado.
 Este enquadramento justifica a classificação atribuída neste domínio.
 </p>
 </div>`;
 }
 
-/* ================= GERAR FICHA ================= */
+/* ================= GERAR ================= */
 function gerar(){
-  const v=id=>document.getElementById(id).value;
-
-  out.innerHTML=`
+const v=id=>document.getElementById(id).value;
+out.innerHTML=`
 <div class="pdf-header">
 <img src="logo-monte-do-pasto.png">
 <h1>Monte do Pasto — Avaliação Anual</h1>
@@ -271,11 +256,11 @@ ${blocoLongo("Nível de Atitude no Trabalho",parseInt(v("na")),v("tAti"))}
 <div class="section">
 <h2>Conclusão</h2>
 <p>
-A avaliação global reflete o desempenho e a atitude observados ao longo do período analisado. 
-Os resultados obtidos permitem identificar pontos fortes que devem ser mantidos. 
-Os aspetos menos positivos constituem oportunidades de desenvolvimento. 
-Esta avaliação deverá servir como base para acompanhamento futuro e definição de objetivos. 
-O diálogo entre colaborador e chefia será fundamental para a evolução contínua. 
+A avaliação global reflete o desempenho e a atitude observados ao longo do período analisado.
+Os pontos fortes identificados devem ser mantidos e consolidados.
+Os aspetos menos positivos constituem oportunidades de desenvolvimento.
+Esta avaliação deverá servir como base para acompanhamento e definição de objetivos.
+O diálogo entre colaborador e chefia será determinante para a evolução futura.
 </p>
 </div>
 
@@ -291,8 +276,7 @@ ______________________________________________
 <strong>Assinatura da Chefia:</strong><br><br>
 ______________________________________________
 </div>
-</div>
-`;
+</div>`;
 }
 </script>
 
