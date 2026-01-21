@@ -76,17 +76,10 @@ button{
 }
 
 @media print{
-
   body{background:#fff}
-
   header, .card.form, button{display:none}
-
   main{display:block;padding:0}
-
-  .paper{
-    border:none;
-    padding:0;
-  }
+  .paper{border:none;padding:0}
 
   .pdf-header{
     display:flex;
@@ -97,7 +90,6 @@ button{
   }
 
   .pdf-header img{height:60px;margin-right:20px}
-
   .pdf-header h1{font-size:18pt;margin:0}
 
   .section{
@@ -136,7 +128,7 @@ button{
 <section class="card form">
 <label>Nome</label><input id="nome">
 <label>Função</label><input id="funcao">
-<label>Tipo</label>
+<label>Tipo de função</label>
 <select id="tipo">
   <option value="campo">Operacional / Campo</option>
   <option value="admin">Administrativa / Apoio</option>
@@ -152,7 +144,7 @@ button{
   <option value="1">1 — Muito fraco</option>
 </select>
 
-<label>Nível de Atitude</label>
+<label>Nível de Atitude no Trabalho</label>
 <select id="na">
   <option value="5">5 — Muito boa</option>
   <option value="4">4 — Boa</option>
@@ -161,9 +153,13 @@ button{
   <option value="1">1 — Muito fraca</option>
 </select>
 
-<label>Comentário Desempenho</label><textarea id="tTrab"></textarea>
-<label>Comentário Atitude</label><textarea id="tAti"></textarea>
+<label>Comentário sobre o desempenho</label>
+<textarea id="tTrab"></textarea>
 
+<label>Comentário sobre a atitude</label>
+<textarea id="tAti"></textarea>
+
+<button onclick="preencherExemplo()">Preencher com exemplo</button>
 <button onclick="gerar()">Gerar ficha</button>
 <button onclick="window.print()">Imprimir / PDF</button>
 </section>
@@ -175,41 +171,113 @@ button{
 </main>
 
 <script>
+/* ================= NOTAS ================= */
 const labels={5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
 
+/* ================= EXEMPLOS RANDOM ================= */
+let ultimoExemplo = -1;
+
+const exemplos = [
+  {
+    nome:"João Silva",
+    funcao:"Trabalhador Agrícola",
+    tipo:"campo",
+    nd:3, na:4,
+    tTrab:"cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização e o ritmo de execução",
+    tAti:"mantém uma atitude positiva, respeita as orientações e colabora com os colegas"
+  },
+  {
+    nome:"Ana Costa",
+    funcao:"Administrativa",
+    tipo:"admin",
+    nd:4, na:4,
+    tTrab:"executa as tarefas administrativas com rigor, organização e cumprimento de prazos",
+    tAti:"apresenta uma postura profissional consistente e adequada ao contexto de trabalho"
+  },
+  {
+    nome:"Carlos Mendes",
+    funcao:"Auxiliar de Armazém",
+    tipo:"campo",
+    nd:2, na:3,
+    tTrab:"apresenta dificuldades na consistência do trabalho, necessitando de acompanhamento mais frequente",
+    tAti:"mantém uma atitude geralmente correta, embora com alguma resistência a mudanças"
+  },
+  {
+    nome:"Sofia Almeida",
+    funcao:"Responsável Administrativa",
+    tipo:"admin",
+    nd:5, na:5,
+    tTrab:"desempenha as suas funções com elevado nível de qualidade, autonomia e sentido de responsabilidade",
+    tAti:"demonstra uma atitude exemplar, promovendo um ambiente de trabalho positivo e colaborativo"
+  }
+];
+
+function preencherExemplo(){
+  let i;
+  do { i = Math.floor(Math.random()*exemplos.length); }
+  while(i === ultimoExemplo);
+  ultimoExemplo = i;
+
+  const e = exemplos[i];
+  nome.value=e.nome;
+  funcao.value=e.funcao;
+  tipo.value=e.tipo;
+  data.value=new Date().toISOString().slice(0,10);
+  nd.value=e.nd;
+  na.value=e.na;
+  tTrab.value=e.tTrab;
+  tAti.value=e.tAti;
+}
+
+/* ================= TEXTO LONGO ================= */
 function blocoLongo(titulo,nota,texto){
   return `
 <div class="section">
 <h2>${titulo}: ${nota}/5 — ${labels[nota]}</h2>
 <p>
-Ao longo do período avaliado, o colaborador demonstrou um nível enquadrado como ${labels[nota].toLowerCase()}. 
-O desempenho observado reflete a forma como as responsabilidades foram assumidas no dia a dia. 
-A execução das tarefas ocorreu de forma consistente ao longo do período em análise. 
-Foram identificados comportamentos alinhados com as expectativas associadas à função. 
-O texto do avaliador reforça esta análise, indicando que ${texto}. 
-Em determinados momentos, verificaram-se oportunidades de melhoria que devem ser consideradas. 
+Ao longo do período avaliado, o colaborador demonstrou um nível de desempenho enquadrado como ${labels[nota].toLowerCase()}. 
+A forma como as responsabilidades foram assumidas reflete a prática diária observada durante o ano. 
+A execução das tarefas revelou consistência ao longo do período em análise. 
+De forma geral, o trabalho desenvolvido encontra-se alinhado com as exigências da função desempenhada. 
+O avaliador refere que ${texto}. 
+Em alguns momentos, foram identificadas oportunidades de melhoria que devem ser consideradas. 
 Ainda assim, o desempenho global manteve-se estável e coerente. 
-A avaliação atribuída enquadra-se na observação contínua realizada ao longo do ano. 
-Este bloco resume de forma objetiva o nível observado.
+A avaliação atribuída resulta da observação contínua e do acompanhamento realizado. 
+Este enquadramento justifica a classificação atribuída neste domínio.
 </p>
 </div>`;
 }
 
+/* ================= GERAR FICHA ================= */
 function gerar(){
   const v=id=>document.getElementById(id).value;
+
   out.innerHTML=`
 <div class="pdf-header">
 <img src="logo-monte-do-pasto.png">
 <h1>Monte do Pasto — Avaliação Anual</h1>
 </div>
 
-<p><strong>Colaborador:</strong> ${v("nome")}<br>
+<p>
+<strong>Colaborador:</strong> ${v("nome")}<br>
 <strong>Função:</strong> ${v("funcao")}<br>
-<strong>Tipo:</strong> ${v("tipo")}<br>
-<strong>Data:</strong> ${v("data")}</p>
+<strong>Tipo de função:</strong> ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}<br>
+<strong>Data:</strong> ${v("data")}
+</p>
 
 ${blocoLongo("Nível de Desempenho",parseInt(v("nd")),v("tTrab"))}
 ${blocoLongo("Nível de Atitude no Trabalho",parseInt(v("na")),v("tAti"))}
+
+<div class="section">
+<h2>Conclusão</h2>
+<p>
+A avaliação global reflete o desempenho e a atitude observados ao longo do período analisado. 
+Os resultados obtidos permitem identificar pontos fortes que devem ser mantidos. 
+Os aspetos menos positivos constituem oportunidades de desenvolvimento. 
+Esta avaliação deverá servir como base para acompanhamento futuro e definição de objetivos. 
+O diálogo entre colaborador e chefia será fundamental para a evolução contínua. 
+</p>
+</div>
 
 <div class="signatures">
 <p><strong>Data:</strong> ____________________________</p>
