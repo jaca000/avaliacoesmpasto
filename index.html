@@ -54,7 +54,7 @@ input,select,textarea{
   background:#fafafa;
   font-size:14px;
 }
-textarea{min-height:100px;resize:vertical}
+textarea{min-height:100px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:600px){.grid{grid-template-columns:1fr}}
 .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
@@ -71,17 +71,16 @@ button.secondary{background:#fff}
 .paper{
   background:#fff;
   color:#111;
-  padding:22px;
+  padding:26px;
   border-radius:12px;
   border:1px solid var(--border);
   max-height:70vh;
   overflow:auto;
   white-space:pre-wrap;
   font-family:Georgia,"Times New Roman",serif;
-  line-height:1.45;
+  line-height:1.7;
 }
 @media print{
-  body{background:#fff}
   header,.card.form,.actions{display:none}
   main{display:block;padding:0}
   .paper{max-height:none;border:none}
@@ -92,9 +91,9 @@ button.secondary{background:#fff}
 <body>
 
 <header>
-  <img src="logo-monte-do-pasto.png" alt="Monte do Pasto" class="logo">
+  <img src="logo-monte-do-pasto.png" class="logo" alt="Monte do Pasto">
   <h1>Avaliação Anual de Colaboradores</h1>
-  <p>Ferramenta interna para avaliação clara, justa e objetiva.</p>
+  <p>Ferramenta interna para avaliação estruturada, clara e profissional.</p>
 </header>
 
 <main>
@@ -159,116 +158,87 @@ button.secondary{background:#fff}
 
 <section class="card">
 <h2>Ficha gerada</h2>
-<div class="paper" id="out">
-FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
-
-(À espera de dados)
-</div>
+<div class="paper" id="out">(À espera de dados)</div>
 </section>
 
 </main>
 
 <script>
-/* ---------- EXEMPLOS DINÂMICOS ---------- */
-const exemplos = [
-  {
-    nome:"João Silva",
-    funcao:"Trabalhador Agrícola",
-    tipo:"campo",
-    nd:3, na:4,
-    tTrab:"Executa as tarefas atribuídas de forma regular, cumprindo o essencial do trabalho diário.",
-    tAti:"Mantém uma atitude positiva e demonstra disponibilidade para colaborar.",
-    fortes:"Responsabilidade; disponibilidade para ajudar colegas; adaptação ao trabalho no terreno.",
-    melhorar:"Melhorar a organização do trabalho diário; aumentar a atenção ao detalhe."
-  },
-  {
-    nome:"Ana Costa",
-    funcao:"Administrativa",
-    tipo:"admin",
-    nd:4, na:4,
-    tTrab:"Realiza as tarefas administrativas com bom nível de rigor e cumprimento de prazos.",
-    tAti:"Postura profissional adequada, com boa relação com colegas.",
-    fortes:"Boa organização; cumprimento de prazos; autonomia.",
-    melhorar:"Reforçar a comunicação sobre tarefas em curso."
-  },
-  {
-    nome:"Carlos Mendes",
-    funcao:"Auxiliar de Armazém",
-    tipo:"campo",
-    nd:2, na:3,
-    tTrab:"Apresenta dificuldades na execução consistente das tarefas, necessitando de maior acompanhamento.",
-    tAti:"Atitude geralmente correta, embora com alguma resistência a mudanças.",
-    fortes:"Pontualidade; disponibilidade.",
-    melhorar:"Seguir orientações de forma mais rigorosa; melhorar consistência no trabalho."
-  },
-  {
-    nome:"Sofia Almeida",
-    funcao:"Responsável Administrativa",
-    tipo:"admin",
-    nd:5, na:5,
-    tTrab:"Desempenha as funções com elevado nível de qualidade e autonomia.",
-    tAti:"Atitude exemplar, promovendo um ambiente positivo.",
-    fortes:"Responsabilidade; organização; comunicação.",
-    melhorar:"Manter o nível de desempenho e apoiar o desenvolvimento da equipa."
-  }
+/* ===== TEXTO LONGO E ESTRUTURADO ===== */
+
+function blocoDesempenho(nota, texto){
+  return `
+Ao longo do período avaliado, o colaborador demonstrou um nível de desempenho que pode ser enquadrado como ${nota>=4?"positivo":"adequado"}. 
+A execução das tarefas atribuídas foi realizada com um grau de consistência compatível com a função desempenhada. 
+De forma geral, o trabalho apresentado reflete conhecimento das responsabilidades associadas ao cargo. 
+Verifica-se capacidade para cumprir o essencial do trabalho diário, respeitando as orientações recebidas. 
+Em determinados momentos, foram identificadas situações que evidenciam margem para melhoria. 
+O ritmo de trabalho manteve-se estável ao longo do período analisado. 
+A qualidade da execução revelou-se adequada às exigências da função. 
+O texto do avaliador reforça esta perceção: ${texto}. 
+No global, o desempenho apresentado enquadra-se no nível atribuído.`;
+}
+
+function blocoAtitude(nota, texto){
+  return `
+Relativamente à atitude no trabalho, o colaborador demonstrou uma postura globalmente coerente com o contexto profissional. 
+A forma de estar no dia a dia revela compreensão das regras e expectativas da organização. 
+O relacionamento com colegas e superiores foi, na generalidade, adequado. 
+Observou-se disponibilidade para cumprir orientações e colaborar quando solicitado. 
+Em algumas situações, a atitude evidenciada poderia ser reforçada. 
+Ainda assim, não foram identificados comportamentos desajustados de forma recorrente. 
+O contributo individual para o ambiente de trabalho foi globalmente positivo. 
+Segundo o avaliador, ${texto}. 
+Este enquadramento justifica o nível de atitude atribuído.`;
+}
+
+function blocoEquipa(texto){
+  return `
+No que respeita ao trabalho em equipa, foram identificados aspetos relevantes ao longo do período avaliado. 
+A integração do colaborador na equipa revelou-se funcional no contexto das tarefas atribuídas. 
+A relação com os colegas foi, na maioria das situações, adequada. 
+Houve momentos em que a colaboração se destacou de forma positiva. 
+Em contrapartida, também se identificaram oportunidades de melhoria. 
+A comunicação interna poderá ser reforçada em determinados contextos. 
+A cooperação entre elementos da equipa é um fator a consolidar. 
+O texto do avaliador aponta que ${texto}. 
+O trabalho em equipa deve continuar a ser acompanhado no próximo período.`;
+}
+
+function blocoConclusao(notaD, notaA){
+  return `
+A avaliação realizada permite enquadrar o desempenho global do colaborador de forma estruturada e equilibrada. 
+O nível de desempenho atribuído reflete a execução do trabalho ao longo do período avaliado. 
+A atitude no trabalho complementa esta análise, enquadrando a postura demonstrada no dia a dia. 
+De forma global, a avaliação indica um cenário ${notaD>=4&&notaA>=4?"positivo":"estável"}, com aspetos a consolidar. 
+É importante manter os pontos fortes identificados ao longo desta avaliação. 
+Os aspetos a melhorar deverão ser trabalhados de forma progressiva. 
+Para o próximo período, recomenda-se foco na consistência e qualidade do trabalho. 
+A clarificação de objetivos contribuirá para uma evolução sustentada. 
+Esta avaliação deverá servir como base para acompanhamento futuro.`;
+}
+
+/* ===== EXEMPLOS DINÂMICOS ===== */
+const exemplos=[
+  {nome:"João Silva",funcao:"Trabalhador Agrícola",tipo:"campo",nd:3,na:4,
+   tTrab:"cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização",
+   tAti:"mantém uma atitude correta e colaborativa",
+   fortes:"responsabilidade; disponibilidade; adaptação ao terreno",
+   melhorar:"organização; atenção ao detalhe"}
 ];
 
 function preencherExemplo(){
-  const e = exemplos[Math.floor(Math.random()*exemplos.length)];
-  document.getElementById("nome").value=e.nome;
-  document.getElementById("funcao").value=e.funcao;
-  document.getElementById("tipo").value=e.tipo;
-  document.getElementById("data").value=new Date().toISOString().slice(0,10);
-  document.getElementById("nd").value=e.nd;
-  document.getElementById("na").value=e.na;
-  document.getElementById("tTrab").value=e.tTrab;
-  document.getElementById("tAti").value=e.tAti;
-  document.getElementById("fortes").value=e.fortes;
-  document.getElementById("melhorar").value=e.melhorar;
-}
-
-/* ---------- GERAÇÃO DA FICHA ---------- */
-const fraseNota=(n,t)=>({
-  5:`Apresenta um nível ${t} muito elevado.`,
-  4:`Demonstra um bom nível ${t}.`,
-  3:`Cumpre o essencial ao nível ${t}.`,
-  2:`Revela fragilidades ao nível ${t}.`,
-  1:`O nível ${t} é insuficiente.`
-}[n]);
-
-function listaDetalhada(txt){
-  return txt.split(/[.;\n]/).map(t=>t.trim()).filter(Boolean)
-    .map(t=>"• "+t.charAt(0).toUpperCase()+t.slice(1)).join("\n");
+  const e=exemplos[Math.floor(Math.random()*exemplos.length)];
+  nome.value=e.nome; funcao.value=e.funcao; tipo.value=e.tipo;
+  data.value=new Date().toISOString().slice(0,10);
+  nd.value=e.nd; na.value=e.na;
+  tTrab.value=e.tTrab; tAti.value=e.tAti;
+  fortes.value=e.fortes; melhorar.value=e.melhorar;
 }
 
 function gerar(){
   const v=id=>document.getElementById(id).value;
-  const nd=parseInt(v("nd")), na=parseInt(v("na"));
-  const total=(v("tTrab")+v("tAti")+v("fortes")+v("melhorar")).toLowerCase();
-
-  let equipa="";
-  if(/equipa|colega|conflito|colabora|ajuda/.test(total)){
-    equipa = /conflito/.test(total)
-      ? "No trabalho em equipa existem aspetos a melhorar, sobretudo na comunicação."
-      : "Demonstra boa integração e colaboração com a equipa.";
-  }
-
-  let objetivos=[];
-  if(/organiza|tempo/.test(total)) objetivos.push("Melhorar a organização do trabalho diário.");
-  if(/comunica|equipa|colega/.test(total)) objetivos.push("Reforçar a comunicação e colaboração.");
-  if(/aten|erro|cuidado/.test(total)) objetivos.push("Aumentar a atenção ao detalhe.");
-  objetivos=objetivos.slice(0,3);
-
-  let conclusao =
-    nd>=4 && na>=4 ? "Avaliação globalmente positiva." :
-    nd>=3 && na>=3 ? "Avaliação global satisfatória." :
-    "Avaliação que requer acompanhamento mais próximo.";
-
-  if(objetivos.length){
-    conclusao += "\n\nObjetivos:\n"+objetivos.map(o=>"• "+o).join("\n");
-  }
-
-  document.getElementById("out").textContent=
+  out.textContent=
 `FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
 
 Colaborador: ${v("nome")}
@@ -276,24 +246,24 @@ Função: ${v("funcao")}
 Tipo de função: ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}
 Data: ${v("data")}
 
-Nível de Desempenho: ${nd}/5
-${fraseNota(nd,"de desempenho")}
-${v("tTrab")}
+Nível de Desempenho:
+${blocoDesempenho(v("nd"),v("tTrab"))}
 
-Nível de Atitude no Trabalho: ${na}/5
-${fraseNota(na,"de atitude")}
-${v("tAti")}
+Nível de Atitude no Trabalho:
+${blocoAtitude(v("na"),v("tAti"))}
 
-${equipa? "Trabalho em Equipa:\n"+equipa+"\n\n":""}
+Trabalho em Equipa:
+${blocoEquipa(v("tAti"))}
 
-Pontos fortes:
-${listaDetalhada(v("fortes"))}
+Pontos Fortes:
+${v("fortes")}
 
-Aspetos a melhorar:
-${listaDetalhada(v("melhorar"))}
+Aspetos a Melhorar:
+${v("melhorar")}
 
 Conclusão e Objetivos:
-${conclusao}`;
+${blocoConclusao(parseInt(v("nd")),parseInt(v("na")))}
+`;
 }
 </script>
 
