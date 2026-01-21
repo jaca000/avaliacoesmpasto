@@ -6,7 +6,6 @@
 <title>Monte do Pasto — Avaliação Anual</title>
 
 <style>
-/* ================= SISTEMA VISUAL ================= */
 :root{
   --bg:#ecefe8;
   --panel:#ffffff;
@@ -18,7 +17,7 @@
   --border:#d9dfd6;
 }
 
-/* ================= BASE ================= */
+/* BASE */
 body{
   margin:0;
   font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -47,7 +46,7 @@ header h1{
   color:var(--primary);
 }
 
-/* ================= LAYOUT ================= */
+/* LAYOUT */
 main{
   max-width:1400px;
   margin:0 auto;
@@ -61,7 +60,7 @@ main{
   main{grid-template-columns:1fr}
 }
 
-/* ================= FORM ================= */
+/* FORM */
 .form{
   background:var(--panel);
   border-radius:18px;
@@ -115,7 +114,7 @@ button{
   cursor:pointer;
 }
 
-/* ================= PREVIEW DOCUMENT ================= */
+/* PREVIEW */
 .preview{
   background:var(--paper);
   border-radius:20px;
@@ -135,7 +134,7 @@ button{
   line-height:1.75;
 }
 
-/* ================= SECTIONS ================= */
+/* SECTIONS */
 .section{
   margin-bottom:26px;
 }
@@ -155,7 +154,7 @@ button{
   font-size:14px;
 }
 
-/* ================= PDF ================= */
+/* PDF */
 .pdf-header{display:none}
 
 @page{size:A4;margin:25mm 20mm}
@@ -245,7 +244,107 @@ button{
 </main>
 
 <script>
-/* Lógica igual à versão congelada */
+const labels={5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
+
+function lista(txt){
+ return txt.split(";").map(t=>t.trim()).filter(Boolean)
+   .map(t=>"• "+t).join("<br>");
+}
+
+function bloco(titulo,nota,texto){
+ return `
+<div class="section">
+<h2>${titulo}: ${nota}/5 — ${labels[nota]}</h2>
+<p>
+Ao longo do período avaliado, o colaborador apresentou um nível enquadrado como ${labels[nota].toLowerCase()}.
+O desempenho observado reflete a forma como as responsabilidades foram assumidas no quotidiano.
+A execução das tarefas revelou consistência ao longo do período analisado.
+O trabalho desenvolvido encontra-se alinhado com as exigências da função desempenhada.
+O avaliador refere que ${texto}.
+Foram identificados comportamentos que sustentam esta avaliação.
+Também se observaram oportunidades de melhoria relevantes.
+Ainda assim, o desempenho global revelou-se coerente.
+A classificação atribuída traduz a observação contínua realizada.
+</p>
+</div>`;
+}
+
+function gerar(){
+const v=id=>document.getElementById(id).value;
+const nd=parseInt(v("nd"));
+const na=parseInt(v("na"));
+
+out.innerHTML=`
+<div class="pdf-header">
+<img src="logo-monte-do-pasto.png">
+<h1>Monte do Pasto — Avaliação Anual</h1>
+</div>
+
+<div class="meta">
+<strong>Colaborador:</strong> ${v("nome")}<br>
+<strong>Função:</strong> ${v("funcao")}<br>
+<strong>Tipo de função:</strong> ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}<br>
+<strong>Data:</strong> ${v("data")}
+</div>
+
+${bloco("Nível de Desempenho",nd,v("tTrab"))}
+${bloco("Nível de Atitude no Trabalho",na,v("tAti"))}
+
+<div class="section">
+<h2>Trabalho em Equipa</h2>
+<p>
+Ao longo do período avaliado, o colaborador integrou-se de forma funcional na equipa.
+A relação com colegas revelou-se globalmente adequada.
+Demonstrou disponibilidade para colaborar quando solicitado.
+A comunicação interna mostrou-se eficaz em vários momentos.
+Em algumas situações, poderá ser reforçada.
+O trabalho em equipa contribuiu para o normal funcionamento das atividades.
+Este aspeto deverá continuar a ser acompanhado.
+O contexto descrito sustenta a avaliação efetuada.
+</p>
+</div>
+
+<div class="section">
+<h2>Pontos Fortes</h2>
+<p>${lista(v("fortes"))}</p>
+<p>
+Os pontos fortes identificados evidenciam competências relevantes para a função.
+Estes aspetos contribuem positivamente para o desempenho global.
+Devem ser mantidos e consolidados no próximo período.
+</p>
+</div>
+
+<div class="section">
+<h2>Aspetos a Melhorar</h2>
+<p>${lista(v("melhorar"))}</p>
+<p>
+Os aspetos a melhorar representam oportunidades concretas de desenvolvimento.
+A sua abordagem contribuirá para uma melhoria gradual do desempenho.
+Recomenda-se acompanhamento e definição de prioridades.
+</p>
+</div>
+
+<div class="section">
+<h2>Conclusão e Objetivos</h2>
+<p>
+A presente avaliação permite enquadrar o colaborador num nível global de desempenho e atitude coerente com as exigências da função.
+As classificações atribuídas refletem o comportamento observado ao longo do período avaliado e a forma como as responsabilidades foram assumidas.
+Os pontos fortes identificados constituem uma base sólida que deverá ser mantida e valorizada.
+Em simultâneo, os aspetos a melhorar evidenciam áreas concretas onde é possível reforçar a eficácia do trabalho desenvolvido.
+Para o próximo período, recomenda-se a definição de objetivos claros, realistas e alinhados com a função desempenhada.
+Esses objetivos deverão incidir diretamente sobre os aspetos identificados nesta avaliação.
+O acompanhamento regular por parte da chefia será determinante para apoiar este processo.
+Pretende-se, desta forma, promover uma evolução gradual, sustentada e alinhada com as necessidades da organização.
+</p>
+</div>
+
+<div class="section">
+<p><strong>Data:</strong> ____________________________</p>
+<p><strong>Assinatura do Colaborador:</strong><br><br>______________________________</p>
+<p><strong>Assinatura da Chefia:</strong><br><br>______________________________</p>
+</div>
+`;
+}
 </script>
 
 </body>
