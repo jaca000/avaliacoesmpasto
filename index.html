@@ -6,23 +6,19 @@
 <title>Monte do Pasto — Avaliação Anual</title>
 
 <style>
-/* ================= BASE APP ================= */
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   background:#f4f5f2;
   color:#2b2b2b;
 }
-
 header{
   text-align:center;
   padding:28px 20px;
   background:#fff;
   border-bottom:1px solid #ccc;
 }
-
 header img{max-height:110px}
-
 main{
   max-width:1100px;
   margin:0 auto;
@@ -31,16 +27,13 @@ main{
   grid-template-columns:1fr 1fr;
   gap:24px;
 }
-
 @media(max-width:900px){main{grid-template-columns:1fr}}
-
 .card{
   background:#fff;
   border:1px solid #ddd;
   border-radius:12px;
   padding:20px;
 }
-
 label{display:block;margin-top:12px;font-size:13px;color:#555}
 input,select,textarea{
   width:100%;
@@ -50,7 +43,6 @@ input,select,textarea{
   font-size:14px;
 }
 textarea{min-height:90px}
-
 button{
   margin-top:16px;
   padding:10px 16px;
@@ -60,7 +52,6 @@ button{
   cursor:pointer;
   font-weight:600;
 }
-
 .paper{
   background:#fff;
   padding:32px;
@@ -68,22 +59,14 @@ button{
   font-family:"Times New Roman", serif;
   line-height:1.65;
 }
-
-/* ========== PDF HEADER (HIDDEN ON SCREEN) ========== */
 .pdf-header{display:none}
 
-/* ================= PRINT / PDF ================= */
-@page{
-  size:A4;
-  margin:25mm 20mm;
-}
-
+/* PRINT / PDF */
+@page{size:A4;margin:25mm 20mm}
 @media print{
-  body{background:#fff}
   header,.card.form,button{display:none}
   main{display:block;padding:0}
   .paper{border:none;padding:0}
-
   .pdf-header{
     display:flex;
     align-items:center;
@@ -91,35 +74,16 @@ button{
     padding-bottom:10px;
     margin-bottom:20px;
   }
-
-  .pdf-header img{
-    height:60px;
-    width:auto;
-    margin-right:18px;
-  }
-
-  .pdf-header h1{
-    font-size:18pt;
-    margin:0;
-  }
-
-  .section{
-    margin-bottom:20px;
-    page-break-inside:avoid;
-  }
-
+  .pdf-header img{height:60px;margin-right:18px}
+  .pdf-header h1{font-size:18pt;margin:0}
+  .section{margin-bottom:20px;page-break-inside:avoid}
   .section h2{
     font-size:14pt;
     border-bottom:1px solid #000;
     padding-bottom:4px;
     margin-bottom:8px;
   }
-
-  .signatures{
-    margin-top:40px;
-    page-break-inside:avoid;
-  }
-
+  .signatures{margin-top:40px;page-break-inside:avoid}
   .signature-line{margin-top:30px}
 }
 </style>
@@ -168,6 +132,12 @@ button{
 <label>Comentário sobre a atitude</label>
 <textarea id="tAti"></textarea>
 
+<label>Pontos fortes (separar por ;)</label>
+<textarea id="fortes"></textarea>
+
+<label>Aspetos a melhorar (separar por ;)</label>
+<textarea id="melhorar"></textarea>
+
 <button onclick="preencherExemplo()">Preencher com exemplo</button>
 <button onclick="gerar()">Gerar ficha</button>
 <button onclick="window.print()">Imprimir / PDF</button>
@@ -180,61 +150,55 @@ button{
 </main>
 
 <script>
-/* ================= NOTAS ================= */
 const labels={5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
+let ultimo=-1;
 
-/* ================= EXEMPLOS RANDOM ================= */
-let ultimoExemplo=-1;
 const exemplos=[
-  {nome:"João Silva",funcao:"Trabalhador Agrícola",tipo:"campo",nd:3,na:4,
-   tTrab:"cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização e o ritmo de execução",
-   tAti:"mantém uma atitude positiva, respeita as orientações e colabora com os colegas"},
-  {nome:"Ana Costa",funcao:"Administrativa",tipo:"admin",nd:4,na:4,
-   tTrab:"executa as tarefas administrativas com rigor, organização e cumprimento de prazos",
-   tAti:"apresenta uma postura profissional consistente e adequada"},
-  {nome:"Carlos Mendes",funcao:"Auxiliar de Armazém",tipo:"campo",nd:2,na:3,
-   tTrab:"apresenta dificuldades na consistência do trabalho, necessitando de acompanhamento",
-   tAti:"mantém uma atitude correta, embora com alguma resistência a mudanças"},
-  {nome:"Sofia Almeida",funcao:"Responsável Administrativa",tipo:"admin",nd:5,na:5,
-   tTrab:"desempenha funções com elevado nível de qualidade, autonomia e responsabilidade",
-   tAti:"demonstra uma atitude exemplar e promotora de bom ambiente"}
+ {nome:"João Silva",funcao:"Trabalhador Agrícola",tipo:"campo",nd:3,na:4,
+  tTrab:"cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização",
+  tAti:"mantém uma atitude positiva e colaborativa",
+  fortes:"responsabilidade; disponibilidade; adaptação ao trabalho no terreno",
+  melhorar:"organização; atenção ao detalhe"},
+ {nome:"Ana Costa",funcao:"Administrativa",tipo:"admin",nd:4,na:4,
+  tTrab:"executa tarefas administrativas com rigor e cumprimento de prazos",
+  tAti:"postura profissional consistente",
+  fortes:"organização; autonomia; comunicação",
+  melhorar:"planeamento; priorização de tarefas"}
 ];
 
 function preencherExemplo(){
-  let i;
-  do{i=Math.floor(Math.random()*exemplos.length)}while(i===ultimoExemplo);
-  ultimoExemplo=i;
-  const e=exemplos[i];
-  nome.value=e.nome;
-  funcao.value=e.funcao;
-  tipo.value=e.tipo;
-  data.value=new Date().toISOString().slice(0,10);
-  nd.value=e.nd;
-  na.value=e.na;
-  tTrab.value=e.tTrab;
-  tAti.value=e.tAti;
+ let i; do{i=Math.floor(Math.random()*exemplos.length)}while(i===ultimo);
+ ultimo=i; const e=exemplos[i];
+ nome.value=e.nome; funcao.value=e.funcao; tipo.value=e.tipo;
+ data.value=new Date().toISOString().slice(0,10);
+ nd.value=e.nd; na.value=e.na;
+ tTrab.value=e.tTrab; tAti.value=e.tAti;
+ fortes.value=e.fortes; melhorar.value=e.melhorar;
 }
 
-/* ================= TEXTO LONGO ================= */
+function lista(txt){
+ return txt.split(";").map(t=>t.trim()).filter(Boolean)
+   .map(t=>"• "+t).join("<br>");
+}
+
 function blocoLongo(titulo,nota,texto){
-return `
+ return `
 <div class="section">
 <h2>${titulo}: ${nota}/5 — ${labels[nota]}</h2>
 <p>
-Ao longo do período avaliado, o colaborador demonstrou um nível enquadrado como ${labels[nota].toLowerCase()}.
-A forma como as responsabilidades foram assumidas reflete o desempenho observado no dia a dia.
-A execução das tarefas manteve um grau de consistência adequado ao longo do período analisado.
-De forma geral, o trabalho desenvolvido encontra-se alinhado com as exigências da função desempenhada.
+Ao longo do período avaliado, o colaborador apresentou um nível enquadrado como ${labels[nota].toLowerCase()}.
+O desempenho observado reflete a forma como as responsabilidades foram assumidas no dia a dia.
+A execução das tarefas manteve consistência ao longo do período em análise.
+O trabalho desenvolvido encontra-se alinhado com as exigências da função.
 O avaliador refere que ${texto}.
-Em alguns momentos, foram identificadas oportunidades de melhoria relevantes.
-Ainda assim, o desempenho global revelou-se estável e coerente.
-A avaliação atribuída resulta da observação contínua e do acompanhamento realizado.
-Este enquadramento justifica a classificação atribuída neste domínio.
+Foram identificados aspetos positivos que sustentam esta avaliação.
+Também se observaram oportunidades de melhoria relevantes.
+Ainda assim, o desempenho global revelou-se coerente.
+A classificação atribuída traduz a observação contínua realizada.
 </p>
 </div>`;
 }
 
-/* ================= GERAR ================= */
 function gerar(){
 const v=id=>document.getElementById(id).value;
 out.innerHTML=`
@@ -243,39 +207,65 @@ out.innerHTML=`
 <h1>Monte do Pasto — Avaliação Anual</h1>
 </div>
 
-<p>
-<strong>Colaborador:</strong> ${v("nome")}<br>
+<p><strong>Colaborador:</strong> ${v("nome")}<br>
 <strong>Função:</strong> ${v("funcao")}<br>
 <strong>Tipo de função:</strong> ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}<br>
-<strong>Data:</strong> ${v("data")}
-</p>
+<strong>Data:</strong> ${v("data")}</p>
 
 ${blocoLongo("Nível de Desempenho",parseInt(v("nd")),v("tTrab"))}
 ${blocoLongo("Nível de Atitude no Trabalho",parseInt(v("na")),v("tAti"))}
 
 <div class="section">
-<h2>Conclusão</h2>
+<h2>Trabalho em Equipa</h2>
 <p>
-A avaliação global reflete o desempenho e a atitude observados ao longo do período analisado.
-Os pontos fortes identificados devem ser mantidos e consolidados.
-Os aspetos menos positivos constituem oportunidades de desenvolvimento.
-Esta avaliação deverá servir como base para acompanhamento e definição de objetivos.
-O diálogo entre colaborador e chefia será determinante para a evolução futura.
+Ao longo do período avaliado, o colaborador integrou-se de forma funcional na equipa.
+A relação com colegas revelou-se globalmente adequada.
+Houve disponibilidade para colaborar quando solicitado.
+A comunicação interna mostrou-se eficaz em vários momentos.
+Em algumas situações, poderá ser reforçada.
+O trabalho em equipa contribuiu para o normal funcionamento das atividades.
+Este aspeto deverá continuar a ser acompanhado.
+O texto do avaliador sustenta esta análise.
+</p>
+</div>
+
+<div class="section">
+<h2>Pontos Fortes</h2>
+<p>${lista(v("fortes"))}</p>
+<p>
+Os pontos fortes identificados evidenciam competências relevantes para a função.
+Estes aspetos contribuem positivamente para o desempenho global.
+Devem ser mantidos e consolidados no próximo período.
+</p>
+</div>
+
+<div class="section">
+<h2>Aspetos a Melhorar</h2>
+<p>${lista(v("melhorar"))}</p>
+<p>
+Os aspetos a melhorar representam oportunidades de desenvolvimento.
+A sua abordagem contribuirá para uma melhoria gradual do desempenho.
+Recomenda-se acompanhamento e definição de objetivos claros.
+</p>
+</div>
+
+<div class="section">
+<h2>Conclusão e Objetivos</h2>
+<p>
+A avaliação global reflete de forma equilibrada o desempenho e a atitude observados.
+Os resultados permitem identificar áreas consolidadas e áreas de evolução.
+Os pontos fortes deverão ser mantidos.
+Os aspetos a melhorar devem ser trabalhados de forma progressiva.
+Esta avaliação serve de base para acompanhamento futuro.
+O diálogo entre colaborador e chefia será fundamental.
+Pretende-se promover uma evolução consistente no próximo período.
 </p>
 </div>
 
 <div class="signatures">
 <p><strong>Data:</strong> ____________________________</p>
-
-<div class="signature-line">
-<strong>Assinatura do Colaborador:</strong><br><br>
-______________________________________________
-</div>
-
-<div class="signature-line">
-<strong>Assinatura da Chefia:</strong><br><br>
-______________________________________________
-</div>
+<div class="signature-line"><strong>Assinatura do Colaborador:</strong><br><br>______________________________</div>
+<div class="signature-line"><strong>Assinatura da Chefia:</strong><br><br>______________________________</div>
 </div>`;
 }
 </script>
