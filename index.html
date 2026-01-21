@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Monte do Pasto — Avaliação Anual</title>
+  <meta name="description" content="Ferramenta de avaliação anual de colaboradores — Monte do Pasto" />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f1a2e;
+      --muted:#93a4c7;
+      --text:#e9eefc;
+      --accent:#66e3a1;
+      --accent2:#6aa6ff;
+      --danger:#ff6b6b;
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --radius2:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1000px 600px at 20% 0%, rgba(102,227,161,.18), transparent 55%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(106,166,255,.16), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.35;
+    }
+    header{
+      padding:28px 18px 10px;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    .title{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:13px;
+      user-select:none;
+    }
+    h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:8px 0 0;
+      color:var(--muted);
+      max-width:900px;
+    }
+
+    main{
+      max-width:1100px;
+      margin:0 auto;
+      padding:16px 18px 42px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      main{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 640px){
+      .grid{grid-template-columns:1fr}
+    }
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin:0 0 6px;
+    }
+    input, select, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(8,14,26,.55);
+      color:var(--text);
+      outline:none;
+      transition: border .15s ease, transform .05s ease;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(102,227,161,.65);
+    }
+    textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+    .row{
+      margin-top:12px;
+    }
+    .help{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+    button{
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.07);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:600;
+      letter-spacing:.2px;
+      transition: transform .05s ease, background .2s ease, border .2s ease;
+      user-select:none;
+    }
+    button:hover{
+      background:rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.22);
+    }
+    button:active{transform: translateY(1px)}
+    .primary{
+      background: linear-gradient(90deg, rgba(102,227,161,.25), rgba(106,166,255,.18));
+      border-color: rgba(102,227,161,.35);
+    }
+    .primary:hover{
+      background: linear-gradient(90deg, rgba(102,227,161,.32), rgba(106,166,255,.24));
+      border-color: rgba(102,227,161,.55);
+    }
+    .danger{
+      background: rgba(255,107,107,.14);
+      border-color: rgba(255,107,107,.28);
+    }
+    .danger:hover{
+      background: rgba(255,107,107,.18);
+      border-color: rgba(255,107,107,.4);
+    }
+    .ghost{
+      background: transparent;
+    }
+
+    .output{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .outputHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .status{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .paper{
+      background: #ffffff;
+      color:#0b1220;
+      border-radius:18px;
+      padding:18px;
+      border:1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      overflow:auto;
+      max-height: 72vh;
+      white-space: pre-wrap;
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      line-height:1.4;
+    }
+
+    /* impressão */
+    @media print{
+      body{background:#fff}
+      header, .card.form, .actions.printHide, .status, .badge{display:none !important}
+      main{display:block; padding:0; margin:0}
+      .card.outputCard{
+        border:none; box-shadow:none; background:#fff; padding:0;
+      }
+      .paper{
+        border:none; box-shadow:none; padding:0; max-height:none;
+        font-size:12pt;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="title">
+      <div>
+        <h1>Monte do Pasto — Avaliação Anual</h1>
+        <p class="subtitle">
+          Preenche os dados, escolhe o tipo de função, atribui as classificações (1–5) e escreve os comentários.
+          A ferramenta gera uma ficha anual coerente, respeitosa e pronta a arquivar.
+        </p>
+      </div>
+      <div class="badge" title="Ficheiro único para GitHub Pages">
+        ⚙️ HTML/CSS/JS • sem custos • PT-PT
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- FORMULÁRIO -->
+    <section class="card form">
+      <h2>1) Dados e avaliação</h2>
+
+      <div class="grid">
+        <div>
+          <label for="nome">Nome do colaborador *</label>
+          <input id="nome" type="text" placeholder="Ex.: Manuel Silva" />
+        </div>
+        <div>
+          <label for="funcao">Função desempenhada *</label>
+          <input id="funcao" type="text" placeholder="Ex.: Trabalhador Agrícola / Administrativa" />
+        </div>
+        <div>
+          <label for="tipoFuncao">Tipo de função *</label>
+          <select id="tipoFuncao">
+            <option value="campo">Operacional / Campo</option>
+            <option value="admin">Administrativa / Apoio</option>
+          </select>
+        </div>
+        <div>
+          <label for="data">Data da avaliação *</label>
+          <input id="data" type="date" />
+        </div>
+        <div>
+          <label for="avaliador">Nome do avaliador (opcional)</label>
+          <input id="avaliador" type="text" placeholder="Ex.: Ana Martins" />
+        </div>
+        <div>
+          <label for="periodo">Período avaliado (opcional)</label>
+          <input id="periodo" type="text" placeholder="Ex.: Janeiro a Dezembro de 2025" />
+        </div>
+      </div>
+
+      <div class="row">
+        <h2 style="margin-top:16px;">2) Desempenho e comportamento</h2>
+        <div class="grid">
+          <div>
+            <label for="notaDesempenho">Classificação do desempenho (1–5) *</label>
+            <select id="notaDesempenho">
+              <option value="5">5 — Muito bom</option>
+              <option value="4">4 — Bom</option>
+              <option value="3" selected>3 — Adequado</option>
+              <option value="2">2 — Insuficiente</option>
+              <option value="1">1 — Muito insuficiente</option>
+            </select>
+          </div>
+          <div>
+            <label for="notaComportamento">Classificação do comportamento (1–5) *</label>
+            <select id="notaComportamento">
+              <option value="5">5 — Muito bom</option>
+              <option value="4">4 — Bom</option>
+              <option value="3" selected>3 — Adequado</option>
+              <option value="2">2 — Insuficiente</option>
+              <option value="1">1 — Muito insuficiente</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="comentDesempenho">Comentário sobre o desempenho nas funções *</label>
+          <textarea id="comentDesempenho" placeholder="Escreve de forma simples e direta. A ferramenta reformula para linguagem profissional."></textarea>
+        </div>
+
+        <div class="row">
+          <label for="comentComportamento">Comentário sobre o comportamento profissional *</label>
+          <textarea id="comentComportamento" placeholder="Ex.: pontualidade, responsabilidade, relação com colegas, comunicação, atitude."></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <h2 style="margin-top:16px;">3) Pontos fortes e a melhorar</h2>
+        <div class="row">
+          <label for="pontosFortes">Principais pontos fortes *</label>
+          <textarea id="pontosFortes" placeholder="Ex.: responsável, fiável, organizado, boa comunicação, bom ritmo no terreno, atenção ao detalhe."></textarea>
+        </div>
+        <div class="row">
+          <label for="pontosMelhorar">Aspetos a melhorar *</label>
+          <textarea id="pontosMelhorar" placeholder="Ex.: organização, comunicação, cuidado com equipamentos, cumprimento de prazos, autonomia."></textarea>
+        </div>
+        <p class="help">Dica: quanto mais concreto for o texto, mais concreta fica a ficha (sem “RH de plástico”).</p>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="btnGerar">Gerar ficha</button>
+        <button class="ghost" id="btnExemploCampo" title="Preenche com um exemplo realista">Exemplo (Campo)</button>
+        <button class="ghost" id="btnExemploAdmin" title="Preenche com um exemplo realista">Exemplo (Administrativo)</button>
+        <button class="danger" id="btnLimpar">Limpar</button>
+      </div>
+    </section>
+
+    <!-- OUTPUT -->
+    <section class="card outputCard">
+      <div class="output">
+        <div class="outputHeader">
+          <h2 style="margin:0;">Ficha gerada</h2>
+          <div class="status" id="status">Preenche o formulário e clica em “Gerar ficha”.</div>
+        </div>
+
+        <div class="actions printHide">
+          <button id="btnCopiar">Copiar</button>
+          <button id="btnImprimir">Imprimir / Guardar em PDF</button>
+          <button id="btnDownload">Descarregar (.txt)</button>
+        </div>
+
+        <div class="paper" id="paper" aria-label="Ficha de avaliação anual gerada">
+FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
+
+(À espera de dados…)
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---------- Utilitários ----------
+    const $ = (id) => document.getElementById(id);
+
+    function hojeISO(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function dataPT(iso){
+      if(!iso) return "";
+      const [y,m,d] = iso.split("-").map(Number);
+      if(!y||!m||!d) return iso;
+      const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+      return `${d} de ${meses[m-1]} de ${y}`;
+    }
+
+    function clean(s){
+      return (s||"").toString().trim().replace(/\s+/g," ");
+    }
+
+    function asParagraph(s){
+      // Leve "polimento": capitaliza primeira letra, remove finais muito crus
+      let t = (s||"").trim();
+      if(!t) return "";
+      t = t.replace(/\s+/g," ");
+      t = t.charAt(0).toUpperCase() + t.slice(1);
+      // garante ponto final
+      if(!/[.!?]$/.test(t)) t += ".";
+      return t;
+    }
+
+    function notaLabel(n){
+      const map = {
+        1: "Muito insuficiente",
+        2: "Insuficiente",
+        3: "Adequado",
+        4: "Bom",
+        5: "Muito bom"
+      };
+      return map[n] || "—";
+    }
+
+    function toneByScore(n){
+      // devolve parâmetros de tom e foco
+      if(n <= 1) return {lead:"corretivo", intensity: 3};
+      if(n === 2) return {lead:"melhoria", intensity: 2};
+      if(n === 3) return {lead:"equilibrado", intensity: 1};
+      if(n === 4) return {lead:"positivo", intensity: 1};
+      return {lead:"excelente", intensity: 0};
+    }
+
+    function perfilTexto(tipo){
+      if(tipo === "campo"){
+        return {
+          enquadramento:
+            "O colaborador desempenha funções de natureza operacional no terreno, assegurando tarefas essenciais ao funcionamento diário do Monte do Pasto, relacionadas com atividades agrícolas, apoio às operações e utilização de equipamentos no contexto de campo.",
+          focoMelhoria:
+            "organização das tarefas no terreno, atenção ao detalhe, segurança, cuidado com equipamentos e consistência na execução",
+          focoForca:
+            "fiabilidade, ritmo de trabalho, autonomia prática, cumprimento de orientações e cuidado na execução"
+        };
+      }
+      return {
+        enquadramento:
+          "O colaborador exerce funções de carácter administrativo e de apoio, assegurando tarefas de organização, registo, comunicação e acompanhamento de processos, com impacto direto no bom funcionamento interno do Monte do Pasto.",
+        focoMelhoria:
+          "priorização, acompanhamento de tarefas, rigor nos registos, comunicação interna e cumprimento de prazos",
+        focoForca:
+          "organização, rigor, autonomia, comunicação e capacidade de resposta"
+      };
+    }
+
+    function buildObjetivos(tipo, nd, nc, pontosMelhorarRaw){
+      const p = perfilTexto(tipo);
+      const tDes = toneByScore(nd);
+      const tComp = toneByScore(nc);
+
+      // Objetivos base por intensidade
+      let objetivos = [];
+
+      // Extrai algumas palavras-chave simples (não é NLP avançado, mas ajuda)
+      const text = (pontosMelhorarRaw||"").toLowerCase();
+      const has = (kw) => text.includes(kw);
+
+      // sugestões por keywords comuns
+      if(tipo === "campo"){
+        if(has("material") || has("equip") || has("máquina") || has("maquina") || has("trato") || has("ferrament")){
+          objetivos.push("Reforçar as boas práticas de utilização e conservação de equipamentos e materiais, reduzindo desgaste e prevenindo avarias.");
+        }
+        if(has("seguran") || has("epi") || has("risco")){
+          objetivos.push("Cumprir de forma consistente as normas de segurança e a utilização adequada de EPI, minimizando riscos no trabalho diário.");
+        }
+        if(has("organiza") || has("plane") || has("tempo") || has("atras")){
+          objetivos.push("Melhorar a organização e sequência das tarefas no terreno, de modo a reduzir retrabalho e otimizar o tempo de execução.");
+        }
+        if(has("aten") || has("detal") || has("pressa") || has("apressa")){
+          objetivos.push("Executar as tarefas com maior atenção ao detalhe, assegurando qualidade e consistência nos resultados.");
+        }
+      } else {
+        if(has("prazo") || has("atras") || has("tempo")){
+          objetivos.push("Reforçar o cumprimento de prazos através de uma planificação semanal e de checkpoints regulares das tarefas em curso.");
+        }
+        if(has("comunica") || has("avisa") || has("inform")){
+          objetivos.push("Melhorar a comunicação interna sobre o estado das tarefas e processos, garantindo partilha atempada de informação relevante.");
+        }
+        if(has("rigor") || has("erro") || has("regist") || has("arquivo") || has("document")){
+          objetivos.push("Reforçar o rigor nos registos, arquivo e validação de informação, reduzindo erros e aumentando a fiabilidade dos dados.");
+        }
+        if(has("prior") || has("organiza") || has("penden") || has("seguimento") || has("acompanh")){
+          objetivos.push("Melhorar a priorização e o acompanhamento de tarefas pendentes, garantindo conclusão consistente dos processos.");
+        }
+      }
+
+      // fallback se não apanhou keywords
+      if(objetivos.length === 0){
+        if(tDes.lead === "corretivo" || tDes.lead === "melhoria"){
+          objetivos.push(`Definir objetivos de melhoria claros e acompanhados, com foco em ${p.focoMelhoria}.`);
+        } else {
+          objetivos.push(`Consolidar o desempenho atual e reforçar boas práticas, mantendo foco em ${p.focoForca}.`);
+        }
+      }
+
+      // Ajuste por comportamento baixo
+      if(tComp.lead === "corretivo" || tComp.lead === "melhoria"){
+        objetivos.push("Reforçar a comunicação e a responsabilidade no acompanhamento das tarefas, promovendo maior previsibilidade no trabalho diário.");
+      }
+
+      // Limitar e garantir bullets curtos
+      objetivos = objetivos.slice(0, 5);
+      return objetivos;
+    }
+
+    function gerarFicha(){
+      const nome = clean($("nome").value);
+      const funcao = clean($("funcao").value);
+      const tipo = $("tipoFuncao").value;
+      const data = $("data").value;
+      const avaliador = clean($("avaliador").value);
+      const periodo = clean($("periodo").value);
+
+      const nd = parseInt($("notaDesempenho").value,10);
+      const nc = parseInt($("notaComportamento").value,10);
+
+      const cDes = $("comentDesempenho").value.trim();
+      const cComp = $("comentComportamento").value.trim();
+      const fortes = $("pontosFortes").value.trim();
+      const melhorar = $("pontosMelhorar").value.trim();
+
+      // Validação mínima
+      const missing = [];
+      if(!nome) missing.push("Nome do colaborador");
+      if(!funcao) missing.push("Função desempenhada");
+      if(!data) missing.push("Data da avaliação");
+      if(!cDes) missing.push("Comentário sobre o desempenho");
+      if(!cComp) missing.push("Comentário sobre o comportamento");
+      if(!fortes) missing.push("Pontos fortes");
+      if(!melhorar) missing.push("Aspetos a melhorar");
+
+      if(missing.length){
+        $("status").textContent = `Faltam campos: ${missing.join(", ")}.`;
+        $("status").style.color = "rgba(255,107,107,.95)";
+        return;
+      }
+
+      const p = perfilTexto(tipo);
+      const tDes = toneByScore(nd);
+      const tComp = toneByScore(nc);
+
+      // Construção de texto com regras
+      const dataExt = dataPT(data);
+      const tipoFuncaoTxt = (tipo === "campo") ? "Operacional / Campo" : "Administrativa / Apoio";
+
+      // Bloco Desempenho (tom a partir da nota, mas sempre respeitoso)
+      let desempenhoIntro = "";
+      if(tDes.lead === "excelente"){
+        desempenhoIntro = "O desempenho demonstrado ao longo do período avaliado foi muito positivo, evidenciando consistência e elevado sentido de responsabilidade na execução das funções.";
+      } else if(tDes.lead === "positivo"){
+        desempenhoIntro = "O desempenho demonstrado ao longo do período avaliado foi positivo, com execução consistente das tarefas e bom nível de fiabilidade na função.";
+      } else if(tDes.lead === "equilibrado"){
+        desempenhoIntro = "O desempenho demonstrado ao longo do período avaliado foi adequado, cumprindo as principais responsabilidades, existindo ainda margem para melhoria em aspetos específicos.";
+      } else if(tDes.lead === "melhoria"){
+        desempenhoIntro = "O desempenho demonstrado ao longo do período avaliado revelou necessidades de melhoria, sendo importante reforçar práticas de trabalho e acompanhamento das tarefas atribuídas.";
+      } else { // corretivo
+        desempenhoIntro = "O desempenho demonstrado ao longo do período avaliado foi insuficiente, sendo necessário um plano de melhoria claro e acompanhado para reforçar a execução das funções.";
+      }
+
+      // Bloco Comportamento
+      let comportamentoIntro = "";
+      if(tComp.lead === "excelente"){
+        comportamentoIntro = "O comportamento profissional foi muito bom, com postura colaborativa, comunicação adequada e contributo positivo para o ambiente de trabalho.";
+      } else if(tComp.lead === "positivo"){
+        comportamentoIntro = "O comportamento profissional foi bom, com atitude colaborativa e cumprimento geral das normas e orientações internas.";
+      } else if(tComp.lead === "equilibrado"){
+        comportamentoIntro = "O comportamento profissional foi adequado, sendo recomendável consolidar práticas de comunicação e colaboração no dia a dia.";
+      } else if(tComp.lead === "melhoria"){
+        comportamentoIntro = "O comportamento profissional evidencia necessidade de melhoria, sobretudo na consistência de atitudes e comunicação no contexto de trabalho.";
+      } else {
+        comportamentoIntro = "O comportamento profissional foi insuficiente, sendo necessário reforçar a responsabilidade, a comunicação e o cumprimento das orientações definidas.";
+      }
+
+      // Reformulação simples dos pontos fortes e a melhorar (sem inventar)
+      const fortesTxt = asParagraph(fortes);
+      const melhorarTxt = asParagraph(melhorar);
+
+      const objetivos = buildObjetivos(tipo, nd, nc, melhorar);
+
+      // Montagem final da ficha
+      const linhas = [];
+      linhas.push("FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO");
+      linhas.push("");
+      linhas.push(`Colaborador: ${nome}`);
+      linhas.push(`Função: ${funcao}`);
+      linhas.push(`Tipo de função: ${tipoFuncaoTxt}`);
+      if(periodo) linhas.push(`Período avaliado: ${periodo}`);
+      linhas.push(`Data da avaliação: ${dataExt}`);
+      if(avaliador) linhas.push(`Avaliador: ${avaliador}`);
+      linhas.push("");
+      linhas.push("1) Enquadramento da Função");
+      linhas.push(p.enquadramento);
+      linhas.push("");
+      linhas.push("2) Avaliação do Desempenho");
+      linhas.push(`Classificação do desempenho: ${nd} — ${notaLabel(nd)}`);
+      linhas.push(desempenhoIntro);
+      linhas.push(asParagraph(cDes));
+      linhas.push("");
+      linhas.push("3) Comportamento Profissional");
+      linhas.push(`Classificação do comportamento profissional: ${nc} — ${notaLabel(nc)}`);
+      linhas.push(comportamentoIntro);
+      linhas.push(asParagraph(cComp));
+      linhas.push("");
+      linhas.push("4) Pontos Fortes");
+      linhas.push(fortesTxt);
+      linhas.push("");
+      linhas.push("5) Aspetos a Melhorar");
+      linhas.push(melhorarTxt);
+      linhas.push("");
+      linhas.push("6) Objetivos e Recomendações para o Próximo Período");
+      objetivos.forEach((o) => linhas.push(`• ${o}`));
+      linhas.push("");
+      linhas.push("7) Conclusão");
+      // conclusão coerente com notas
+      let conclusao = "";
+      if(nd >= 4 && nc >= 4){
+        conclusao = "A avaliação reflete um desempenho globalmente sólido. Recomenda-se a continuidade das boas práticas e a consolidação do contributo do colaborador para os objetivos do Monte do Pasto.";
+      } else if(nd >= 3 && nc >= 3){
+        conclusao = "A avaliação reflete um desempenho globalmente adequado. Recomenda-se reforçar os aspetos identificados para melhoria e manter práticas consistentes alinhadas com as necessidades do Monte do Pasto.";
+      } else {
+        conclusao = "A avaliação reflete necessidades claras de melhoria. Recomenda-se acompanhamento e definição de objetivos específicos, de modo a promover evolução sustentada e alinhamento com as exigências da função no Monte do Pasto.";
+      }
+      linhas.push(conclusao);
+
+      const ficha = linhas.join("\n");
+
+      $("paper").textContent = ficha;
+      $("status").textContent = `Ficha gerada com sucesso (${new Date().toLocaleString("pt-PT")}).`;
+      $("status").style.color = "var(--muted)";
+    }
+
+    async function copiar(){
+      const text = $("paper").textContent || "";
+      try{
+        await navigator.clipboard.writeText(text);
+        $("status").textContent = "Copiado para a área de transferência.";
+        $("status").style.color = "var(--muted)";
+      }catch(e){
+        // fallback
+        const r = document.createRange();
+        r.selectNodeContents($("paper"));
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
+        document.execCommand("copy");
+        sel.removeAllRanges();
+        $("status").textContent = "Copiado (modo compatibilidade).";
+        $("status").style.color = "var(--muted)";
+      }
+    }
+
+    function imprimir(){
+      window.print();
+    }
+
+    function downloadTxt(){
+      const text = $("paper").textContent || "";
+      const nome = clean($("nome").value) || "colaborador";
+      const data = $("data").value || hojeISO();
+      const filename = `avaliacao_${nome.replace(/\s+/g,"_")}_${data}.txt`;
+
+      const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      $("status").textContent = "Ficheiro .txt descarregado.";
+      $("status").style.color = "var(--muted)";
+    }
+
+    function limpar(){
+      ["nome","funcao","avaliador","periodo","comentDesempenho","comentComportamento","pontosFortes","pontosMelhorar"].forEach(id => $(id).value = "");
+      $("tipoFuncao").value = "campo";
+      $("notaDesempenho").value = "3";
+      $("notaComportamento").value = "3";
+      $("data").value = hojeISO();
+      $("paper").textContent = "FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO\n\n(À espera de dados…)";
+      $("status").textContent = "Formulário limpo.";
+      $("status").style.color = "var(--muted)";
+    }
+
+    function preencherExemplo(tipo){
+      if(tipo === "campo"){
+        $("nome").value = "Manuel Silva";
+        $("funcao").value = "Trabalhador Agrícola";
+        $("tipoFuncao").value = "campo";
+        $("data").value = hojeISO();
+        $("avaliador").value = "Ana Martins";
+        $("periodo").value = "Janeiro a Dezembro de 2025";
+        $("notaDesempenho").value = "4";
+        $("notaComportamento").value = "4";
+        $("comentDesempenho").value = "Executa bem as tarefas no campo, conhece o trabalho e raramente precisa de ser corrigido. Mantém um bom ritmo e resolve problemas simples de forma autónoma.";
+        $("comentComportamento").value = "É pontual, cumpre orientações e colabora com a equipa. Quando surge pressão, mantém uma atitude estável e respeitosa.";
+        $("pontosFortes").value = "Fiável, responsável, bom ritmo no terreno, boa adaptação às tarefas e disponibilidade para ajudar quando necessário.";
+        $("pontosMelhorar").value = "Por vezes executa algumas tarefas de forma apressada e pode reforçar o cuidado com equipamento e material.";
+      } else {
+        $("nome").value = "Ana Costa";
+        $("funcao").value = "Administrativa";
+        $("tipoFuncao").value = "admin";
+        $("data").value = hojeISO();
+        $("avaliador").value = "Rui Ferreira";
+        $("periodo").value = "Janeiro a Dezembro de 2025";
+        $("notaDesempenho").value = "3";
+        $("notaComportamento").value = "3";
+        $("comentDesempenho").value = "Cumpre as tarefas, mas por vezes deixa assuntos pendentes e precisa de acompanhamento para fechar processos. Quando está focada, a execução é consistente.";
+        $("comentComportamento").value = "É educada e disponível, mas nem sempre comunica atempadamente quando algo fica por tratar ou quando encontra dificuldades.";
+        $("pontosFortes").value = "Organizada, domina bem os sistemas e responde quando solicitada. Mantém boa relação com colegas.";
+        $("pontosMelhorar").value = "Comunicação interna e acompanhamento de tarefas pendentes, garantindo conclusão consistente e cumprimento de prazos.";
+      }
+      $("status").textContent = "Exemplo carregado. Clica em “Gerar ficha”.";
+      $("status").style.color = "var(--muted)";
+    }
+
+    // ---------- Eventos ----------
+    window.addEventListener("DOMContentLoaded", () => {
+      $("data").value = hojeISO();
+
+      $("btnGerar").addEventListener("click", (e) => { e.preventDefault(); gerarFicha(); });
+      $("btnCopiar").addEventListener("click", (e) => { e.preventDefault(); copiar(); });
+      $("btnImprimir").addEventListener("click", (e) => { e.preventDefault(); imprimir(); });
+      $("btnDownload").addEventListener("click", (e) => { e.preventDefault(); downloadTxt(); });
+      $("btnLimpar").addEventListener("click", (e) => { e.preventDefault(); limpar(); });
+
+      $("btnExemploCampo").addEventListener("click", (e) => { e.preventDefault(); preencherExemplo("campo"); });
+      $("btnExemploAdmin").addEventListener("click", (e) => { e.preventDefault(); preencherExemplo("admin"); });
+    });
+  </script>
+</body>
+</html>
