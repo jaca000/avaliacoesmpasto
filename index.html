@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Monte do Pasto — Avaliação Anual</title>
 
   <style>
     :root{
-      --bg:#f4f5f2;          /* fundo claro */
-      --card:#ffffff;        /* cartões brancos */
-      --text:#2b2b2b;        /* texto principal */
-      --muted:#6f6f6f;       /* texto secundário */
-      --accent:#2e7d32;      /* verde Monte do Pasto */
+      --bg:#f4f5f2;
+      --card:#ffffff;
+      --text:#2b2b2b;
+      --muted:#6f6f6f;
+      --accent:#2e7d32;
       --border:#dcdcdc;
       --shadow:0 8px 20px rgba(0,0,0,.08);
       --radius:16px;
@@ -26,17 +26,15 @@
       color:var(--text);
     }
 
-    /* ---------- HEADER ---------- */
     header{
       text-align:center;
       padding:36px 20px 24px;
-      background:#ffffff;
+      background:#fff;
       border-bottom:1px solid var(--border);
     }
 
     .logo{
       max-height:150px;
-      width:auto;
       margin-bottom:16px;
     }
 
@@ -44,7 +42,6 @@
       margin:0;
       font-size:28px;
       font-weight:700;
-      color:#1f1f1f;
     }
 
     header p{
@@ -52,10 +49,8 @@
       max-width:760px;
       color:var(--muted);
       font-size:16px;
-      line-height:1.4;
     }
 
-    /* ---------- MAIN ---------- */
     main{
       max-width:1100px;
       margin:0 auto;
@@ -80,7 +75,6 @@
     h2{
       margin:0 0 14px;
       font-size:17px;
-      color:#1f1f1f;
     }
 
     label{
@@ -96,7 +90,6 @@
       border-radius:12px;
       border:1px solid var(--border);
       background:#fafafa;
-      color:var(--text);
       font-size:14px;
     }
 
@@ -115,7 +108,6 @@
       .grid{grid-template-columns:1fr}
     }
 
-    /* ---------- BOTÕES ---------- */
     .actions{
       margin-top:16px;
       display:flex;
@@ -128,24 +120,18 @@
       border-radius:999px;
       border:1px solid var(--border);
       background:#f0f0f0;
-      color:#1f1f1f;
       cursor:pointer;
       font-weight:600;
     }
 
     button.primary{
       background:var(--accent);
-      border:none;
       color:#fff;
+      border:none;
     }
 
-    button.primary:hover{
-      opacity:.9;
-    }
-
-    /* ---------- OUTPUT ---------- */
     .paper{
-      background:#ffffff;
+      background:#fff;
       color:#111;
       padding:22px;
       border-radius:12px;
@@ -157,12 +143,11 @@
       line-height:1.45;
     }
 
-    /* ---------- PRINT ---------- */
     @media print{
       body{background:#fff}
       header, .card.form, .actions{display:none}
-      main{display:block; padding:0}
-      .paper{max-height:none; border:none}
+      main{display:block;padding:0}
+      .paper{max-height:none;border:none}
     }
   </style>
 </head>
@@ -173,8 +158,8 @@
   <img src="logo-monte-do-pasto.png" alt="Monte do Pasto" class="logo">
   <h1>Avaliação Anual de Colaboradores</h1>
   <p>
-    Preenche os dados, escolhe o tipo de função e atribui as classificações.
-    A ferramenta gera automaticamente uma ficha anual clara, justa e pronta a arquivar.
+    Ferramenta interna para avaliação clara, justa e objetiva dos colaboradores
+    do Monte do Pasto.
   </p>
 </header>
 
@@ -190,7 +175,7 @@
         <input id="nome">
       </div>
       <div>
-        <label>Função desempenhada</label>
+        <label>Função</label>
         <input id="funcao">
       </div>
       <div>
@@ -206,28 +191,36 @@
       </div>
     </div>
 
-    <h2 style="margin-top:20px;">Classificações</h2>
+    <h2 style="margin-top:20px;">Avaliação com nota</h2>
 
     <div class="grid">
       <div>
-        <label>Desempenho (1–5)</label>
-        <select id="desempenho">
-          <option>5</option><option>4</option><option selected>3</option><option>2</option><option>1</option>
+        <label>Nível de Desempenho (1–5)</label>
+        <select id="nivelDesempenho">
+          <option value="5">5 — Muito bom</option>
+          <option value="4">4 — Bom</option>
+          <option value="3" selected>3 — Suficiente</option>
+          <option value="2">2 — Fraco</option>
+          <option value="1">1 — Muito fraco</option>
         </select>
       </div>
       <div>
-        <label>Comportamento (1–5)</label>
-        <select id="comportamento">
-          <option>5</option><option>4</option><option selected>3</option><option>2</option><option>1</option>
+        <label>Nível de Atitude no Trabalho (1–5)</label>
+        <select id="nivelAtitude">
+          <option value="5">5 — Muito boa</option>
+          <option value="4">4 — Boa</option>
+          <option value="3" selected>3 — Suficiente</option>
+          <option value="2">2 — Fraca</option>
+          <option value="1">1 — Muito fraca</option>
         </select>
       </div>
     </div>
 
-    <label>Comentário sobre o desempenho</label>
-    <textarea id="cDes"></textarea>
+    <label>Comentário sobre o trabalho realizado</label>
+    <textarea id="textoTrabalho"></textarea>
 
-    <label>Comentário sobre o comportamento</label>
-    <textarea id="cComp"></textarea>
+    <label>Comentário sobre a atitude no trabalho</label>
+    <textarea id="textoAtitude"></textarea>
 
     <label>Pontos fortes</label>
     <textarea id="fortes"></textarea>
@@ -255,30 +248,46 @@ FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
 
 <script>
 function gerar(){
-  const g=id=>document.getElementById(id).value;
+  const v=id=>document.getElementById(id).value;
+
+  const textoGlobal =
+`${v("textoTrabalho")} ${v("textoAtitude")} ${v("fortes")} ${v("melhorar")}`.toLowerCase();
+
+  let blocoEquipa = "";
+  if(/equipa|colega|colegas|ajuda|colabora|conflito|trabalha com/.test(textoGlobal)){
+    blocoEquipa = `
+Trabalho em Equipa:
+Com base na avaliação realizada, o colaborador demonstra uma forma de integração
+na equipa que deve ser considerada no contexto do seu desempenho global,
+sendo importante manter ou melhorar a colaboração e a comunicação com os colegas.
+`;
+  }
+
   document.getElementById("out").textContent =
 `FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
 
-Colaborador: ${g("nome")}
-Função: ${g("funcao")}
-Tipo de função: ${g("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}
-Data: ${g("data")}
+Colaborador: ${v("nome")}
+Função: ${v("funcao")}
+Tipo de função: ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}
+Data: ${v("data")}
 
-Desempenho (${g("desempenho")}/5):
-${g("cDes")}
+Nível de Desempenho: ${v("nivelDesempenho")}/5
+${v("textoTrabalho")}
 
-Comportamento (${g("comportamento")}/5):
-${g("cComp")}
+Nível de Atitude no Trabalho: ${v("nivelAtitude")}/5
+${v("textoAtitude")}
 
+${blocoEquipa}
 Pontos fortes:
-${g("fortes")}
+${v("fortes")}
 
 Aspetos a melhorar:
-${g("melhorar")}
+${v("melhorar")}
 
 Conclusão:
-Avaliação realizada com base no desempenho observado ao longo do período avaliado,
-visando a melhoria contínua e o alinhamento com os valores do Monte do Pasto.`;
+Avaliação efetuada com base no trabalho observado ao longo do período avaliado,
+com o objetivo de promover a melhoria contínua e o alinhamento com os valores
+e necessidades do Monte do Pasto.`;
 }
 </script>
 
