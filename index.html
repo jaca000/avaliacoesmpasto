@@ -46,6 +46,7 @@ input,select,textarea{
 textarea{min-height:90px}
 button{
   margin-top:12px;
+  margin-right:8px;
   padding:10px 16px;
   border-radius:20px;
   border:1px solid #ccc;
@@ -70,12 +71,12 @@ button{
   text-align:center;
 }
 
-.pdf-header{display:none}
-
 #out.editable{
   outline:3px dashed #8da58f;
   outline-offset:6px;
 }
+
+.pdf-header{display:none}
 
 @page{size:A4;margin:25mm 20mm}
 @media print{
@@ -163,6 +164,7 @@ button{
   <label>Aspetos a melhorar (;)</label>
   <textarea id="melhorar"></textarea>
 
+  <button onclick="preencherExemplo()">Preencher com exemplo</button>
   <button onclick="gerar()">Gerar ficha</button>
   <button onclick="toggleEdicao()">Ativar edição do texto</button>
   <button onclick="window.print()">Imprimir / PDF</button>
@@ -177,6 +179,62 @@ button{
 <script>
 const labels={5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
 let edit=false;
+let ultimoExemplo=-1;
+
+const exemplos=[
+  {
+    ano:"2026",
+    nome:"João Silva",
+    funcao:"Trabalhador Agrícola",
+    tipo:"campo",
+    nd:3, na:4, ne:3,
+    tTrab:"Cumpre as tarefas com regularidade, mas precisa de melhorar a organização e o controlo do trabalho.",
+    tAti:"Mantém uma atitude positiva e colaborativa, embora por vezes revele alguma resistência a alterações.",
+    fortes:"responsabilidade; disponibilidade",
+    melhorar:"organização; atenção ao detalhe"
+  },
+  {
+    ano:"2026",
+    nome:"Ana Costa",
+    funcao:"Administrativa",
+    tipo:"admin",
+    nd:4, na:4, ne:4,
+    tTrab:"Executa tarefas administrativas com rigor e autonomia, cumprindo prazos e procedimentos.",
+    tAti:"Postura profissional consistente, com boa comunicação e espírito de colaboração.",
+    fortes:"organização; comunicação; autonomia",
+    melhorar:"priorização de tarefas"
+  },
+  {
+    ano:"2026",
+    nome:"Carlos Mendes",
+    funcao:"Chefe de Equipa",
+    tipo:"chefia",
+    nd:4, na:3, ne:4,
+    tTrab:"Coordena a equipa de forma eficaz, assegurando o cumprimento dos objetivos definidos.",
+    tAti:"Mantém uma postura profissional, embora possa melhorar a gestão de conflitos.",
+    fortes:"liderança; sentido de responsabilidade",
+    melhorar:"gestão de conflitos; comunicação em situações de pressão"
+  }
+];
+
+function preencherExemplo(){
+  let i;
+  do{i=Math.floor(Math.random()*exemplos.length)}while(i===ultimoExemplo);
+  ultimoExemplo=i;
+  const e=exemplos[i];
+  ano.value=e.ano;
+  nome.value=e.nome;
+  funcao.value=e.funcao;
+  tipo.value=e.tipo;
+  data.value=new Date().toISOString().slice(0,10);
+  nd.value=e.nd;
+  na.value=e.na;
+  ne.value=e.ne;
+  tTrab.value=e.tTrab;
+  tAti.value=e.tAti;
+  fortes.value=e.fortes;
+  melhorar.value=e.melhorar;
+}
 
 function toggleEdicao(){
   edit=!edit;
@@ -192,9 +250,9 @@ function gerar(){
   const tipo=g("tipo");
   const contexto=
     tipo==="chefia"
-      ? "num contexto de coordenação, liderança e tomada de decisão"
+      ? "num contexto de liderança, coordenação e tomada de decisão"
       : tipo==="admin"
-        ? "no contexto administrativo e de suporte"
+        ? "no contexto administrativo e de apoio"
         : "no contexto operacional e de trabalho no terreno";
 
   const bloco=(t,n,txt)=>`
@@ -207,12 +265,11 @@ function gerar(){
         Existem aspetos positivos a manter e oportunidades de melhoria a desenvolver.
         Recomenda-se acompanhamento contínuo e definição de prioridades claras.
         A consistência ao longo do tempo será determinante para a evolução.
-        O enquadramento apresentado reflete a observação global do período.
         Este domínio deverá continuar a ser acompanhado no próximo ciclo.
       </p>
     </div>`;
 
-  document.getElementById("out").innerHTML=`
+  out.innerHTML=`
     <div class="pdf-header">
       <img src="logo-monte-do-pasto.png">
       <h1>Monte do Pasto — Avaliação Anual</h1>
@@ -222,7 +279,7 @@ function gerar(){
       <strong>Ano:</strong> ${g("ano")}<br>
       <strong>Nome:</strong> ${g("nome")}<br>
       <strong>Função:</strong> ${g("funcao")}<br>
-      <strong>Tipo:</strong> ${tipo}<br>
+      <strong>Tipo de função:</strong> ${tipo}<br>
       <strong>Data:</strong> ${g("data")}
     </p>
 
@@ -234,10 +291,8 @@ function gerar(){
       <h2>Conclusão e Objetivos</h2>
       <p>
         A presente avaliação sintetiza o período observado ${contexto}.
-        O desempenho global revela um enquadramento consistente com a função exercida.
         Devem ser mantidos os pontos fortes identificados e trabalhadas as áreas de melhoria.
         Recomenda-se a definição de objetivos claros, realistas e acompanhados regularmente.
-        O acompanhamento próximo permitirá consolidar resultados e promover evolução.
         Este documento serve de base para o próximo ciclo de avaliação.
       </p>
     </div>
