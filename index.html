@@ -6,83 +6,97 @@
 <title>Monte do Pasto — Avaliação Anual</title>
 
 <style>
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:#f4f5f2;
-  color:#2b2b2b;
-}
-header{
-  text-align:center;
-  padding:28px 20px;
-  background:#fff;
-  border-bottom:1px solid #ccc;
-}
-header img{max-height:110px}
-main{
-  max-width:1100px;
-  margin:0 auto;
-  padding:28px 20px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
-}
-@media(max-width:900px){main{grid-template-columns:1fr}}
-.card{
-  background:#fff;
-  border:1px solid #ddd;
-  border-radius:12px;
-  padding:20px;
-}
-label{display:block;margin-top:12px;font-size:13px;color:#555}
-input,select,textarea{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:14px;
-}
-textarea{min-height:90px}
-button{
-  margin-top:16px;
-  padding:10px 16px;
-  border-radius:20px;
-  border:1px solid #ccc;
-  background:#eee;
-  cursor:pointer;
-  font-weight:600;
-}
-.paper{
-  background:#fff;
-  padding:32px;
-  border:1px solid #ccc;
-  font-family:"Times New Roman", serif;
-  line-height:1.65;
-}
-.pdf-header{display:none}
-.small-note{font-size:12px;color:#666;margin-top:8px;line-height:1.4}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    background:#f4f5f2;
+    color:#2b2b2b;
+  }
+  header{
+    text-align:center;
+    padding:28px 20px;
+    background:#fff;
+    border-bottom:1px solid #ccc;
+  }
+  header img{max-height:110px}
+  main{
+    max-width:1120px;
+    margin:0 auto;
+    padding:28px 20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+  }
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .card{
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:20px;
+  }
+  label{display:block;margin-top:12px;font-size:13px;color:#555}
+  input,select,textarea{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:14px;
+  }
+  textarea{min-height:92px}
+  button{
+    margin-top:12px;
+    margin-right:8px;
+    padding:10px 16px;
+    border-radius:20px;
+    border:1px solid #ccc;
+    background:#eee;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .hint{
+    font-size:12px;color:#666;margin-top:10px;line-height:1.35
+  }
 
-@page{size:A4;margin:25mm 20mm}
-@media print{
-  header,.card.form,button{display:none}
-  main{display:block;padding:0}
-  .paper{border:none;padding:0}
-  .pdf-header{
-    display:flex;
-    align-items:center;
-    border-bottom:2px solid #000;
-    padding-bottom:10px;
-    margin-bottom:20px;
+  .paper{
+    background:#fff;
+    padding:32px;
+    border:1px solid #ccc;
+    font-family:"Times New Roman", serif;
+    line-height:1.65;
   }
-  .pdf-header img{height:60px;margin-right:18px}
-  .section{margin-bottom:20px;page-break-inside:avoid}
-  .section h2{
-    margin:0 0 8px;
-    font-size:14pt;
-    border-bottom:1px solid #000;
-    padding-bottom:4px;
+
+  /* edição direta do lado direito */
+  #out.editable{
+    outline:3px dashed #8da58f;
+    outline-offset:6px;
+    border-radius:6px;
   }
-}
+  #out.editable:focus{outline-color:#5f7d67}
+
+  .pdf-header{display:none}
+
+  @page{size:A4;margin:25mm 20mm}
+  @media print{
+    header,.card.form,button,.hint{display:none}
+    main{display:block;padding:0}
+    .paper{border:none;padding:0}
+    .pdf-header{
+      display:flex;
+      align-items:center;
+      border-bottom:2px solid #000;
+      padding-bottom:10px;
+      margin-bottom:18px;
+    }
+    .pdf-header img{height:60px;margin-right:18px}
+    .section{margin-bottom:18px;page-break-inside:avoid}
+    .section h2{
+      margin:0 0 8px;
+      font-size:14pt;
+      border-bottom:1px solid #000;
+      padding-bottom:4px;
+    }
+  }
 </style>
 </head>
 
@@ -129,6 +143,15 @@ button{
     <option value="1">1 — Muito fraca</option>
   </select>
 
+  <label>Nível de Trabalho em Equipa</label>
+  <select id="ne">
+    <option value="5">5 — Muito bom</option>
+    <option value="4">4 — Bom</option>
+    <option value="3" selected>3 — Suficiente</option>
+    <option value="2">2 — Fraco</option>
+    <option value="1">1 — Muito fraco</option>
+  </select>
+
   <label>Comentário sobre o desempenho (texto livre)</label>
   <textarea id="tTrab" placeholder="Ex.: Muito dedicado, mas precisa de melhorar a organização e o controlo de qualidade..."></textarea>
 
@@ -141,14 +164,17 @@ button{
   <label>Aspetos a melhorar (separar por ;)</label>
   <textarea id="melhorar" placeholder="Ex.: organização; comunicação; atenção ao detalhe"></textarea>
 
-  <div class="small-note">
-    A geração de texto adapta-se ao que escreves (mesmo com alguns erros).<br>
-    O campo <b>ANO DA AVALIAÇÃO</b> é obrigatório.
+  <div class="hint">
+    O texto é gerado com base no que é escrito (tolerando alguns erros).<br>
+    Pode editar diretamente o texto do lado direito antes de imprimir o PDF.
   </div>
 
-  <button onclick="preencherExemplo()">Preencher com exemplo</button>
-  <button onclick="gerar()">Gerar ficha</button>
-  <button onclick="window.print()">Imprimir / PDF</button>
+  <div class="btn-row">
+    <button onclick="preencherExemplo()">Preencher com exemplo</button>
+    <button onclick="gerar()">Gerar ficha</button>
+    <button onclick="toggleEdicao()">Ativar edição do texto</button>
+    <button onclick="window.print()">Imprimir / PDF</button>
+  </div>
 </section>
 
 <section class="card">
@@ -158,19 +184,24 @@ button{
 </main>
 
 <script>
-/* ================= BASE (congelada) ================= */
+/* ===================== BASE ===================== */
 const labels = {5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
-let ultimo = -1;
+let ultimoExemplo = -1;
 
+/* memória curta anti-repetição (na sessão) */
+const recentStarts = [];
+const RECENT_LIMIT = 12;
+
+/* exemplos (random, sem repetir seguido) */
 const exemplos = [
   {
     ano:"2026",
     nome:"João Silva",
     funcao:"Trabalhador Agrícola",
     tipo:"campo",
-    nd:3, na:4,
+    nd:3, na:4, ne:3,
     tTrab:"Cumpre as tarefas com regularidade, mas nota-se falta de organizacao em dias de maior volume e alguma distração na verificação final.",
-    tAti:"Mantém atitude positiva, boa colaboração, embora por vezes mostre resistência a mudanças no plano de trabalho.",
+    tAti:"Mantém atitude positiva e colaboração, embora por vezes mostre resistência a mudanças no plano de trabalho.",
     fortes:"responsabilidade; disponibilidade; adaptação ao trabalho no terreno",
     melhorar:"organização; atenção ao detalhe; planeamento"
   },
@@ -179,7 +210,7 @@ const exemplos = [
     nome:"Ana Costa",
     funcao:"Administrativa",
     tipo:"admin",
-    nd:4, na:4,
+    nd:4, na:4, ne:4,
     tTrab:"Executa tarefas administrativas com rigor e cumprimnto de prazos, com boa autonomia e atenção ao registo de informação.",
     tAti:"Postura profissional consistente, comunicação clara com colegas e disponibilidade para apoiar quando necessário.",
     fortes:"organização; autonomia; comunicação",
@@ -190,8 +221,8 @@ const exemplos = [
     nome:"Carlos Mendes",
     funcao:"Auxiliar de Armazém",
     tipo:"campo",
-    nd:2, na:3,
-    tTrab:"Em alguns dias falha no ritmo e no controlo de qualidade; precisa de mais consistência e atenção a segurança.",
+    nd:2, na:3, ne:2,
+    tTrab:"Em alguns dias falha no ritmo e no controlo de qualidade; precisa de mais consistência e atenção à segurança.",
     tAti:"Atitude geralmente correta, mas reage mal a correções e perde foco em momentos de pressão.",
     fortes:"disponibilidade; aprendizagem",
     melhorar:"consistência; segurança; atenção ao detalhe; resposta a feedback"
@@ -199,9 +230,10 @@ const exemplos = [
 ];
 
 function preencherExemplo(){
-  let i; do { i = Math.floor(Math.random()*exemplos.length); } while(i===ultimo);
-  ultimo = i;
+  let i; do { i = Math.floor(Math.random()*exemplos.length); } while(i===ultimoExemplo);
+  ultimoExemplo = i;
   const e = exemplos[i];
+
   ano.value = e.ano;
   nome.value = e.nome;
   funcao.value = e.funcao;
@@ -209,15 +241,11 @@ function preencherExemplo(){
   data.value = new Date().toISOString().slice(0,10);
   nd.value = e.nd;
   na.value = e.na;
+  ne.value = e.ne;
   tTrab.value = e.tTrab;
   tAti.value = e.tAti;
   fortes.value = e.fortes;
   melhorar.value = e.melhorar;
-}
-
-function lista(txt){
-  return txt.split(";").map(t=>t.trim()).filter(Boolean)
-    .map(t=>"• "+escapeHtml(t)).join("<br>");
 }
 
 function escapeHtml(str){
@@ -226,11 +254,16 @@ function escapeHtml(str){
   }[m]));
 }
 
-/* ================= "IA" leve: interpretação + correção =================
-   Objetivo: extrair temas mesmo com erros ortográficos e gerar texto diferente e contextual.
-*/
+function lista(txt){
+  const items = (txt ?? "")
+    .split(";")
+    .map(t=>t.trim())
+    .filter(Boolean);
 
-/* --- PRNG determinístico por input (para não repetir ao acaso sem razão) --- */
+  return items.length ? items.map(t=>"• "+escapeHtml(t)).join("<br>") : "—";
+}
+
+/* ===================== PRNG determinístico ===================== */
 function hashString(s){
   s = String(s ?? "");
   let h = 2166136261;
@@ -252,8 +285,25 @@ function makeRng(seed){
 function pick(rng, arr){
   return arr[Math.floor(rng()*arr.length)];
 }
+function pickNonRepeatingStart(rng, arr){
+  // tenta evitar repetir os mesmos inícios de frase na sessão
+  for(let tries=0; tries<8; tries++){
+    const cand = pick(rng, arr);
+    const startKey = cand.slice(0, 42).toLowerCase();
+    if(!recentStarts.includes(startKey)){
+      recentStarts.push(startKey);
+      while(recentStarts.length > RECENT_LIMIT) recentStarts.shift();
+      return cand;
+    }
+  }
+  const fallback = pick(rng, arr);
+  const startKey = fallback.slice(0, 42).toLowerCase();
+  recentStarts.push(startKey);
+  while(recentStarts.length > RECENT_LIMIT) recentStarts.shift();
+  return fallback;
+}
 
-/* --- Levenshtein (para tolerar erros) --- */
+/* ===================== “IA leve”: normalização + fuzzy ===================== */
 function levenshtein(a,b){
   a = a || ""; b = b || "";
   const n=a.length, m=b.length;
@@ -273,12 +323,10 @@ function levenshtein(a,b){
   }
   return dp[m];
 }
-
-/* --- Normalização + tokenização --- */
 function normalizeText(s){
   return (s ?? "")
     .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"") // remove acentos
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
     .replace(/[^a-z0-9\s]/g," ")
     .replace(/\s+/g," ")
     .trim();
@@ -288,52 +336,47 @@ function tokens(s){
   return t ? t.split(" ") : [];
 }
 
-/* --- Vocabulário de temas (com sinónimos) --- */
+/* temas + sinónimos */
 const THEMES = [
   {key:"organizacao", label:"organização", pos:["organizacao","organizado","planeamento","planear","priorizacao","priorizar","metodo"], neg:["desorganizacao","atrasos","confusao"]},
-  {key:"pontualidade", label:"pontualidade", pos:["pontual","pontualidade"], neg:["atraso","atrasos","tardio"]},
-  {key:"qualidade", label:"qualidade", pos:["qualidade","rigor","precisao","exatidao","verificacao","controlo"], neg:["erro","erros","falhas","retrabalho"]},
-  {key:"produtividade", label:"produtividade/ritmo", pos:["ritmo","produtividade","eficiencia","agilidade"], neg:["lento","lentidao","quebra","paragens"]},
-  {key:"autonomia", label:"autonomia", pos:["autonomia","autonomo","iniciativa","proatividade"], neg:["dependente","precisa","orientacao","supervisao"]},
-  {key:"comunicacao", label:"comunicação", pos:["comunicacao","claro","clareza","articulacao"], neg:["falha","malentendido","ruido"]},
+  {key:"prazos", label:"cumprimento de prazos", pos:["prazo","prazos","cumprimento","cumprir","pontual","pontualidade"], neg:["atraso","atrasos","tardio"]},
+  {key:"qualidade", label:"qualidade/rigor", pos:["qualidade","rigor","precisao","verificacao","controlo"], neg:["erro","erros","falhas","retrabalho"]},
+  {key:"ritmo", label:"ritmo/produtividade", pos:["ritmo","produtividade","eficiencia","agilidade"], neg:["lento","lentidao","paragens","quebra"]},
+  {key:"autonomia", label:"autonomia/iniciativa", pos:["autonomia","autonomo","iniciativa","proatividade"], neg:["dependente","precisa","orientacao","supervisao"]},
+  {key:"comunicacao", label:"comunicação", pos:["comunicacao","claro","clareza","articulacao"], neg:["malentendido","ruido","falha"]},
   {key:"equipa", label:"trabalho em equipa", pos:["equipa","colaboracao","colabora","ajuda","entreajuda"], neg:["isolado","conflito","tensao"]},
-  {key:"seguranca", label:"segurança", pos:["seguranca","seguro","epi","procedimentos","regras"], neg:["risco","perigo","imprudencia"]},
-  {key:"atitude", label:"atitude", pos:["positivo","respeito","disponibilidade","empenho"], neg:["resistencia","reage","mal","desmotivado"]},
+  {key:"seguranca", label:"segurança", pos:["seguranca","epi","procedimentos","regras"], neg:["risco","perigo","imprudencia"]},
   {key:"atencao", label:"atenção ao detalhe", pos:["detalhe","atencao","cuidado"], neg:["distraido","distracao","esquece"]},
+  {key:"atitude", label:"atitude/postura", pos:["positivo","respeito","disponibilidade","empenho","motivacao"], neg:["resistencia","desmotivado","reage","irritado"]}
 ];
 
-/* cria uma lista de palavras “canónicas” para fuzzy match */
 const CANON_WORDS = (() => {
   const set = new Set();
   for(const th of THEMES){
-    for(const w of th.pos) set.add(w);
-    for(const w of th.neg) set.add(w);
+    th.pos.forEach(w=>set.add(w));
+    th.neg.forEach(w=>set.add(w));
   }
   return Array.from(set);
 })();
 
-/* Corrige token para palavra canónica se estiver “perto” */
 function correctToken(tok){
   if(!tok || tok.length < 4) return tok;
   let best = tok, bestD = 99;
-  // limite depende do tamanho (mais tolerante em palavras longas)
   const maxD = tok.length <= 6 ? 1 : 2;
   for(const w of CANON_WORDS){
     const d = levenshtein(tok, w);
     if(d < bestD){
-      bestD = d;
-      best = w;
+      bestD = d; best = w;
       if(bestD === 0) break;
     }
   }
   return (bestD <= maxD) ? best : tok;
 }
 
-/* Extrai temas do texto, aceitando erros */
 function extractThemes(text){
   const raw = tokens(text).map(correctToken);
   const counts = {};
-  for(const th of THEMES) counts[th.key] = 0;
+  THEMES.forEach(t=>counts[t.key]=0);
 
   for(const tok of raw){
     for(const th of THEMES){
@@ -343,22 +386,38 @@ function extractThemes(text){
     }
   }
 
-  // devolve top temas (com contagem)
-  const ranked = Object.entries(counts)
+  return Object.entries(counts)
     .filter(([,c])=>c>0)
     .sort((a,b)=>b[1]-a[1])
-    .map(([k,c])=>({key:k, count:c, label: THEMES.find(t=>t.key===k).label}));
-
-  return ranked;
+    .map(([k,c])=>({key:k,count:c,label:THEMES.find(t=>t.key===k).label}));
 }
 
-/* Monta uma frase com base em temas */
+/* âncoras do texto humano: extrai 1–2 expressões úteis */
+function extractAnchors(text){
+  const t = (text ?? "").trim();
+  if(!t) return [];
+  // cortar em frases, filtrar curtas, escolher as mais informativas (comprimento)
+  const parts = t
+    .replace(/\s+/g," ")
+    .split(/[.!?;]/)
+    .map(s=>s.trim())
+    .filter(s=>s.length >= 18);
+
+  // se não houver frases “boas”, usar trecho inicial
+  const pool = parts.length ? parts : [t.slice(0, 90)];
+  pool.sort((a,b)=>b.length-a.length);
+  const a1 = pool[0] ? pool[0].slice(0, 110) : "";
+  const a2 = pool[1] ? pool[1].slice(0, 90) : "";
+  return [a1,a2].filter(Boolean);
+}
+
+/* frase de temas (positiva/negativa) */
 function themesPhrase(rng, themes, kind){
   if(!themes.length){
     return kind==="pos"
       ? pick(rng, [
           "Foram identificados aspetos positivos relevantes, com contributo direto para o cumprimento das responsabilidades.",
-          "Observa-se um conjunto de práticas adequadas que sustentam o trabalho realizado ao longo do período avaliado."
+          "Observam-se práticas adequadas que sustentam o trabalho realizado ao longo do período."
         ])
       : pick(rng, [
           "Foram identificadas oportunidades de melhoria que, sendo trabalhadas, poderão reforçar a consistência dos resultados.",
@@ -369,8 +428,8 @@ function themesPhrase(rng, themes, kind){
   const join = top.length===1 ? top[0] : top.length===2 ? `${top[0]} e ${top[1]}` : `${top[0]}, ${top[1]} e ${top[2]}`;
   return kind==="pos"
     ? pick(rng, [
-        `Destacam-se aspetos ligados a ${join}, que contribuem de forma positiva para o desempenho global.`,
-        `Verifica-se especial incidência em ${join}, refletindo competências úteis e aplicáveis à função.`
+        `Destacam-se aspetos ligados a ${join}, com impacto positivo no desempenho global.`,
+        `Verifica-se incidência em ${join}, refletindo competências úteis para a função.`
       ])
     : pick(rng, [
         `As principais oportunidades de melhoria concentram-se em ${join}, devendo ser definidas prioridades claras.`,
@@ -378,9 +437,18 @@ function themesPhrase(rng, themes, kind){
       ]);
 }
 
-/* Constrói parágrafo com 9 frases (8–10) */
-function buildBlock(rng, title, nota, freeText, tipoFunc, focus){
-  // foco: "desempenho" | "atitude" | "equipa" | "conclusao"
+/* perfis de escrita (muda voz/estrutura sem o dizer) */
+function chooseStyleProfile(rng){
+  return pick(rng, ["analitico","direto","descritivo","processual"]);
+}
+
+/* alternância de foco narrativo */
+function chooseFocus(rng){
+  return pick(rng, ["processo","resultado","comportamento","impacto"]);
+}
+
+/* monta blocos 9 frases (8–10) com variação real e sem “avaliador” */
+function buildScoredBlock(rng, title, nota, tipoFunc, freeText, extraText){
   const tone =
     nota >= 4 ? "positivo" :
     nota === 3 ? "equilibrado" : "corretivo";
@@ -388,132 +456,175 @@ function buildBlock(rng, title, nota, freeText, tipoFunc, focus){
   const ctxFunc = (tipoFunc==="campo")
     ? pick(rng, [
         "no contexto operacional e de trabalho no terreno",
-        "no contexto das tarefas operacionais e rotinas de campo",
-        "no contexto de execução prática, com exigências de ritmo e consistência"
+        "no contexto das rotinas práticas e execução no terreno",
+        "no contexto operacional, com exigências de ritmo e consistência"
       ])
     : pick(rng, [
         "no contexto das tarefas administrativas e de apoio",
-        "no contexto de organização, registo e suporte administrativo",
-        "no contexto de processos internos, prazos e articulação com equipas"
+        "no contexto de processos internos, prazos e registos",
+        "no contexto de suporte administrativo e articulação com equipas"
       ]);
 
-  const themes = extractThemes(freeText);
-  const posPhrase = themesPhrase(rng, themes, "pos");
-  const negPhrase = themesPhrase(rng, themes, "neg");
+  const profile = chooseStyleProfile(rng);
+  const focus = chooseFocus(rng);
 
-  const opener = pick(rng, [
-    `Ao longo do período avaliado, foi observado um nível ${labels[nota].toLowerCase()} ${ctxFunc}.`,
-    `Durante o ano em análise, o colaborador evidenciou um nível ${labels[nota].toLowerCase()} ${ctxFunc}.`,
-    `No período considerado, a avaliação aponta para um nível ${labels[nota].toLowerCase()} ${ctxFunc}.`
-  ]);
+  const fullText = `${freeText ?? ""} ${extraText ?? ""}`.trim();
+  const themes = extractThemes(fullText);
+  const anchors = extractAnchors(freeText).concat(extractAnchors(extraText)).slice(0,2);
 
-  const noteLine = `A classificação atribuída (${nota}/5 — ${labels[nota]}) resulta da observação contínua e da informação registada pelo avaliador.`;
+  const openerOptions = [
+    `Durante o período em análise, foi observado um nível ${labels[nota].toLowerCase()} ${ctxFunc}.`,
+    `No período considerado, a avaliação enquadra-se num nível ${labels[nota].toLowerCase()} ${ctxFunc}.`,
+    `Ao longo do ano avaliado, verificou-se um nível ${labels[nota].toLowerCase()} ${ctxFunc}.`
+  ];
+  const s1 = pickNonRepeatingStart(rng, openerOptions);
 
-  // Frases adaptativas
-  const s1 = opener;
-  const s2 = pick(rng, [
-    "A execução das responsabilidades demonstrou coerência com as expectativas associadas à função.",
-    "Verificou-se alinhamento global com o conjunto de responsabilidades definidas para o cargo.",
-    "O trabalho desenvolvido foi, na generalidade, compatível com as exigências e rotinas da função."
-  ]);
-
-  const s3 = pick(rng, [
-    `O avaliador indica que ${freeText.trim() ? freeText.trim() : "existem elementos a considerar ao longo do período."}`,
-    `Conforme descrito pelo avaliador, ${freeText.trim() ? freeText.trim() : "o desempenho apresenta aspetos relevantes para análise."}`,
-    `Segundo o avaliador, ${freeText.trim() ? freeText.trim() : "foram observadas dinâmicas que justificam a avaliação atribuída."}`
-  ]);
-
-  const s4 = (tone==="positivo")
+  // âncora humana (se existir)
+  const anchorLine = anchors.length
     ? pick(rng, [
-        "A consistência dos resultados obtidos evidencia capacidade para manter padrões adequados ao longo do tempo.",
-        "A estabilidade demonstrada sugere maturidade na execução e boa gestão das prioridades do dia a dia.",
-        "Observa-se capacidade para responder às exigências do trabalho com previsibilidade e controlo."
-      ])
-    : (tone==="equilibrado")
-      ? pick(rng, [
-          "A consistência apresentada é adequada, existindo margem para reforçar o controlo e a previsibilidade dos resultados.",
-          "O desempenho é globalmente estável, sendo recomendável consolidar rotinas e melhorar a resposta em momentos de maior exigência.",
-          "O nível observado cumpre o essencial, com oportunidade para elevar a consistência e reduzir variabilidade."
-        ])
-      : pick(rng, [
-          "O desempenho apresenta variabilidade e requer reforço de acompanhamento para melhorar consistência e resultados.",
-          "Observam-se dificuldades que devem ser trabalhadas com orientação mais frequente e objetivos claros.",
-          "O nível registado indica necessidade de intervenção e suporte para elevar o padrão de execução."
-        ]);
-
-  const s5 = posPhrase;
-  const s6 = (tone==="positivo")
-    ? pick(rng, [
-        "Este conjunto de fatores sustenta um enquadramento favorável e recomenda a continuidade das boas práticas identificadas.",
-        "A manutenção deste padrão deverá ser incentivada, garantindo estabilidade e qualidade no próximo período.",
-        "Recomenda-se reforçar e preservar os comportamentos que contribuem para este resultado."
+        `Em particular, registou-se que ${anchors[0].toLowerCase()}.`,
+        `Em termos práticos, verificou-se que ${anchors[0].toLowerCase()}.`
       ])
     : pick(rng, [
-        negPhrase,
-        negPhrase
-      ][0]); // só para manter legibilidade
-
-  const s7 = (tone==="positivo")
-    ? pick(rng, [
-        "Ainda assim, mesmo em níveis elevados, é importante manter atenção a detalhes e a consistência em picos de trabalho.",
-        "Como em qualquer função, recomenda-se atenção contínua a rotinas e verificação, de forma a evitar falhas pontuais.",
-        "É aconselhável manter disciplina de execução, especialmente em períodos de maior carga."
-      ])
-    : (tone==="equilibrado")
-      ? pick(rng, [
-          "Uma melhoria gradual nestas áreas poderá refletir-se diretamente na qualidade e no ritmo do trabalho realizado.",
-          "O reforço de hábitos e métodos de trabalho poderá trazer ganhos de consistência e previsibilidade.",
-          "A consolidação de rotinas pode reduzir erros e aumentar eficiência."
-        ])
-      : pick(rng, [
-          "A abordagem a estas áreas deverá ser priorizada para reduzir erros, aumentar segurança e estabilizar resultados.",
-          "O foco deve incidir em correções concretas e acompanhadas, garantindo evolução visível no curto prazo.",
-          "É necessário concentrar esforços em medidas práticas para elevar o padrão de execução."
-        ]);
-
-  const s8 = (focus==="equipa")
-    ? pick(rng, [
-        "No domínio do trabalho em equipa, recomenda-se reforçar comunicação e coordenação, garantindo fluidez entre colegas.",
-        "A integração com a equipa deve ser acompanhada, favorecendo cooperação e alinhamento de tarefas.",
-        "Deverá promover-se articulação regular com colegas e chefia, reduzindo ruído e melhorando o planeamento."
-      ])
-    : pick(rng, [
-        "Este enquadramento é coerente com o registo do avaliador e com a observação do período em análise.",
-        "A descrição apresentada pelo avaliador sustenta a avaliação efetuada e clarifica o enquadramento do nível atribuído.",
-        "O conteúdo registado pelo avaliador dá suporte ao nível atribuído e ajuda a orientar o próximo período."
+        "Foram registados elementos relevantes para a análise deste período.",
+        "Observou-se informação suficiente para sustentar o enquadramento desta avaliação."
       ]);
 
-  const s9 = noteLine;
+  const themePos = themesPhrase(rng, themes, "pos");
+  const themeNeg = themesPhrase(rng, themes, "neg");
 
-  const sentences = [s1,s2,s3,s4,s5,s6,s7,s8,s9].map(s=>s.replace(/\s+/g," ").trim());
+  const toneLine =
+    tone==="positivo"
+      ? pick(rng, [
+          "A consistência dos resultados evidencia estabilidade e fiabilidade na execução.",
+          "O padrão de execução revelou-se sólido, com boa previsibilidade de resultados.",
+          "Observa-se capacidade para manter qualidade e ritmo ao longo do tempo."
+        ])
+      : tone==="equilibrado"
+        ? pick(rng, [
+            "O desempenho é globalmente adequado, existindo margem para consolidar consistência e método.",
+            "O nível observado cumpre o essencial, sendo recomendável reforçar previsibilidade e controlo.",
+            "Verifica-se estabilidade suficiente, com oportunidade para elevar padrões de forma progressiva."
+          ])
+        : pick(rng, [
+            "O desempenho apresenta fragilidades e requer reforço de acompanhamento e medidas práticas.",
+            "Observa-se variabilidade que deve ser reduzida através de objetivos claros e controlo regular.",
+            "O nível registado indica necessidade de intervenção orientada para elevar o padrão de execução."
+          ]);
+
+  // alternância de foco (muda ordem/ênfase)
+  const focusLine = (() => {
+    if(focus==="processo"){
+      return pick(rng, [
+        "A forma de organizar e executar as tarefas influencia diretamente a qualidade final e o cumprimento de prazos.",
+        "A consistência do método de trabalho é determinante para reduzir erros e estabilizar resultados.",
+        "A estrutura do trabalho diário tem impacto direto na eficiência e na segurança."
+      ]);
+    }
+    if(focus==="resultado"){
+      return pick(rng, [
+        "Os resultados obtidos ao longo do período mostram alinhamento global com as expectativas da função.",
+        "Os resultados observados são coerentes com o nível atribuído e com o contexto de trabalho.",
+        "O efeito do trabalho realizado é compatível com as exigências do cargo."
+      ]);
+    }
+    if(focus==="comportamento"){
+      return pick(rng, [
+        "A postura no dia a dia contribui para a fluidez do trabalho e para a estabilidade da equipa.",
+        "A forma de lidar com feedback e alterações influencia a adaptação e a consistência do desempenho.",
+        "A atitude perante prioridades e mudanças tem impacto direto na execução."
+      ]);
+    }
+    // impacto
+    return pick(rng, [
+      "O contributo para o funcionamento do serviço é visível na forma como as tarefas são concluídas e articuladas.",
+      "A forma de atuação afeta positivamente o trabalho de outros elementos quando existe clareza e coordenação.",
+      "O impacto no funcionamento global depende de consistência, comunicação e método."
+    ]);
+  })();
+
+  const profileLine = (() => {
+    if(profile==="analitico"){
+      return pick(rng, [
+        "Este enquadramento resulta de uma leitura global do período, integrando observação, registos e contexto da função.",
+        "A análise considera padrões de execução, comportamento e impacto no funcionamento diário.",
+        "A síntese efetuada baseia-se no conjunto de evidências recolhidas ao longo do período."
+      ]);
+    }
+    if(profile==="direto"){
+      return pick(rng, [
+        "O nível atribuído traduz o que foi observado no período e serve de base para o próximo ciclo.",
+        "A nota espelha a realidade do período e permite orientar prioridades de melhoria.",
+        "O enquadramento é claro e útil para definir objetivos e acompanhamento."
+      ]);
+    }
+    if(profile==="descritivo"){
+      return pick(rng, [
+        "No dia a dia, a execução revelou aspetos positivos e pontos a consolidar, conforme o contexto de trabalho.",
+        "A descrição do período evidencia práticas que funcionam bem e outras que devem ser reforçadas.",
+        "O retrato do período mostra coerência global, com áreas de desenvolvimento identificadas."
+      ]);
+    }
+    // processual
+    return pick(rng, [
+      "Recomenda-se transformar os pontos identificados em ações simples, com verificação periódica e acompanhamento.",
+      "A evolução depende de objetivos práticos, rotina de controlo e acompanhamento regular.",
+      "O progresso deve assentar em medidas concretas e repetíveis ao longo do tempo."
+    ]);
+  })();
+
+  const noteLine = `A classificação atribuída (${nota}/5 — ${labels[nota]}) traduz o enquadramento global observado.`;
+
+  // 9 frases (8–10)
+  const sentences = [
+    s1,
+    pick(rng, [
+      "A execução das responsabilidades demonstrou coerência com as exigências da função desempenhada.",
+      "Verificou-se alinhamento global com as responsabilidades associadas ao cargo.",
+      "O trabalho desenvolvido foi, na generalidade, compatível com as exigências da função."
+    ]),
+    anchorLine,
+    toneLine,
+    themePos,
+    (tone==="positivo" ? pick(rng, [
+      "Mesmo em níveis elevados, recomenda-se manter disciplina de verificação e consistência em picos de trabalho.",
+      "É importante manter hábitos de controlo e método, prevenindo falhas pontuais.",
+      "Recomenda-se atenção contínua a rotinas e verificação, especialmente em períodos de maior carga."
+    ]) : themeNeg),
+    focusLine,
+    profileLine,
+    noteLine
+  ].map(s=>String(s).replace(/\s+/g," ").trim());
 
   return `
-<div class="section">
-  <h2>${escapeHtml(title)}: ${nota}/5 — ${labels[nota]}</h2>
-  <p>${sentences.join(" ")}</p>
-</div>`;
+  <div class="section">
+    <h2>${escapeHtml(title)}: ${nota}/5 — ${labels[nota]}</h2>
+    <p>${sentences.join(" ")}</p>
+  </div>`;
 }
 
-/* Conclusão e Objetivos: usa notas + temas de fortes/melhorar + comentários */
-function buildConclusion(rng, nd, na, tipoFunc, fortesTxt, melhorarTxt, tTrabTxt, tAtiTxt){
-  const fortesThemes = extractThemes(fortesTxt + " " + tTrabTxt + " " + tAtiTxt);
-  const melhorarThemes = extractThemes(melhorarTxt + " " + tTrabTxt + " " + tAtiTxt);
-
-  const overall = (nd+na)/2;
-  const tone =
-    overall >= 4 ? "forte" :
-    overall >= 3 ? "estavel" : "critico";
-
+/* Conclusão e Objetivos: específica e não-carimbo */
+function buildConclusion(rng, tipoFunc, nd, na, ne, tTrab, tAti, fortesTxt, melhorarTxt){
   const ctx = (tipoFunc==="campo")
     ? "na componente operacional e no contexto de trabalho no terreno"
     : "na componente administrativa e no suporte aos processos internos";
 
-  const keep = themesPhrase(rng, fortesThemes, "pos");
-  const improve = themesPhrase(rng, melhorarThemes, "neg");
+  const overall = (nd+na+ne)/3;
+  const tone =
+    overall >= 4 ? "forte" :
+    overall >= 3 ? "estavel" : "critico";
+
+  const themesStrong = extractThemes(`${fortesTxt} ${tTrab} ${tAti}`);
+  const themesImprove = extractThemes(`${melhorarTxt} ${tTrab} ${tAti}`);
+
+  const keep = themesPhrase(rng, themesStrong, "pos");
+  const improve = themesPhrase(rng, themesImprove, "neg");
+
+  const anchors = extractAnchors(`${tTrab}. ${tAti}`).slice(0,1);
 
   const goals = (() => {
-    // objetivos curtos mas específicos, com base em temas mais prováveis
-    const t = (melhorarThemes.length ? melhorarThemes : [{label:"consistência e método de trabalho"}]).slice(0,3).map(x=>x.label);
+    const t = (themesImprove.length ? themesImprove : [{label:"consistência e método de trabalho"}])
+      .slice(0,3).map(x=>x.label);
     const a = [];
     a.push(`Definir objetivos mensuráveis ligados a ${t[0]} (ex.: rotina, verificação e registo do trabalho).`);
     if(t[1]) a.push(`Reforçar ${t[1]} através de acompanhamento periódico e priorização de tarefas.`);
@@ -521,79 +632,93 @@ function buildConclusion(rng, nd, na, tipoFunc, fortesTxt, melhorarTxt, tTrabTxt
     return a;
   })();
 
-  // 9 frases
-  const s1 = pick(rng, [
-    `A presente avaliação permite enquadrar o desempenho e a atitude do colaborador ${ctx}, com base na informação registada ao longo do ano.`,
-    `Com base no período avaliado, esta ficha sintetiza o contributo do colaborador ${ctx}, integrando observação contínua e registos do avaliador.`,
-    `Esta avaliação anual consolida a análise do trabalho desenvolvido ${ctx}, considerando desempenho, atitude e registos do período.`
+  const s1 = pickNonRepeatingStart(rng, [
+    `Esta avaliação anual sintetiza o período observado ${ctx}, integrando desempenho, atitude e trabalho em equipa.`,
+    `A presente avaliação consolida a leitura do período ${ctx}, considerando desempenho, atitude e trabalho em equipa.`,
+    `Esta ficha de avaliação enquadra o período analisado ${ctx}, com base nos registos e observações do ano.`
   ]);
 
-  const s2 = `Os níveis atribuídos (Desempenho: ${nd}/5 — ${labels[nd]}; Atitude: ${na}/5 — ${labels[na]}) traduzem o enquadramento global observado.`;
+  const s2 = `Os níveis atribuídos são: Desempenho ${nd}/5 — ${labels[nd]}, Atitude ${na}/5 — ${labels[na]} e Trabalho em Equipa ${ne}/5 — ${labels[ne]}.`;
 
-  const s3 = (tone==="forte")
+  const s3 = tone==="forte"
     ? pick(rng, [
-        "O resultado global é claramente positivo, indicando consistência, fiabilidade e bom alinhamento com as expectativas da função.",
-        "A avaliação global é muito favorável, evidenciando maturidade na execução e postura profissional adequada.",
-        "O enquadramento global demonstra elevado contributo e estabilidade no desempenho."
+        "O resultado global é muito favorável, indicando consistência, fiabilidade e bom alinhamento com as expectativas da função.",
+        "O enquadramento global é claramente positivo, com estabilidade na execução e postura adequada ao contexto.",
+        "O resultado global evidencia bom contributo e previsibilidade de resultados ao longo do período."
       ])
-    : (tone==="estavel")
+    : tone==="estavel"
       ? pick(rng, [
-          "O resultado global é estável, cumprindo o essencial, com margem para reforço de consistência e melhoria progressiva.",
-          "A avaliação global é equilibrada, demonstrando adequação ao cargo, embora com pontos a consolidar no próximo período.",
-          "O enquadramento global é satisfatório, recomendando-se foco em áreas específicas para elevar resultados."
+          "O resultado global é estável e satisfatório, existindo margem para reforço de consistência e melhoria progressiva.",
+          "A avaliação global é equilibrada, com pontos consolidados e áreas específicas a desenvolver no próximo ciclo.",
+          "O enquadramento global cumpre o essencial, recomendando-se foco em áreas concretas para elevar resultados."
         ])
       : pick(rng, [
-          "O resultado global indica necessidade de melhoria estruturada, com acompanhamento e objetivos claros no próximo período.",
-          "A avaliação global evidencia fragilidades que devem ser tratadas de forma prática e acompanhada.",
-          "O enquadramento global aponta para urgência de medidas de melhoria e controlo de execução."
+          "O resultado global indica necessidade de melhoria estruturada, com objetivos claros e acompanhamento regular.",
+          "A avaliação global evidencia fragilidades que devem ser trabalhadas com medidas práticas e controlo consistente.",
+          "O enquadramento global aponta para urgência de intervenção orientada para elevar o padrão de execução."
         ]);
 
-  const s4 = keep;
-  const s5 = pick(rng, [
-    "Estes pontos devem ser valorizados e mantidos, pois têm impacto direto na qualidade do trabalho e na estabilidade da equipa.",
-    "A manutenção destes aspetos é importante para garantir previsibilidade de resultados e bom funcionamento das rotinas.",
-    "A consolidação destes fatores contribui para eficácia e confiança no desempenho ao longo do tempo."
-  ]);
-
-  const s6 = improve;
-
-  const s7 = pick(rng, [
-    "Para o próximo período, recomenda-se a definição de objetivos claros, realistas e acompanhados em momentos regulares com a chefia.",
-    "No próximo ciclo, deverá ser estabelecido um plano simples de objetivos, com pontos de controlo e acompanhamento pela chefia.",
-    "Recomenda-se transformar os pontos a melhorar em objetivos práticos, com verificação periódica de evolução."
-  ]);
-
-  const s8 = goals.length
+  const s4 = anchors.length
     ? pick(rng, [
-        `Objetivos propostos: ${goals.join(" ")}`,
-        `Linhas de objetivos: ${goals.join(" ")}`,
-        `Objetivos para o próximo período: ${goals.join(" ")}`
+        `Em termos práticos, destacou-se que ${anchors[0].toLowerCase()}.`,
+        `Registou-se como aspeto relevante que ${anchors[0].toLowerCase()}.`
       ])
-    : "Objetivos propostos: definir metas claras e acompanhadas, alinhadas com a função e com as prioridades da organização.";
+    : pick(rng, [
+        "A leitura do período evidencia aspetos positivos e oportunidades de melhoria com impacto direto no trabalho diário.",
+        "O período analisado permite identificar pontos fortes e áreas de desenvolvimento relevantes."
+      ]);
+
+  const s5 = keep;
+  const s6 = pick(rng, [
+    "Estes aspetos devem ser mantidos e valorizados, pois contribuem para a estabilidade do serviço e para a qualidade do trabalho.",
+    "A consolidação destes pontos é importante para garantir previsibilidade de resultados e bom funcionamento das rotinas.",
+    "A manutenção destes fatores sustenta a eficácia e reduz variabilidade ao longo do tempo."
+  ]);
+
+  const s7 = improve;
+
+  const s8 = pick(rng, [
+    "Para o próximo período, recomenda-se definir objetivos claros, realistas e acompanhados em momentos regulares com a chefia.",
+    "No próximo ciclo, deverá ser estabelecido um plano simples de objetivos, com pontos de controlo e acompanhamento periódico.",
+    "Recomenda-se transformar os aspetos a melhorar em objetivos práticos, com verificação regular de evolução."
+  ]);
 
   const s9 = pick(rng, [
-    "Esta conclusão deve servir como base para o acompanhamento e para uma evolução sustentada, mantendo o foco em resultados e consistência.",
-    "A presente avaliação fica como base de trabalho para acompanhamento, com foco em consistência, qualidade e alinhamento de expectativas.",
-    "Esta ficha pretende suportar a melhoria contínua, através de objetivos concretos e acompanhamento regular."
+    `Objetivos propostos: ${goals.join(" ")}`,
+    `Linhas de objetivos: ${goals.join(" ")}`,
+    `Objetivos para o próximo período: ${goals.join(" ")}`
   ]);
 
-  const sentences = [s1,s2,s3,s4,s5,s6,s7,s8,s9].map(s=>s.replace(/\s+/g," ").trim());
+  const sentences = [s1,s2,s3,s4,s5,s6,s7,s8,s9].map(s=>String(s).replace(/\s+/g," ").trim());
 
   return `
-<div class="section">
-  <h2>Conclusão e Objetivos</h2>
-  <p>${sentences.join(" ")}</p>
-</div>`;
+  <div class="section">
+    <h2>Conclusão e Objetivos</h2>
+    <p>${sentences.join(" ")}</p>
+  </div>`;
 }
 
-/* ================= GERAR ================= */
-function gerar(){
-  const v = id => document.getElementById(id).value;
+/* ===================== EDIÇÃO DIRETA (contenteditable) ===================== */
+let edicaoAtiva = false;
+function toggleEdicao(){
+  edicaoAtiva = !edicaoAtiva;
+  const el = document.getElementById("out");
+  el.contentEditable = edicaoAtiva ? "true" : "false";
+  el.classList.toggle("editable", edicaoAtiva);
+  if(edicaoAtiva){
+    el.focus();
+  }
+}
 
-  const anoVal = (v("ano")||"").trim();
-  const nomeVal = (v("nome")||"").trim();
-  const funcaoVal = (v("funcao")||"").trim();
-  const dataVal = (v("data")||"").trim();
+/* ===================== GERAR ===================== */
+function gerar(){
+  const v = id => (document.getElementById(id).value ?? "").trim();
+
+  const anoVal = v("ano");
+  const nomeVal = v("nome");
+  const funcaoVal = v("funcao");
+  const tipoVal = v("tipo");
+  const dataVal = v("data");
 
   if(!anoVal){
     alert("O campo ANO DA AVALIAÇÃO é obrigatório.");
@@ -601,7 +726,7 @@ function gerar(){
     return;
   }
   if(!/^\d{4}$/.test(anoVal)){
-    alert("O ANO DA AVALIAÇÃO deve ser um ano válido com 4 dígitos (ex.: 2026).");
+    alert("O ANO DA AVALIAÇÃO deve ter 4 dígitos (ex.: 2026).");
     document.getElementById("ano").focus();
     return;
   }
@@ -621,85 +746,101 @@ function gerar(){
     return;
   }
 
-  const tipoFunc = v("tipo");
-  const nd = parseInt(v("nd"),10);
-  const na = parseInt(v("na"),10);
+  const nd = parseInt(document.getElementById("nd").value,10);
+  const na = parseInt(document.getElementById("na").value,10);
+  const ne = parseInt(document.getElementById("ne").value,10);
 
-  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoFunc,nd,na,v("tTrab"),v("tAti"),v("fortes"),v("melhorar")].join("|"));
+  const tTrabTxt = v("tTrab");
+  const tAtiTxt  = v("tAti");
+  const fortesTxt = v("fortes");
+  const melhorarTxt = v("melhorar");
+
+  // seed baseada no ano + conteúdo (evita repetição ano após ano e mantém coerência)
+  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,nd,na,ne,tTrabTxt,tAtiTxt,fortesTxt,melhorarTxt].join("|"));
   const rng = makeRng(seed);
 
-  const desempenhoBlock = buildBlock(rng, "Nível de Desempenho", nd, v("tTrab"), tipoFunc, "desempenho");
-  const atitudeBlock = buildBlock(rng, "Nível de Atitude no Trabalho", na, v("tAti"), tipoFunc, "atitude");
+  // blocos com nota
+  const blocoDesempenho = buildScoredBlock(rng, "Nível de Desempenho", nd, tipoVal, tTrabTxt, `${fortesTxt} ${melhorarTxt}`);
+  const blocoAtitude    = buildScoredBlock(rng, "Nível de Atitude no Trabalho", na, tipoVal, tAtiTxt, `${fortesTxt} ${melhorarTxt}`);
+  const blocoEquipa     = buildScoredBlock(rng, "Trabalho em Equipa", ne, tipoVal, `${tAtiTxt}`, `${fortesTxt} ${melhorarTxt}`);
 
-  // Trabalho em equipa: baseia-se em atitude + fortes/melhorar para variar
-  const teamText = (v("tAti") + " " + v("fortes") + " " + v("melhorar")).trim();
-  const equipaBlock = buildBlock(rng, "Trabalho em Equipa", Math.max(1, Math.min(5, Math.round((na + nd)/2))), teamText, tipoFunc, "equipa");
-
-  const fortesList = lista(v("fortes"));
-  const melhorarList = lista(v("melhorar"));
-
+  // explicações curtas (mas variáveis) para fortes/melhorar
   const fortesExplain = (() => {
-    const themes = extractThemes(v("fortes")+" "+v("tTrab")+" "+v("tAti"));
-    const phr = themesPhrase(rng, themes, "pos");
-    const s = [
-      "Os pontos fortes listados refletem competências e atitudes que trazem valor ao desempenho global.",
-      phr,
-      "Recomenda-se manter e reforçar estes aspetos, garantindo consistência e previsibilidade ao longo do próximo período."
-    ];
-    return `<p>${s.join(" ")}</p>`;
+    const th = extractThemes(`${fortesTxt} ${tTrabTxt} ${tAtiTxt}`);
+    const p1 = pick(rng, [
+      "Os pontos fortes listados refletem competências e atitudes com impacto positivo no desempenho global.",
+      "Os pontos fortes indicados evidenciam práticas úteis e competências relevantes para a função."
+    ]);
+    const p2 = themesPhrase(rng, th, "pos");
+    const p3 = pick(rng, [
+      "Recomenda-se manter e reforçar estes aspetos, garantindo consistência e previsibilidade no próximo período.",
+      "A consolidação destes pontos contribuirá para estabilidade e qualidade ao longo do próximo ciclo."
+    ]);
+    return `<p>${[p1,p2,p3].join(" ")}</p>`;
   })();
 
   const melhorarExplain = (() => {
-    const themes = extractThemes(v("melhorar")+" "+v("tTrab")+" "+v("tAti"));
-    const phr = themesPhrase(rng, themes, "neg");
-    const s = [
+    const th = extractThemes(`${melhorarTxt} ${tTrabTxt} ${tAtiTxt}`);
+    const p1 = pick(rng, [
       "Os aspetos a melhorar devem ser interpretados como oportunidades concretas de desenvolvimento.",
-      phr,
-      "Sugere-se definir prioridades e um plano simples de acompanhamento, para garantir evolução observável e sustentada."
-    ];
-    return `<p>${s.join(" ")}</p>`;
+      "Os aspetos identificados representam áreas práticas onde é possível reforçar consistência e eficácia."
+    ]);
+    const p2 = themesPhrase(rng, th, "neg");
+    const p3 = pick(rng, [
+      "Sugere-se definir prioridades e um plano simples de acompanhamento, para garantir evolução observável e sustentada.",
+      "Recomenda-se acompanhamento regular e metas claras, permitindo progressos consistentes ao longo do período."
+    ]);
+    return `<p>${[p1,p2,p3].join(" ")}</p>`;
   })();
 
-  const conclusao = buildConclusion(rng, nd, na, tipoFunc, v("fortes"), v("melhorar"), v("tTrab"), v("tAti"));
+  const conclusao = buildConclusion(rng, tipoVal, nd, na, ne, tTrabTxt, tAtiTxt, fortesTxt, melhorarTxt);
+
+  const tipoHuman = (tipoVal==="campo") ? "Operacional / Campo" : "Administrativa / Apoio";
+
+  // ao gerar, desligamos edição para evitar confusão; o botão volta a ativar
+  edicaoAtiva = false;
+  const out = document.getElementById("out");
+  out.contentEditable = "false";
+  out.classList.remove("editable");
 
   out.innerHTML = `
-<div class="pdf-header">
-  <img src="logo-monte-do-pasto.png" alt="Monte do Pasto">
-  <h1>Monte do Pasto — Avaliação Anual</h1>
-</div>
+  <div class="pdf-header">
+    <img src="logo-monte-do-pasto.png" alt="Monte do Pasto">
+    <h1>Monte do Pasto — Avaliação Anual</h1>
+  </div>
 
-<p>
-  <strong>Ano da Avaliação:</strong> ${escapeHtml(anoVal)}<br>
-  <strong>Colaborador:</strong> ${escapeHtml(nomeVal)}<br>
-  <strong>Função:</strong> ${escapeHtml(funcaoVal)}<br>
-  <strong>Tipo de função:</strong> ${tipoFunc==="campo" ? "Operacional / Campo" : "Administrativa / Apoio"}<br>
-  <strong>Data:</strong> ${escapeHtml(dataVal)}
-</p>
+  <p>
+    <strong>Ano da Avaliação:</strong> ${escapeHtml(anoVal)}<br>
+    <strong>Colaborador:</strong> ${escapeHtml(nomeVal)}<br>
+    <strong>Função:</strong> ${escapeHtml(funcaoVal)}<br>
+    <strong>Tipo de função:</strong> ${tipoHuman}<br>
+    <strong>Data:</strong> ${escapeHtml(dataVal)}
+  </p>
 
-${desempenhoBlock}
-${atitudeBlock}
-${equipaBlock}
+  ${blocoDesempenho}
+  ${blocoAtitude}
+  ${blocoEquipa}
 
-<div class="section">
-  <h2>Pontos Fortes</h2>
-  <p>${fortesList || "—"}</p>
-  ${fortesExplain}
-</div>
+  <div class="section">
+    <h2>Pontos Fortes</h2>
+    <p>${lista(fortesTxt)}</p>
+    ${fortesExplain}
+  </div>
 
-<div class="section">
-  <h2>Aspetos a Melhorar</h2>
-  <p>${melhorarList || "—"}</p>
-  ${melhorarExplain}
-</div>
+  <div class="section">
+    <h2>Aspetos a Melhorar</h2>
+    <p>${lista(melhorarTxt)}</p>
+    ${melhorarExplain}
+  </div>
 
-${conclusao}
+  ${conclusao}
 
-<div class="section">
-  <p><strong>Data:</strong> ____________________________</p>
-  <p><strong>Assinatura do Colaborador:</strong><br><br>______________________________</p>
-  <p><strong>Assinatura da Chefia:</strong><br><br>______________________________</p>
-</div>
-`;
+  <div class="section">
+    <p><strong>Data:</strong> ____________________________</p>
+    <p><strong>Assinatura do Colaborador:</strong><br><br>______________________________</p>
+    <p><strong>Assinatura da Chefia:</strong><br><br>______________________________</p>
+  </div>
+  `;
 }
 </script>
 
