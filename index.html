@@ -6,6 +6,7 @@
 <title>Monte do Pasto — Avaliação Anual</title>
 
 <style>
+/* ================= BASE APP ================= */
 :root{
   --bg:#f4f5f2;
   --card:#ffffff;
@@ -16,27 +17,52 @@
   --shadow:0 8px 20px rgba(0,0,0,.08);
   --radius:16px;
 }
+
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   background:var(--bg);
   color:var(--text);
 }
+
 header{
   text-align:center;
   padding:36px 20px 24px;
   background:#fff;
   border-bottom:1px solid var(--border);
 }
-.logo{max-height:150px;margin-bottom:16px}
-header h1{margin:0;font-size:28px}
-header p{margin:10px auto 0;max-width:760px;color:var(--muted)}
-main{
-  max-width:1100px;margin:0 auto;padding:28px 20px 60px;
-  display:grid;grid-template-columns:1fr 1fr;gap:22px;
+
+.logo{
+  max-height:140px;
+  margin-bottom:16px;
 }
-@media(max-width:900px){main{grid-template-columns:1fr}}
+
+header h1{
+  margin:0;
+  font-size:28px;
+}
+
+header p{
+  margin:10px auto 0;
+  max-width:760px;
+  color:var(--muted);
+}
+
+main{
+  max-width:1100px;
+  margin:0 auto;
+  padding:28px 20px 60px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+}
+
+@media(max-width:900px){
+  main{grid-template-columns:1fr}
+}
+
 .card{
   background:var(--card);
   border:1px solid var(--border);
@@ -44,8 +70,19 @@ main{
   box-shadow:var(--shadow);
   padding:20px;
 }
-h2{margin:0 0 14px;font-size:17px}
-label{display:block;margin:12px 0 6px;font-size:13px;color:var(--muted)}
+
+h2{
+  margin:0 0 14px;
+  font-size:17px;
+}
+
+label{
+  display:block;
+  margin:12px 0 6px;
+  font-size:13px;
+  color:var(--muted);
+}
+
 input,select,textarea{
   width:100%;
   padding:11px 12px;
@@ -54,10 +91,26 @@ input,select,textarea{
   background:#fafafa;
   font-size:14px;
 }
+
 textarea{min-height:100px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:600px){.grid{grid-template-columns:1fr}}
-.actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+}
+
+.actions{
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
 button{
   padding:10px 16px;
   border-radius:999px;
@@ -66,24 +119,77 @@ button{
   font-weight:600;
   cursor:pointer;
 }
-button.primary{background:var(--accent);color:#fff;border:none}
-button.secondary{background:#fff}
+
+button.primary{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+}
+
+button.secondary{
+  background:#fff;
+}
+
 .paper{
   background:#fff;
   color:#111;
-  padding:26px;
+  padding:30px;
   border-radius:12px;
   border:1px solid var(--border);
   max-height:70vh;
   overflow:auto;
   white-space:pre-wrap;
   font-family:Georgia,"Times New Roman",serif;
-  line-height:1.7;
+  line-height:1.65;
 }
+
+/* ================= PDF / PRINT ================= */
 @media print{
-  header,.card.form,.actions{display:none}
-  main{display:block;padding:0}
-  .paper{max-height:none;border:none}
+
+  body{
+    background:#fff;
+    font-family:"Times New Roman", Georgia, serif;
+    font-size:12pt;
+    color:#000;
+  }
+
+  header, .card.form, .actions{
+    display:none !important;
+  }
+
+  main{
+    display:block;
+    padding:0;
+    margin:0;
+  }
+
+  .paper{
+    border:none;
+    padding:0;
+    max-height:none;
+    line-height:1.6;
+  }
+
+  .paper h3{
+    margin-top:24px;
+    margin-bottom:6px;
+    font-size:14pt;
+    border-bottom:1px solid #000;
+    padding-bottom:4px;
+  }
+
+  .paper .meta{
+    margin-bottom:20px;
+  }
+
+  .paper .meta p{
+    margin:4px 0;
+  }
+
+  .paper .section{
+    margin-bottom:18px;
+  }
+
 }
 </style>
 </head>
@@ -91,15 +197,16 @@ button.secondary{background:#fff}
 <body>
 
 <header>
-  <img src="logo-monte-do-pasto.png" class="logo" alt="Monte do Pasto">
+  <img src="logo-monte-do-pasto.png" alt="Monte do Pasto" class="logo">
   <h1>Avaliação Anual de Colaboradores</h1>
-  <p>Ferramenta interna para avaliação estruturada, clara e profissional.</p>
+  <p>Ferramenta interna para avaliação estruturada e profissional.</p>
 </header>
 
 <main>
 
 <section class="card form">
 <h2>Dados do colaborador</h2>
+
 <div class="grid">
   <div><label>Nome</label><input id="nome"></div>
   <div><label>Função</label><input id="funcao"></div>
@@ -114,6 +221,7 @@ button.secondary{background:#fff}
 </div>
 
 <h2 style="margin-top:20px">Avaliação com nota</h2>
+
 <div class="grid">
   <div>
     <label>Nível de Desempenho (1–5)</label>
@@ -164,105 +272,94 @@ button.secondary{background:#fff}
 </main>
 
 <script>
-/* ===== TEXTO LONGO E ESTRUTURADO ===== */
+/* ================= TEXTO LONGO ================= */
 
-function blocoDesempenho(nota, texto){
-  return `
-Ao longo do período avaliado, o colaborador demonstrou um nível de desempenho que pode ser enquadrado como ${nota>=4?"positivo":"adequado"}. 
-A execução das tarefas atribuídas foi realizada com um grau de consistência compatível com a função desempenhada. 
-De forma geral, o trabalho apresentado reflete conhecimento das responsabilidades associadas ao cargo. 
-Verifica-se capacidade para cumprir o essencial do trabalho diário, respeitando as orientações recebidas. 
-Em determinados momentos, foram identificadas situações que evidenciam margem para melhoria. 
-O ritmo de trabalho manteve-se estável ao longo do período analisado. 
-A qualidade da execução revelou-se adequada às exigências da função. 
-O texto do avaliador reforça esta perceção: ${texto}. 
-No global, o desempenho apresentado enquadra-se no nível atribuído.`;
+const mapaNota = {
+  5:"Muito bom",
+  4:"Bom",
+  3:"Suficiente",
+  2:"Fraco",
+  1:"Muito fraco"
+};
+
+function bloco(titulo, texto){
+  return `<h3>${titulo}</h3><div class="section">${texto}</div>`;
 }
 
-function blocoAtitude(nota, texto){
-  return `
-Relativamente à atitude no trabalho, o colaborador demonstrou uma postura globalmente coerente com o contexto profissional. 
-A forma de estar no dia a dia revela compreensão das regras e expectativas da organização. 
-O relacionamento com colegas e superiores foi, na generalidade, adequado. 
-Observou-se disponibilidade para cumprir orientações e colaborar quando solicitado. 
-Em algumas situações, a atitude evidenciada poderia ser reforçada. 
-Ainda assim, não foram identificados comportamentos desajustados de forma recorrente. 
-O contributo individual para o ambiente de trabalho foi globalmente positivo. 
-Segundo o avaliador, ${texto}. 
-Este enquadramento justifica o nível de atitude atribuído.`;
-}
-
-function blocoEquipa(texto){
-  return `
-No que respeita ao trabalho em equipa, foram identificados aspetos relevantes ao longo do período avaliado. 
-A integração do colaborador na equipa revelou-se funcional no contexto das tarefas atribuídas. 
-A relação com os colegas foi, na maioria das situações, adequada. 
-Houve momentos em que a colaboração se destacou de forma positiva. 
-Em contrapartida, também se identificaram oportunidades de melhoria. 
-A comunicação interna poderá ser reforçada em determinados contextos. 
-A cooperação entre elementos da equipa é um fator a consolidar. 
-O texto do avaliador aponta que ${texto}. 
-O trabalho em equipa deve continuar a ser acompanhado no próximo período.`;
-}
-
-function blocoConclusao(notaD, notaA){
-  return `
-A avaliação realizada permite enquadrar o desempenho global do colaborador de forma estruturada e equilibrada. 
-O nível de desempenho atribuído reflete a execução do trabalho ao longo do período avaliado. 
-A atitude no trabalho complementa esta análise, enquadrando a postura demonstrada no dia a dia. 
-De forma global, a avaliação indica um cenário ${notaD>=4&&notaA>=4?"positivo":"estável"}, com aspetos a consolidar. 
-É importante manter os pontos fortes identificados ao longo desta avaliação. 
-Os aspetos a melhorar deverão ser trabalhados de forma progressiva. 
-Para o próximo período, recomenda-se foco na consistência e qualidade do trabalho. 
-A clarificação de objetivos contribuirá para uma evolução sustentada. 
-Esta avaliação deverá servir como base para acompanhamento futuro.`;
-}
-
-/* ===== EXEMPLOS DINÂMICOS ===== */
+/* ================= EXEMPLOS ================= */
 const exemplos=[
-  {nome:"João Silva",funcao:"Trabalhador Agrícola",tipo:"campo",nd:3,na:4,
-   tTrab:"cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização",
-   tAti:"mantém uma atitude correta e colaborativa",
-   fortes:"responsabilidade; disponibilidade; adaptação ao terreno",
-   melhorar:"organização; atenção ao detalhe"}
+  {
+    nome:"João Silva",
+    funcao:"Trabalhador Agrícola",
+    tipo:"campo",
+    nd:3,
+    na:4,
+    tTrab:"Cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização do trabalho.",
+    tAti:"Mantém uma atitude positiva e colaborativa.",
+    fortes:"Responsabilidade; disponibilidade; adaptação ao trabalho no terreno.",
+    melhorar:"Organização do trabalho; atenção ao detalhe."
+  }
 ];
 
 function preencherExemplo(){
   const e=exemplos[Math.floor(Math.random()*exemplos.length)];
-  nome.value=e.nome; funcao.value=e.funcao; tipo.value=e.tipo;
+  nome.value=e.nome;
+  funcao.value=e.funcao;
+  tipo.value=e.tipo;
   data.value=new Date().toISOString().slice(0,10);
-  nd.value=e.nd; na.value=e.na;
-  tTrab.value=e.tTrab; tAti.value=e.tAti;
-  fortes.value=e.fortes; melhorar.value=e.melhorar;
+  nd.value=e.nd;
+  na.value=e.na;
+  tTrab.value=e.tTrab;
+  tAti.value=e.tAti;
+  fortes.value=e.fortes;
+  melhorar.value=e.melhorar;
 }
 
+/* ================= GERAR ================= */
 function gerar(){
   const v=id=>document.getElementById(id).value;
-  out.textContent=
-`FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
+  const ndVal=parseInt(v("nd"));
+  const naVal=parseInt(v("na"));
 
-Colaborador: ${v("nome")}
-Função: ${v("funcao")}
-Tipo de função: ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}
-Data: ${v("data")}
+  out.innerHTML = `
+<div class="meta">
+<p><strong>Colaborador:</strong> ${v("nome")}</p>
+<p><strong>Função:</strong> ${v("funcao")}</p>
+<p><strong>Tipo de função:</strong> ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}</p>
+<p><strong>Data:</strong> ${v("data")}</p>
+</div>
 
-Nível de Desempenho:
-${blocoDesempenho(v("nd"),v("tTrab"))}
+${bloco(
+  `Nível de Desempenho: ${ndVal}/5 — ${mapaNota[ndVal]}`,
+  `Ao longo do período avaliado, o colaborador demonstrou um nível de desempenho enquadrado como ${mapaNota[ndVal].toLowerCase()}. 
+   ${v("tTrab")} 
+   De forma global, o desempenho apresentado é coerente com a classificação atribuída, existindo margem para consolidação futura.`
+)}
 
-Nível de Atitude no Trabalho:
-${blocoAtitude(v("na"),v("tAti"))}
+${bloco(
+  `Nível de Atitude no Trabalho: ${naVal}/5 — ${mapaNota[naVal]}`,
+  `No que respeita à atitude no trabalho, foi observada uma postura ${mapaNota[naVal].toLowerCase()}. 
+   ${v("tAti")} 
+   A atitude demonstrada contribui para o enquadramento geral da avaliação.`
+)}
 
-Trabalho em Equipa:
-${blocoEquipa(v("tAti"))}
+${bloco(
+  "Pontos Fortes",
+  v("fortes")
+)}
 
-Pontos Fortes:
-${v("fortes")}
+${bloco(
+  "Aspetos a Melhorar",
+  v("melhorar")
+)}
 
-Aspetos a Melhorar:
-${v("melhorar")}
-
-Conclusão e Objetivos:
-${blocoConclusao(parseInt(v("nd")),parseInt(v("na")))}
+${bloco(
+  "Conclusão e Objetivos",
+  "A avaliação global reflete o desempenho e a atitude observados ao longo do período analisado. " +
+  "Os pontos fortes identificados deverão ser mantidos e consolidados. " +
+  "Os aspetos a melhorar constituem áreas de desenvolvimento prioritárias para o próximo período. " +
+  "Esta avaliação deverá servir de base para acompanhamento e definição de objetivos futuros."
+)}
 `;
 }
 </script>
