@@ -120,9 +120,11 @@
   <label>ANO DA AVALIAÇÃO (obrigatório)</label>
   <input id="ano" inputmode="numeric" placeholder="Ex.: 2026">
 
-  <label>Nome</label><input id="nome" placeholder="Nome do colaborador">
+  <label>Nome</label>
+  <input id="nome" placeholder="Nome do colaborador">
 
-  <label>Função</label><input id="funcao" placeholder="Função / Cargo">
+  <label>Função</label>
+  <input id="funcao" placeholder="Função / Cargo">
 
   <label>Tipo de função</label>
   <select id="tipo">
@@ -131,7 +133,8 @@
     <option value="chefia">Chefia</option>
   </select>
 
-  <label>Data</label><input type="date" id="data">
+  <label>Data</label>
+  <input type="date" id="data">
 
   <label>Nível de Desempenho</label>
   <select id="nd">
@@ -164,7 +167,7 @@
   <textarea id="tTrab" placeholder="Ex.: Cumpre as tarefas, mas precisa de melhorar a organização e o controlo de qualidade..."></textarea>
 
   <label>Comentário sobre a atitude (texto livre)</label>
-  <textarea id="tAti" placeholder="Ex.: Boa colaboração com colegas, mas por vezes reage mal a mudanças..."></textarea>
+  <textarea id="tAti" placeholder="Ex.: Boa colaboração, mas por vezes reage mal a mudanças..."></textarea>
 
   <label>Pontos fortes (separar por ;)</label>
   <textarea id="fortes" placeholder="Ex.: responsabilidade; autonomia; disponibilidade"></textarea>
@@ -195,62 +198,148 @@
 /* ===================== CONSTANTES / ESTADO ===================== */
 const labels = {5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
 let edicaoAtiva = false;
-let ultimoEx = -1;
 
-/* memória curta anti-repetição (na sessão) */
+/* anti-repetição de inícios (na sessão) */
 const recentStarts = [];
-const RECENT_LIMIT = 14;
+const RECENT_LIMIT = 16;
 
-/* ===================== EXEMPLOS (RANDOM) ===================== */
-const exemplos = [
-  {
-    ano:"2026",
-    nome:"João Silva",
-    funcao:"Trabalhador Agrícola",
-    tipo:"campo",
-    nd:3, na:4, ne:3,
-    tTrab:"Cumpre as tarefas com regularidade, mas nota-se falta de organizacao em dias de maior volume e alguma distração na verificação final.",
-    tAti:"Mantém atitude positiva e colaboração, embora por vezes mostre resistência a mudanças no plano de trabalho.",
-    fortes:"responsabilidade; disponibilidade; adaptação ao trabalho no terreno",
-    melhorar:"organização; atenção ao detalhe; planeamento"
-  },
-  {
-    ano:"2026",
-    nome:"Ana Costa",
-    funcao:"Administrativa",
-    tipo:"admin",
-    nd:4, na:4, ne:4,
-    tTrab:"Executa tarefas administrativas com rigor e cumprimnto de prazos, com boa autonomia e atenção ao registo de informação.",
-    tAti:"Postura profissional consistente, comunicação clara com colegas e disponibilidade para apoiar quando necessário.",
-    fortes:"organização; autonomia; comunicação",
-    melhorar:"priorização; gestão de picos de trabalho"
-  },
-  {
-    ano:"2026",
-    nome:"Carlos Mendes",
-    funcao:"Chefe de Equipa",
-    tipo:"chefia",
-    nd:4, na:3, ne:4,
-    tTrab:"Coordena o trabalho da equipa com foco em objetivos e segurança, mas pode reforçar o acompanhamento em dias de maior pressão.",
-    tAti:"Mantém postura profissional, embora exista margem para melhorar a gestão de conflito e a comunicação em momentos exigentes.",
-    fortes:"liderança; sentido de responsabilidade; visão de prioridades",
-    melhorar:"gestão de conflitos; comunicação em pressão; delegação"
-  }
-];
+/* anti-repetição de exemplos por tipo */
+const ultimoExPorTipo = { campo: -1, admin: -1, chefia: -1 };
+
+/* ===================== EXEMPLOS (POR TIPO) ===================== */
+const exemplosPorTipo = {
+  chefia: [
+    {
+      ano:"2026",
+      nome:"Carlos Mendes",
+      funcao:"Chefe de Equipa",
+      tipo:"chefia",
+      nd:4, na:3, ne:4,
+      tTrab:"Tem assegurado o planeamento das operações com foco no cumprimento de prazos, sobretudo em momentos críticos de saída de animais. Em períodos mais exigentes, foi necessário ajustar decisões no terreno para garantir respostas atempadas aos clientes. Existe margem para maior antecipação e previsibilidade.",
+      tAti:"Mantém postura responsável no contacto com clientes de animais vivos, com comunicação clara e foco na resolução de imprevistos. Em momentos de maior pressão, a comunicação interna pode ser mais antecipada para reduzir intervenções reativas.",
+      fortes:"cumprimento de prazos; relação com clientes; decisão no terreno",
+      melhorar:"antecipação de planeamento; articulação interna; previsibilidade das operações"
+    },
+    {
+      ano:"2026",
+      nome:"Rui Almeida",
+      funcao:"Chefia Operacional",
+      tipo:"chefia",
+      nd:3, na:4, ne:3,
+      tTrab:"Tem acompanhado custos de manutenção e necessidades diárias, assegurando continuidade das operações. As decisões tomadas têm impacto na gestão de recursos; há oportunidade para maior controlo e otimização de custos ao longo do período.",
+      tAti:"Demonstra responsabilidade na gestão diária e na tomada de decisões que envolvem custos e recursos. Pode reforçar a partilha de informação e alinhamento com a equipa em picos de trabalho.",
+      fortes:"controlo de custos; responsabilidade; acompanhamento diário",
+      melhorar:"monitorização contínua; comunicação interna; planeamento operacional"
+    },
+    {
+      ano:"2026",
+      nome:"Tiago Pires",
+      funcao:"Chefia de Engorda",
+      tipo:"chefia",
+      nd:4, na:4, ne:3,
+      tTrab:"Acompanhou regularmente processos ligados à engorda de bovinos, ajustando práticas quando necessário. As decisões tomadas tiveram impacto nos resultados obtidos, com foco em melhoria contínua e consistência ao longo do tempo.",
+      tAti:"Postura prática e orientada ao terreno, com disponibilidade para acompanhar e ajustar processos. Pode reforçar o registo e a sistematização de decisões para facilitar análise e continuidade.",
+      fortes:"acompanhamento da engorda; observação no terreno; melhoria contínua",
+      melhorar:"sistematização; registo de decisões; análise comparativa de resultados"
+    }
+  ],
+  campo: [
+    {
+      ano:"2026",
+      nome:"João Silva",
+      funcao:"Trabalhador Agrícola",
+      tipo:"campo",
+      nd:3, na:4, ne:3,
+      tTrab:"Executa as tarefas no terreno de forma consistente, mantendo um ritmo adequado às exigências diárias. Cumpre orientações transmitidas e assegura continuidade das operações. Em picos de trabalho, existe margem para melhorar a organização das tarefas.",
+      tAti:"Mantém postura funcional, aceita orientações e ajusta a execução quando necessário. Demonstra disponibilidade para colaborar, podendo reforçar a atenção em momentos de maior pressão.",
+      fortes:"ritmo de trabalho; cumprimento de tarefas; disponibilidade",
+      melhorar:"organização no terreno; controlo em períodos de maior carga"
+    },
+    {
+      ano:"2026",
+      nome:"Pedro Santos",
+      funcao:"Operador de Campo",
+      tipo:"campo",
+      nd:4, na:4, ne:3,
+      tTrab:"Executa tarefas com atenção aos procedimentos definidos, demonstrando cuidado no manuseamento de animais e material. O trabalho contribui para a segurança das operações e estabilidade do dia a dia no terreno.",
+      tAti:"Postura responsável, respeita regras de segurança e orientações. Pode reforçar a atenção ao detalhe para evitar correções posteriores.",
+      fortes:"cuidado com animais; cumprimento de regras; atenção a procedimentos",
+      melhorar:"atenção ao detalhe; verificação final das tarefas"
+    },
+    {
+      ano:"2026",
+      nome:"Miguel Costa",
+      funcao:"Trabalhador de Campo",
+      tipo:"campo",
+      nd:3, na:3, ne:4,
+      tTrab:"Demonstra fiabilidade no cumprimento de tarefas atribuídas, assegurando presença e continuidade do trabalho no terreno. A execução é globalmente adequada, permitindo manter o funcionamento normal das operações.",
+      tAti:"Postura colaborativa com colegas, contribuindo para ambiente funcional. Em momentos exigentes, pode melhorar a comunicação para facilitar alinhamento da equipa.",
+      fortes:"fiabilidade; trabalho em equipa; cumprimento de orientações",
+      melhorar:"comunicação no terreno; antecipação de necessidades"
+    }
+  ],
+  admin: [
+    {
+      ano:"2026",
+      nome:"Ana Costa",
+      funcao:"Administrativa",
+      tipo:"admin",
+      nd:4, na:4, ne:4,
+      tTrab:"Executa tarefas administrativas de forma organizada, assegurando cumprimento de prazos definidos. Mantém registos atualizados e contribui para o normal funcionamento dos processos de apoio à operação.",
+      tAti:"Postura profissional e responsável, com disponibilidade para responder a solicitações dentro dos prazos. Em períodos de maior volume, mantém foco nas prioridades.",
+      fortes:"organização; cumprimento de prazos; fiabilidade dos registos",
+      melhorar:"priorização em picos; antecipação de necessidades"
+    },
+    {
+      ano:"2026",
+      nome:"Sofia Matos",
+      funcao:"Apoio Administrativo",
+      tipo:"admin",
+      nd:3, na:4, ne:3,
+      tTrab:"Presta apoio administrativo regular às operações, assegurando circulação de informação necessária ao funcionamento do serviço. O trabalho contribui para reduzir falhas e atrasos no dia a dia.",
+      tAti:"Disponibilidade para apoiar colegas e chefias, com comunicação clara e funcional. Pode reforçar sistematização de algumas tarefas para maior consistência.",
+      fortes:"apoio à operação; disponibilidade; comunicação funcional",
+      melhorar:"sistematização de tarefas; organização documental"
+    },
+    {
+      ano:"2026",
+      nome:"Carla Nunes",
+      funcao:"Administrativa",
+      tipo:"admin",
+      nd:4, na:3, ne:3,
+      tTrab:"Executa tarefas com atenção ao detalhe, assegurando correção da informação registada. O rigor contribui para fiabilidade dos processos e apoio eficaz a decisões operacionais.",
+      tAti:"Postura cuidadosa e responsável, procurando garantir informação correta e atempada. Em situações urgentes, pode melhorar a articulação com outros intervenientes.",
+      fortes:"rigor; atenção ao detalhe; fiabilidade da informação",
+      melhorar:"articulação interna; comunicação em urgências"
+    }
+  ]
+};
 
 function preencherExemplo(){
-  let i; do { i = Math.floor(Math.random()*exemplos.length); } while(i===ultimoEx);
-  ultimoEx = i;
-  const e = exemplos[i];
+  const tipo = document.getElementById("tipo").value;
+  const pool = exemplosPorTipo[tipo] || exemplosPorTipo.campo;
 
-  ano.value = e.ano;
-  nome.value = e.nome;
-  funcao.value = e.funcao;
-  tipo.value = e.tipo;
-  data.value = new Date().toISOString().slice(0,10);
-  nd.value = e.nd; na.value = e.na; ne.value = e.ne;
-  tTrab.value = e.tTrab; tAti.value = e.tAti;
-  fortes.value = e.fortes; melhorar.value = e.melhorar;
+  let i;
+  do { i = Math.floor(Math.random() * pool.length); }
+  while (pool.length > 1 && i === ultimoExPorTipo[tipo]);
+
+  ultimoExPorTipo[tipo] = i;
+  const e = pool[i];
+
+  document.getElementById("ano").value = e.ano;
+  document.getElementById("nome").value = e.nome;
+  document.getElementById("funcao").value = e.funcao;
+  document.getElementById("tipo").value = e.tipo;
+  document.getElementById("data").value = new Date().toISOString().slice(0,10);
+
+  document.getElementById("nd").value = e.nd;
+  document.getElementById("na").value = e.na;
+  document.getElementById("ne").value = e.ne;
+
+  document.getElementById("tTrab").value = e.tTrab;
+  document.getElementById("tAti").value = e.tAti;
+  document.getElementById("fortes").value = e.fortes;
+  document.getElementById("melhorar").value = e.melhorar;
 }
 
 /* ===================== UTILITÁRIOS ===================== */
@@ -259,7 +348,6 @@ function escapeHtml(str){
     "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
   }[m]));
 }
-
 function lista(txt){
   const items = (txt ?? "").split(";").map(t=>t.trim()).filter(Boolean);
   return items.length ? items.map(t=>"• "+escapeHtml(t)).join("<br>") : "—";
@@ -293,9 +381,7 @@ function makeRng(seed){
     return (x >>> 0) / 4294967296;
   };
 }
-function pick(rng, arr){
-  return arr[Math.floor(rng()*arr.length)];
-}
+function pick(rng, arr){ return arr[Math.floor(rng()*arr.length)]; }
 function pickNonRepeatingStart(rng, arr){
   for(let tries=0; tries<10; tries++){
     const cand = pick(rng, arr);
@@ -357,14 +443,19 @@ const THEMES = [
   {key:"equipa", label:"trabalho em equipa", pos:["equipa","colaboracao","colabora","ajuda","entreajuda"], neg:["isolado","conflito","tensao"]},
   {key:"seguranca", label:"segurança", pos:["seguranca","epi","procedimentos","regras"], neg:["risco","perigo","imprudencia"]},
   {key:"atencao", label:"atenção ao detalhe", pos:["detalhe","atencao","cuidado"], neg:["distraido","distracao","esquece"]},
-  {key:"atitude", label:"atitude/postura", pos:["positivo","respeito","disponibilidade","empenho","motivacao"], neg:["resistencia","desmotivado","reage","irritado"]}
+  {key:"atitude", label:"atitude/postura", pos:["positivo","respeito","disponibilidade","empenho","motivacao"], neg:["resistencia","desmotivado","reage","irritado"]},
+
+  /* ADN Monte do Pasto (Chefia) */
+  {key:"clientes", label:"relação com clientes", pos:["cliente","clientes","contacto","relacao","confiança","confianca","expectativa","expectativas"], neg:["queixa","queixas","reclamacao","reclamacoes"]},
+  {key:"custos", label:"custos de manutenção", pos:["custo","custos","manutencao","recursos","otimizacao","otimizar","controlo"], neg:["despesa","despesas","excesso","perda","perdas"]},
+  {key:"engorda", label:"melhoria na engorda", pos:["engorda","bovinos","bovino","alimentacao","alimentar","ganho","peso","monitorizacao","monitorizar"], neg:["queda","quebra","problema","problemas"]}
 ];
 
 const CANON_WORDS = (() => {
   const set = new Set();
   for(const th of THEMES){
-    th.pos.forEach(w=>set.add(w));
-    th.neg.forEach(w=>set.add(w));
+    th.pos.forEach(w=>set.add(normalizeText(w)));
+    th.neg.forEach(w=>set.add(normalizeText(w)));
   }
   return Array.from(set);
 })();
@@ -382,7 +473,6 @@ function correctToken(tok){
   }
   return (bestD <= maxD) ? best : tok;
 }
-
 function extractThemes(text){
   const raw = tokens(text).map(correctToken);
   const counts = {};
@@ -390,7 +480,7 @@ function extractThemes(text){
 
   for(const tok of raw){
     for(const th of THEMES){
-      if(th.pos.includes(tok) || th.neg.includes(tok)){
+      if(th.pos.map(normalizeText).includes(tok) || th.neg.map(normalizeText).includes(tok)){
         counts[th.key] += 1;
       }
     }
@@ -413,12 +503,11 @@ function extractAnchors(text){
   const a2 = pool[1] ? pool[1].slice(0, 90) : "";
   return [a1,a2].filter(Boolean);
 }
-
 function themesPhrase(rng, themes, kind){
   if(!themes.length){
     return kind==="pos"
       ? pick(rng, [
-        "Foram identificados aspetos positivos relevantes, com contributo direto para a execução das responsabilidades.",
+        "Foram identificados aspetos positivos relevantes, com contributo direto para a continuidade das operações.",
         "Observam-se práticas adequadas que sustentam o trabalho realizado ao longo do período."
       ])
       : pick(rng, [
@@ -430,7 +519,7 @@ function themesPhrase(rng, themes, kind){
   const join = top.length===1 ? top[0] : top.length===2 ? `${top[0]} e ${top[1]}` : `${top[0]}, ${top[1]} e ${top[2]}`;
   return kind==="pos"
     ? pick(rng, [
-      `Destacam-se aspetos ligados a ${join}, com impacto positivo no desempenho global.`,
+      `Destacam-se aspetos ligados a ${join}, com impacto positivo no funcionamento diário.`,
       `Verifica-se incidência em ${join}, refletindo competências úteis e aplicáveis à função.`
     ])
     : pick(rng, [
@@ -442,30 +531,30 @@ function themesPhrase(rng, themes, kind){
 function chooseStyleProfile(rng){ return pick(rng, ["analitico","direto","descritivo","processual"]); }
 function chooseFocus(rng){ return pick(rng, ["processo","resultado","comportamento","impacto"]); }
 
-/* contexto por tipo */
+/* contexto por tipo (afinados Monte do Pasto) */
 function contextForTipo(rng, tipo){
   if(tipo==="chefia"){
     return pick(rng, [
-      "num contexto de liderança, coordenação e tomada de decisão",
-      "num contexto de gestão operacional, alinhamento de prioridades e coordenação de equipa",
-      "num contexto de supervisão, planeamento e acompanhamento do trabalho"
+      "num contexto de coordenação operacional, cumprimento de prazos e relação com clientes",
+      "num contexto de gestão diária, controlo de custos de manutenção e acompanhamento de resultados",
+      "num contexto de supervisão no terreno, com impacto direto na engorda e na continuidade das operações"
     ]);
   }
   if(tipo==="admin"){
     return pick(rng, [
-      "no contexto das tarefas administrativas e de apoio",
-      "no contexto de processos internos, prazos e registos",
-      "no contexto de suporte administrativo e articulação com equipas"
+      "no contexto de processos internos, registos e cumprimento de prazos",
+      "no contexto administrativo e de apoio às operações, com foco em fiabilidade da informação",
+      "no contexto de suporte diário, articulação interna e controlo documental"
     ]);
   }
   return pick(rng, [
     "no contexto operacional e de trabalho no terreno",
-    "no contexto das rotinas práticas e execução no terreno",
-    "no contexto operacional, com exigências de ritmo e consistência"
+    "no contexto das rotinas práticas e execução diária no terreno",
+    "no contexto operacional, com exigência de consistência, segurança e ritmo"
   ]);
 }
 
-/* ===================== BLOCO COM NOTA (8–10 FRASES) ===================== */
+/* ===================== BLOCO COM NOTA (9 FRASES) ===================== */
 function buildScoredBlock(rng, title, nota, tipo, freeText, extraText){
   const tone = (nota>=4) ? "positivo" : (nota===3 ? "equilibrado" : "corretivo");
   const ctx = contextForTipo(rng, tipo);
@@ -540,11 +629,11 @@ function buildScoredBlock(rng, title, nota, tipo, freeText, extraText){
     ]);
     if(focus==="comportamento") return pick(rng, [
       "A postura no dia a dia contribui para a fluidez do trabalho e para a estabilidade da equipa.",
-      "A forma de lidar com feedback e alterações influencia a adaptação e a consistência do desempenho.",
+      "A forma de lidar com orientações e alterações influencia a adaptação e a consistência do desempenho.",
       "A atitude perante prioridades e mudanças tem impacto direto na execução."
     ]);
     return pick(rng, [
-      "O contributo para o funcionamento do serviço é visível na forma como as tarefas são concluídas e articuladas.",
+      "O contributo para o funcionamento diário é visível na forma como as tarefas são concluídas e articuladas.",
       "A forma de atuação afeta positivamente o trabalho de outros elementos quando existe clareza e coordenação.",
       "O impacto no funcionamento global depende de consistência, comunicação e método."
     ]);
@@ -553,12 +642,12 @@ function buildScoredBlock(rng, title, nota, tipo, freeText, extraText){
   const s8 = (() => {
     if(profile==="analitico") return pick(rng, [
       "Este enquadramento resulta de uma leitura global do período, integrando contexto, prática diária e resultados.",
-      "A síntese considera padrões de execução, comportamento e impacto no funcionamento diário.",
+      "A síntese considera padrões de execução, postura e impacto no funcionamento diário.",
       "A análise baseia-se no conjunto de evidências recolhidas e na coerência do período observado."
     ]);
     if(profile==="direto") return pick(rng, [
       "O nível atribuído permite orientar prioridades de manutenção e melhoria para o próximo ciclo.",
-      "A nota espelha o período observado e serve de base para definição de objetivos.",
+      "A nota espelha o período observado e serve de base para definição de objetivos práticos.",
       "O enquadramento é claro e útil para orientar acompanhamento e expectativas."
     ]);
     if(profile==="descritivo") return pick(rng, [
@@ -584,7 +673,7 @@ function buildScoredBlock(rng, title, nota, tipo, freeText, extraText){
   </div>`;
 }
 
-/* ===================== CONCLUSÃO E OBJETIVOS (8–10 FRASES) ===================== */
+/* ===================== CONCLUSÃO E OBJETIVOS (9 FRASES) ===================== */
 function buildConclusion(rng, tipo, nd, na, ne, tTrab, tAti, fortesTxt, melhorarTxt){
   const ctx = contextForTipo(rng, tipo);
   const overall = (nd+na+ne)/3;
@@ -618,9 +707,9 @@ function buildConclusion(rng, tipo, nd, na, ne, tTrab, tAti, fortesTxt, melhorar
 
   const s3 =
     tone==="forte" ? pick(rng, [
-      "O resultado global é muito favorável, indicando consistência, fiabilidade e alinhamento com as expectativas da função.",
-      "O enquadramento global é claramente positivo, com estabilidade na execução e postura adequada ao contexto.",
-      "O resultado global evidencia bom contributo e previsibilidade de resultados ao longo do período."
+      "O resultado global é favorável, indicando consistência e alinhamento com as exigências da função.",
+      "O enquadramento global é positivo, com estabilidade na execução e postura adequada ao contexto.",
+      "O resultado global evidencia bom contributo e previsibilidade ao longo do período."
     ]) :
     tone==="estavel" ? pick(rng, [
       "O resultado global é estável e satisfatório, existindo margem para reforço de consistência e melhoria progressiva.",
@@ -647,7 +736,7 @@ function buildConclusion(rng, tipo, nd, na, ne, tTrab, tAti, fortesTxt, melhorar
 
   const s6 = pick(rng, [
     "Estes aspetos devem ser mantidos e valorizados, pois contribuem para estabilidade do serviço e qualidade do trabalho.",
-    "A consolidação destes pontos é importante para garantir previsibilidade de resultados e bom funcionamento das rotinas.",
+    "A consolidação destes pontos é importante para garantir previsibilidade e bom funcionamento das rotinas.",
     "A manutenção destes fatores sustenta eficácia e reduz variabilidade ao longo do tempo."
   ]);
 
@@ -719,7 +808,7 @@ function gerar(){
   const fortesTxt = v("fortes");
   const melhorarTxt = v("melhorar");
 
-  // seed (ANO + conteúdo) -> consistente, mas sem cair em texto carimbo
+  // seed = ano + inputs -> consistente para o mesmo caso, mas com variação real por conteúdo
   const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,nd,na,ne,tTrabTxt,tAtiTxt,fortesTxt,melhorarTxt].join("|"));
   const rng = makeRng(seed);
 
@@ -732,13 +821,13 @@ function gerar(){
   const fortesExplain = (() => {
     const th = extractThemes(`${fortesTxt} ${tTrabTxt} ${tAtiTxt}`);
     const p1 = pick(rng, [
-      "Os pontos fortes listados refletem competências e atitudes com impacto positivo no desempenho global.",
-      "Os pontos fortes indicados evidenciam práticas úteis e competências relevantes para a função."
+      "Os pontos fortes listados refletem competências e práticas com impacto positivo no trabalho diário.",
+      "Os pontos fortes indicados evidenciam aspetos relevantes que contribuem para a consistência do trabalho."
     ]);
     const p2 = themesPhrase(rng, th, "pos");
     const p3 = pick(rng, [
-      "Recomenda-se manter e reforçar estes aspetos, garantindo consistência e previsibilidade no próximo período.",
-      "A consolidação destes pontos contribuirá para estabilidade e qualidade ao longo do próximo ciclo."
+      "Recomenda-se manter e consolidar estes aspetos, garantindo previsibilidade e continuidade no próximo período.",
+      "A consolidação destes pontos contribui para estabilidade e qualidade ao longo do próximo ciclo."
     ]);
     return `<p>${[p1,p2,p3].join(" ")}</p>`;
   })();
@@ -759,7 +848,7 @@ function gerar(){
 
   const conclusao = buildConclusion(rng, tipoVal, nd, na, ne, tTrabTxt, tAtiTxt, fortesTxt, melhorarTxt);
 
-  // ao gerar, desligamos edição (evita confusão); podes reativar no botão
+  // ao gerar, desligamos edição (evita confusão); pode ser reativada no botão
   edicaoAtiva = false;
   const out = document.getElementById("out");
   out.contentEditable = "false";
@@ -777,7 +866,7 @@ function gerar(){
     <strong>Ano da Avaliação:</strong> ${escapeHtml(anoVal)}<br>
     <strong>Colaborador:</strong> ${escapeHtml(nomeVal)}<br>
     <strong>Função:</strong> ${escapeHtml(funcaoVal)}<br>
-    <strong>Tipo de função:</strong> ${tipoHuman}<br>
+    <strong>Tipo de função:</strong> ${escapeHtml(tipoHuman)}<br>
     <strong>Data:</strong> ${escapeHtml(dataVal)}
   </p>
 
