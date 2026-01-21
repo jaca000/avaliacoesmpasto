@@ -1,252 +1,92 @@
-<!doctype html>
-<html lang="pt-PT">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Monte do Pasto — Avaliação Anual</title>
-
-<style>
-:root{
-  --bg:#f4f5f2;
-  --card:#ffffff;
-  --text:#2b2b2b;
-  --muted:#6f6f6f;
-  --accent:#2e7d32;
-  --border:#dcdcdc;
-  --shadow:0 8px 20px rgba(0,0,0,.08);
-  --radius:16px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:var(--bg);
-  color:var(--text);
-}
-header{
-  text-align:center;
-  padding:36px 20px 24px;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-}
-.logo{max-height:150px;margin-bottom:16px}
-header h1{margin:0;font-size:28px}
-header p{margin:10px auto 0;max-width:760px;color:var(--muted)}
-main{
-  max-width:1100px;margin:0 auto;padding:28px 20px 60px;
-  display:grid;grid-template-columns:1fr 1fr;gap:22px;
-}
-@media(max-width:900px){main{grid-template-columns:1fr}}
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:20px;
-}
-h2{margin:0 0 14px;font-size:17px}
-label{display:block;margin:12px 0 6px;font-size:13px;color:var(--muted)}
-input,select,textarea{
-  width:100%;
-  padding:11px 12px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#fafafa;
-  font-size:14px;
-}
-textarea{min-height:100px;resize:vertical}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:600px){.grid{grid-template-columns:1fr}}
-.actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-button{
-  padding:10px 16px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:#f0f0f0;
-  font-weight:600;
-  cursor:pointer;
-}
-button.primary{background:var(--accent);color:#fff;border:none}
-.paper{
-  background:#fff;
-  color:#111;
-  padding:22px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  max-height:70vh;
-  overflow:auto;
-  white-space:pre-wrap;
-  font-family:Georgia,"Times New Roman",serif;
-  line-height:1.45;
-}
-@media print{
-  body{background:#fff}
-  header,.card.form,.actions{display:none}
-  main{display:block;padding:0}
-  .paper{max-height:none;border:none}
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <img src="logo-monte-do-pasto.png" alt="Monte do Pasto" class="logo">
-  <h1>Avaliação Anual de Colaboradores</h1>
-  <p>Ferramenta interna para avaliação clara, justa e objetiva.</p>
-</header>
-
-<main>
-
-<section class="card form">
-<h2>Dados do colaborador</h2>
-<div class="grid">
-  <div><label>Nome</label><input id="nome"></div>
-  <div><label>Função</label><input id="funcao"></div>
-  <div>
-    <label>Tipo de função</label>
-    <select id="tipo">
-      <option value="campo">Operacional / Campo</option>
-      <option value="admin">Administrativa / Apoio</option>
-    </select>
-  </div>
-  <div><label>Data</label><input type="date" id="data"></div>
-</div>
-
-<h2 style="margin-top:20px">Avaliação com nota</h2>
-<div class="grid">
-  <div>
-    <label>Nível de Desempenho (1–5)</label>
-    <select id="nd">
-      <option value="5">5 — Muito bom</option>
-      <option value="4">4 — Bom</option>
-      <option value="3" selected>3 — Suficiente</option>
-      <option value="2">2 — Fraco</option>
-      <option value="1">1 — Muito fraco</option>
-    </select>
-  </div>
-  <div>
-    <label>Nível de Atitude no Trabalho (1–5)</label>
-    <select id="na">
-      <option value="5">5 — Muito boa</option>
-      <option value="4">4 — Boa</option>
-      <option value="3" selected>3 — Suficiente</option>
-      <option value="2">2 — Fraca</option>
-      <option value="1">1 — Muito fraca</option>
-    </select>
-  </div>
-</div>
-
-<label>Comentário sobre o trabalho realizado</label>
-<textarea id="tTrab"></textarea>
-
-<label>Comentário sobre a atitude no trabalho</label>
-<textarea id="tAti"></textarea>
-
-<label>Pontos fortes</label>
-<textarea id="fortes"></textarea>
-
-<label>Aspetos a melhorar</label>
-<textarea id="melhorar"></textarea>
-
-<div class="actions">
-  <button class="primary" onclick="gerar()">Gerar ficha</button>
-  <button onclick="window.print()">Imprimir / PDF</button>
-</div>
-</section>
-
-<section class="card">
-<h2>Ficha gerada</h2>
-<div class="paper" id="out">FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
-
-(À espera de dados)</div>
-</section>
-
-</main>
-
 <script>
-const fraseNota = (n,tipo)=>({
-  5:`Apresenta um nível ${tipo} muito elevado, sendo uma referência no contexto do seu trabalho.`,
-  4:`Demonstra um bom nível ${tipo}, cumprindo de forma consistente o que é esperado.`,
-  3:`Cumpre o essencial ao nível ${tipo}, existindo margem para melhorar a consistência.`,
-  2:`Revela fragilidades ao nível ${tipo}, sendo necessário reforçar práticas.`,
-  1:`O nível ${tipo} é insuficiente, exigindo acompanhamento próximo.`
-}[n]);
-
-function detalharLista(texto, prefixo){
-  if(!texto.trim()) return `${prefixo} não foram identificados de forma específica.`;
-  return texto.split(/[.,;\n]/)
-    .map(t=>t.trim())
-    .filter(Boolean)
-    .map(t=>`• ${t.charAt(0).toUpperCase()+t.slice(1)}`)
-    .join("\n");
-}
-
-function gerar(){
-  const v=id=>document.getElementById(id).value;
-  const nd=parseInt(v("nd")), na=parseInt(v("na"));
-  const textoTotal=(v("tTrab")+v("tAti")+v("fortes")+v("melhorar")).toLowerCase();
-
-  let blocoEquipa="";
-  if(/equipa|colega|colabora|ajuda|conflito|dificuldade/.test(textoTotal)){
-    blocoEquipa =
-      /conflito|dificuldade/.test(textoTotal)
-      ? "No trabalho em equipa, identificam-se algumas dificuldades na relação e comunicação com os colegas, sendo importante reforçar a cooperação."
-      : "No trabalho em equipa, o colaborador demonstra boa integração e disponibilidade para colaborar com os colegas.";
+const exemplos = [
+  {
+    nome: "João Silva",
+    funcao: "Trabalhador Agrícola",
+    tipo: "campo",
+    nd: "3",
+    na: "4",
+    tTrab:
+      "Executa as tarefas que lhe são atribuídas de forma regular, cumprindo o essencial do trabalho diário. " +
+      "Em alguns momentos poderia melhorar a organização e o ritmo de execução.",
+    tAti:
+      "Mantém uma atitude positiva no trabalho, respeitando as orientações dadas e demonstrando disponibilidade para colaborar.",
+    fortes:
+      "Responsabilidade no cumprimento das tarefas; " +
+      "Disponibilidade para ajudar colegas; " +
+      "Boa adaptação ao trabalho no terreno.",
+    melhorar:
+      "Melhorar a organização do trabalho diário; " +
+      "Aumentar a atenção ao detalhe em tarefas repetitivas."
+  },
+  {
+    nome: "Ana Costa",
+    funcao: "Administrativa",
+    tipo: "admin",
+    nd: "4",
+    na: "4",
+    tTrab:
+      "Realiza as tarefas administrativas com bom nível de rigor, cumprindo prazos e assegurando o acompanhamento dos processos.",
+    tAti:
+      "Apresenta uma postura profissional adequada, mantendo uma relação correta com colegas e superiores.",
+    fortes:
+      "Boa organização do trabalho; " +
+      "Cumprimento de prazos; " +
+      "Capacidade de trabalhar de forma autónoma.",
+    melhorar:
+      "Reforçar a comunicação sobre o estado das tarefas em curso."
+  },
+  {
+    nome: "Carlos Mendes",
+    funcao: "Auxiliar de Armazém",
+    tipo: "campo",
+    nd: "2",
+    na: "3",
+    tTrab:
+      "Apresenta algumas dificuldades na execução consistente das tarefas, sendo necessário reforçar orientações e acompanhamento.",
+    tAti:
+      "De um modo geral mantém uma atitude correta, embora por vezes revele alguma resistência a mudanças.",
+    fortes:
+      "Disponibilidade para executar tarefas variadas; " +
+      "Pontualidade.",
+    melhorar:
+      "Melhorar a consistência no trabalho; " +
+      "Seguir orientações de forma mais rigorosa; " +
+      "Aumentar o cuidado com materiais e equipamentos."
+  },
+  {
+    nome: "Sofia Almeida",
+    funcao: "Responsável Administrativa",
+    tipo: "admin",
+    nd: "5",
+    na: "5",
+    tTrab:
+      "Desempenha as suas funções com elevado nível de qualidade, organização e autonomia, sendo uma referência na área administrativa.",
+    tAti:
+      "Demonstra uma atitude exemplar, promovendo um ambiente de trabalho positivo e colaborativo.",
+    fortes:
+      "Elevado sentido de responsabilidade; " +
+      "Excelente capacidade de organização; " +
+      "Boa comunicação com a equipa.",
+    melhorar:
+      "Manter o nível de desempenho e continuar a apoiar o desenvolvimento da equipa."
   }
+];
 
-  let objetivos=[];
-  if(/organiza|tempo|plane/.test(textoTotal)) objetivos.push("Melhorar a organização do trabalho diário.");
-  if(/comunica|equipa|colega/.test(textoTotal)) objetivos.push("Reforçar a comunicação e colaboração com a equipa.");
-  if(/aten|erro|cuidado/.test(textoTotal)) objetivos.push("Aumentar a atenção ao detalhe na execução das tarefas.");
-  objetivos=objetivos.slice(0,3);
+function exemplo(){
+  const e = exemplos[Math.floor(Math.random() * exemplos.length)];
 
-  let conclusaoObjetivos="";
-  if(nd>=4 && na>=4){
-    conclusaoObjetivos =
-      "A avaliação realizada é globalmente positiva, refletindo um bom nível de desempenho e uma atitude adequada no trabalho. " +
-      "Para o próximo período, o objetivo passa por consolidar as boas práticas já demonstradas e manter a consistência no desempenho.";
-  } else if(nd>=3 && na>=3){
-    conclusaoObjetivos =
-      "A avaliação realizada indica um desempenho global satisfatório, cumprindo o essencial das funções atribuídas. " +
-      "Para o próximo período, deverão ser trabalhados os aspetos identificados como oportunidades de melhoria, reforçando a qualidade do trabalho e a atitude no dia a dia.";
-  } else {
-    conclusaoObjetivos =
-      "A avaliação realizada evidencia fragilidades no desempenho e/ou na atitude no trabalho, sendo necessário um acompanhamento mais próximo. " +
-      "Para o próximo período, os objetivos passam por corrigir os pontos identificados e promover uma evolução consistente.";
-  }
-  if(objetivos.length){
-    conclusaoObjetivos += "\n\nObjetivos específicos:\n" + objetivos.map(o=>"• "+o).join("\n");
-  }
+  document.getElementById("nome").value = e.nome;
+  document.getElementById("funcao").value = e.funcao;
+  document.getElementById("tipo").value = e.tipo;
+  document.getElementById("data").value = new Date().toISOString().slice(0,10);
 
-  document.getElementById("out").textContent =
-`FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
+  document.getElementById("nd").value = e.nd;
+  document.getElementById("na").value = e.na;
 
-Colaborador: ${v("nome")}
-Função: ${v("funcao")}
-Tipo de função: ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}
-Data: ${v("data")}
-
-Nível de Desempenho: ${nd}/5
-${fraseNota(nd,"de desempenho")}
-${v("tTrab")}
-
-Nível de Atitude no Trabalho: ${na}/5
-${fraseNota(na,"de atitude")}
-${v("tAti")}
-
-${blocoEquipa ? "Trabalho em Equipa:\n"+blocoEquipa+"\n\n" : ""}
-
-Pontos fortes:
-${detalharLista(v("fortes"),"Pontos fortes")}
-
-Aspetos a melhorar:
-${detalharLista(v("melhorar"),"Aspetos a melhorar")}
-
-Conclusão e Objetivos:
-${conclusaoObjetivos}`;
+  document.getElementById("tTrab").value = e.tTrab;
+  document.getElementById("tAti").value = e.tAti;
+  document.getElementById("fortes").value = e.fortes;
+  document.getElementById("melhorar").value = e.melhorar;
 }
 </script>
-
-</body>
-</html>
