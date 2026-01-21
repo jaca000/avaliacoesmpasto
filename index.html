@@ -1,267 +1,181 @@
 <!doctype html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Monte do Pasto — Avaliação Anual</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monte do Pasto — Avaliação Anual</title>
 
-  <style>
-    :root{
-      --bg:#f4f5f2;
-      --card:#ffffff;
-      --text:#2b2b2b;
-      --muted:#6f6f6f;
-      --accent:#2e7d32;
-      --border:#dcdcdc;
-      --shadow:0 8px 20px rgba(0,0,0,.08);
-      --radius:16px;
-    }
-
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:var(--bg);
-      color:var(--text);
-    }
-
-    header{
-      text-align:center;
-      padding:36px 20px 24px;
-      background:#fff;
-      border-bottom:1px solid var(--border);
-    }
-
-    .logo{
-      max-height:150px;
-      margin-bottom:16px;
-    }
-
-    header h1{
-      margin:0;
-      font-size:28px;
-      font-weight:700;
-    }
-
-    header p{
-      margin:10px auto 0;
-      max-width:760px;
-      color:var(--muted);
-      font-size:16px;
-    }
-
-    main{
-      max-width:1100px;
-      margin:0 auto;
-      padding:28px 20px 60px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:22px;
-    }
-
-    @media (max-width:900px){
-      main{grid-template-columns:1fr}
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:20px;
-    }
-
-    h2{
-      margin:0 0 14px;
-      font-size:17px;
-    }
-
-    label{
-      display:block;
-      margin:12px 0 6px;
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    input, select, textarea{
-      width:100%;
-      padding:11px 12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#fafafa;
-      font-size:14px;
-    }
-
-    textarea{
-      min-height:100px;
-      resize:vertical;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
-    @media (max-width:600px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    .actions{
-      margin-top:16px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    button{
-      padding:10px 16px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:#f0f0f0;
-      cursor:pointer;
-      font-weight:600;
-    }
-
-    button.primary{
-      background:var(--accent);
-      color:#fff;
-      border:none;
-    }
-
-    .paper{
-      background:#fff;
-      color:#111;
-      padding:22px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      max-height:70vh;
-      overflow:auto;
-      white-space:pre-wrap;
-      font-family:Georgia,"Times New Roman",serif;
-      line-height:1.45;
-    }
-
-    @media print{
-      body{background:#fff}
-      header, .card.form, .actions{display:none}
-      main{display:block;padding:0}
-      .paper{max-height:none;border:none}
-    }
-  </style>
+<style>
+:root{
+  --bg:#f4f5f2;
+  --card:#ffffff;
+  --text:#2b2b2b;
+  --muted:#6f6f6f;
+  --accent:#2e7d32;
+  --border:#dcdcdc;
+  --shadow:0 8px 20px rgba(0,0,0,.08);
+  --radius:16px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  text-align:center;
+  padding:36px 20px 24px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+}
+.logo{max-height:150px;margin-bottom:16px}
+header h1{margin:0;font-size:28px}
+header p{margin:10px auto 0;max-width:760px;color:var(--muted)}
+main{
+  max-width:1100px;margin:0 auto;padding:28px 20px 60px;
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;
+}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;
+}
+h2{margin:0 0 14px;font-size:17px}
+label{display:block;margin:12px 0 6px;font-size:13px;color:var(--muted)}
+input,select,textarea{
+  width:100%;padding:11px 12px;border-radius:12px;
+  border:1px solid var(--border);background:#fafafa;font-size:14px;
+}
+textarea{min-height:100px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+button{
+  padding:10px 16px;border-radius:999px;border:1px solid var(--border);
+  background:#f0f0f0;font-weight:600;cursor:pointer
+}
+button.primary{background:var(--accent);color:#fff;border:none}
+.paper{
+  background:#fff;color:#111;padding:22px;border-radius:12px;
+  border:1px solid var(--border);max-height:70vh;overflow:auto;
+  white-space:pre-wrap;font-family:Georgia,"Times New Roman",serif;line-height:1.45
+}
+@media print{
+  body{background:#fff}
+  header,.card.form,.actions{display:none}
+  main{display:block;padding:0}
+  .paper{max-height:none;border:none}
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <img src="logo-monte-do-pasto.png" alt="Monte do Pasto" class="logo">
+  <img src="logo-monte-do-pasto.png" class="logo" alt="Monte do Pasto">
   <h1>Avaliação Anual de Colaboradores</h1>
-  <p>
-    Ferramenta interna para avaliação clara, justa e objetiva dos colaboradores
-    do Monte do Pasto.
-  </p>
+  <p>Ferramenta interna para avaliação clara, justa e objetiva.</p>
 </header>
 
 <main>
 
-  <!-- FORMULÁRIO -->
-  <section class="card form">
-    <h2>Dados do colaborador</h2>
+<section class="card form">
+<h2>Dados do colaborador</h2>
+<div class="grid">
+  <div><label>Nome</label><input id="nome"></div>
+  <div><label>Função</label><input id="funcao"></div>
+  <div>
+    <label>Tipo de função</label>
+    <select id="tipo">
+      <option value="campo">Operacional / Campo</option>
+      <option value="admin">Administrativa / Apoio</option>
+    </select>
+  </div>
+  <div><label>Data</label><input type="date" id="data"></div>
+</div>
 
-    <div class="grid">
-      <div>
-        <label>Nome do colaborador</label>
-        <input id="nome">
-      </div>
-      <div>
-        <label>Função</label>
-        <input id="funcao">
-      </div>
-      <div>
-        <label>Tipo de função</label>
-        <select id="tipo">
-          <option value="campo">Operacional / Campo</option>
-          <option value="admin">Administrativa / Apoio</option>
-        </select>
-      </div>
-      <div>
-        <label>Data da avaliação</label>
-        <input type="date" id="data">
-      </div>
-    </div>
+<h2 style="margin-top:20px">Avaliação com nota</h2>
+<div class="grid">
+  <div>
+    <label>Nível de Desempenho (1–5)</label>
+    <select id="nd">
+      <option value="5">5 — Muito bom</option>
+      <option value="4">4 — Bom</option>
+      <option value="3" selected>3 — Suficiente</option>
+      <option value="2">2 — Fraco</option>
+      <option value="1">1 — Muito fraco</option>
+    </select>
+  </div>
+  <div>
+    <label>Nível de Atitude no Trabalho (1–5)</label>
+    <select id="na">
+      <option value="5">5 — Muito boa</option>
+      <option value="4">4 — Boa</option>
+      <option value="3" selected>3 — Suficiente</option>
+      <option value="2">2 — Fraca</option>
+      <option value="1">1 — Muito fraca</option>
+    </select>
+  </div>
+</div>
 
-    <h2 style="margin-top:20px;">Avaliação com nota</h2>
+<label>Comentário sobre o trabalho</label>
+<textarea id="tTrab"></textarea>
 
-    <div class="grid">
-      <div>
-        <label>Nível de Desempenho (1–5)</label>
-        <select id="nivelDesempenho">
-          <option value="5">5 — Muito bom</option>
-          <option value="4">4 — Bom</option>
-          <option value="3" selected>3 — Suficiente</option>
-          <option value="2">2 — Fraco</option>
-          <option value="1">1 — Muito fraco</option>
-        </select>
-      </div>
-      <div>
-        <label>Nível de Atitude no Trabalho (1–5)</label>
-        <select id="nivelAtitude">
-          <option value="5">5 — Muito boa</option>
-          <option value="4">4 — Boa</option>
-          <option value="3" selected>3 — Suficiente</option>
-          <option value="2">2 — Fraca</option>
-          <option value="1">1 — Muito fraca</option>
-        </select>
-      </div>
-    </div>
+<label>Comentário sobre a atitude</label>
+<textarea id="tAti"></textarea>
 
-    <label>Comentário sobre o trabalho realizado</label>
-    <textarea id="textoTrabalho"></textarea>
+<label>Pontos fortes</label>
+<textarea id="fortes"></textarea>
 
-    <label>Comentário sobre a atitude no trabalho</label>
-    <textarea id="textoAtitude"></textarea>
+<label>Aspetos a melhorar</label>
+<textarea id="melhorar"></textarea>
 
-    <label>Pontos fortes</label>
-    <textarea id="fortes"></textarea>
+<div class="actions">
+  <button class="primary" onclick="gerar()">Gerar ficha</button>
+  <button onclick="window.print()">Imprimir / PDF</button>
+</div>
+</section>
 
-    <label>Aspetos a melhorar</label>
-    <textarea id="melhorar"></textarea>
+<section class="card">
+<h2>Ficha gerada</h2>
+<div class="paper" id="out">FICHA DE AVALIAÇÃO — MONTE DO PASTO
 
-    <div class="actions">
-      <button class="primary" onclick="gerar()">Gerar ficha</button>
-      <button onclick="window.print()">Imprimir / PDF</button>
-    </div>
-  </section>
-
-  <!-- OUTPUT -->
-  <section class="card">
-    <h2>Ficha gerada</h2>
-    <div class="paper" id="out">
-FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
-
-(À espera de dados)
-    </div>
-  </section>
+(À espera de dados)</div>
+</section>
 
 </main>
 
 <script>
+const fraseNota = (n,tipo)=>{
+  const map={
+    5:`Apresenta um nível ${tipo} muito elevado, sendo uma referência no seu trabalho.`,
+    4:`Demonstra um bom nível ${tipo}, cumprindo de forma consistente o que é esperado.`,
+    3:`Cumpre o essencial ao nível ${tipo}, existindo margem para melhoria.`,
+    2:`Revela fragilidades ao nível ${tipo}, sendo necessário reforçar práticas.`,
+    1:`O nível ${tipo} é insuficiente, exigindo acompanhamento próximo.`
+  };
+  return map[n];
+};
+
 function gerar(){
   const v=id=>document.getElementById(id).value;
+  const nd=v("nd"), na=v("na");
+  const textoTotal=(v("tTrab")+v("tAti")+v("fortes")+v("melhorar")).toLowerCase();
 
-  const textoGlobal =
-`${v("textoTrabalho")} ${v("textoAtitude")} ${v("fortes")} ${v("melhorar")}`.toLowerCase();
-
-  let blocoEquipa = "";
-  if(/equipa|colega|colegas|ajuda|colabora|conflito|trabalha com/.test(textoGlobal)){
-    blocoEquipa = `
-Trabalho em Equipa:
-Com base na avaliação realizada, o colaborador demonstra uma forma de integração
-na equipa que deve ser considerada no contexto do seu desempenho global,
-sendo importante manter ou melhorar a colaboração e a comunicação com os colegas.
-`;
+  let equipa="";
+  if(/equipa|colega|colabora|ajuda|conflito/.test(textoTotal)){
+    equipa = textoTotal.match(/conflito|dificuldade/) ?
+    "No trabalho em equipa, existem aspetos a melhorar, sobretudo ao nível da comunicação e cooperação."
+    :
+    "No trabalho em equipa, demonstra boa integração e disponibilidade para colaborar com os colegas.";
   }
+
+  let objetivos=[];
+  if(/organiza|tempo|plane/.test(textoTotal)) objetivos.push("Melhorar a organização do trabalho diário.");
+  if(/comunica|equipa|colega/.test(textoTotal)) objetivos.push("Reforçar a comunicação e colaboração com a equipa.");
+  if(/aten|erro|cuidado/.test(textoTotal)) objetivos.push("Aumentar a atenção ao detalhe na execução das tarefas.");
+  objetivos=objetivos.slice(0,3);
 
   document.getElementById("out").textContent =
 `FICHA DE AVALIAÇÃO ANUAL — MONTE DO PASTO
@@ -271,23 +185,30 @@ Função: ${v("funcao")}
 Tipo de função: ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}
 Data: ${v("data")}
 
-Nível de Desempenho: ${v("nivelDesempenho")}/5
-${v("textoTrabalho")}
+Nível de Desempenho: ${nd}/5
+${fraseNota(nd,"de desempenho")}
+${v("tTrab")}
 
-Nível de Atitude no Trabalho: ${v("nivelAtitude")}/5
-${v("textoAtitude")}
+Nível de Atitude no Trabalho: ${na}/5
+${fraseNota(na,"de atitude")}
+${v("tAti")}
 
-${blocoEquipa}
+${equipa ? "Trabalho em Equipa:\n"+equipa+"\n" : ""}
+
 Pontos fortes:
 ${v("fortes")}
 
 Aspetos a melhorar:
 ${v("melhorar")}
 
+Objetivos para o próximo período:
+${objetivos.map(o=>"• "+o).join("\n")}
+
+Síntese da Avaliação:
+Avaliação global ${nd>=4&&na>=4?"positiva":"equilibrada"}, com foco na consolidação do desempenho e melhoria contínua.
+
 Conclusão:
-Avaliação efetuada com base no trabalho observado ao longo do período avaliado,
-com o objetivo de promover a melhoria contínua e o alinhamento com os valores
-e necessidades do Monte do Pasto.`;
+Esta avaliação visa apoiar o desenvolvimento do colaborador, promovendo práticas alinhadas com os valores e necessidades do Monte do Pasto.`;
 }
 </script>
 
