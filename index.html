@@ -7,189 +7,119 @@
 
 <style>
 /* ================= BASE APP ================= */
-:root{
-  --bg:#f4f5f2;
-  --card:#ffffff;
-  --text:#2b2b2b;
-  --muted:#6f6f6f;
-  --accent:#2e7d32;
-  --border:#dcdcdc;
-  --shadow:0 8px 20px rgba(0,0,0,.08);
-  --radius:16px;
-}
-
-*{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  background:var(--bg);
-  color:var(--text);
+  background:#f4f5f2;
+  color:#2b2b2b;
 }
 
 header{
   text-align:center;
-  padding:36px 20px 24px;
+  padding:30px 20px;
   background:#fff;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid #ccc;
 }
 
-.logo{
-  max-height:140px;
-  margin-bottom:16px;
-}
-
-header h1{
-  margin:0;
-  font-size:28px;
-}
-
-header p{
-  margin:10px auto 0;
-  max-width:760px;
-  color:var(--muted);
-}
+header img{max-height:120px}
 
 main{
   max-width:1100px;
   margin:0 auto;
-  padding:28px 20px 60px;
+  padding:30px 20px;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:22px;
+  gap:24px;
 }
 
-@media(max-width:900px){
-  main{grid-template-columns:1fr}
-}
+@media(max-width:900px){main{grid-template-columns:1fr}}
 
 .card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:12px;
   padding:20px;
 }
 
-h2{
-  margin:0 0 14px;
-  font-size:17px;
-}
-
-label{
-  display:block;
-  margin:12px 0 6px;
-  font-size:13px;
-  color:var(--muted);
-}
-
+label{display:block;margin-top:12px;font-size:13px;color:#555}
 input,select,textarea{
   width:100%;
-  padding:11px 12px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#fafafa;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
   font-size:14px;
 }
-
-textarea{min-height:100px}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-@media(max-width:600px){
-  .grid{grid-template-columns:1fr}
-}
-
-.actions{
-  margin-top:16px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
+textarea{min-height:90px}
 
 button{
+  margin-top:16px;
   padding:10px 16px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:#f0f0f0;
-  font-weight:600;
+  border-radius:20px;
+  border:1px solid #ccc;
+  background:#eee;
   cursor:pointer;
-}
-
-button.primary{
-  background:var(--accent);
-  color:#fff;
-  border:none;
-}
-
-button.secondary{
-  background:#fff;
+  font-weight:600;
 }
 
 .paper{
   background:#fff;
-  color:#111;
-  padding:30px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  max-height:70vh;
-  overflow:auto;
-  white-space:pre-wrap;
-  font-family:Georgia,"Times New Roman",serif;
+  padding:40px;
+  border:1px solid #ccc;
+  font-family:"Times New Roman", serif;
   line-height:1.65;
 }
 
 /* ================= PDF / PRINT ================= */
+@page{
+  size:A4;
+  margin:25mm 20mm 25mm 20mm;
+}
+
 @media print{
 
-  body{
-    background:#fff;
-    font-family:"Times New Roman", Georgia, serif;
-    font-size:12pt;
-    color:#000;
-  }
+  body{background:#fff}
 
-  header, .card.form, .actions{
-    display:none !important;
-  }
+  header, .card.form, button{display:none}
 
-  main{
-    display:block;
-    padding:0;
-    margin:0;
-  }
+  main{display:block;padding:0}
 
   .paper{
     border:none;
     padding:0;
-    max-height:none;
-    line-height:1.6;
   }
 
-  .paper h3{
-    margin-top:24px;
-    margin-bottom:6px;
-    font-size:14pt;
-    border-bottom:1px solid #000;
-    padding-bottom:4px;
-  }
-
-  .paper .meta{
+  .pdf-header{
+    display:flex;
+    align-items:center;
+    border-bottom:2px solid #000;
+    padding-bottom:10px;
     margin-bottom:20px;
   }
 
-  .paper .meta p{
-    margin:4px 0;
+  .pdf-header img{height:60px;margin-right:20px}
+
+  .pdf-header h1{font-size:18pt;margin:0}
+
+  .section{
+    margin-bottom:20px;
+    page-break-inside:avoid;
   }
 
-  .paper .section{
-    margin-bottom:18px;
+  .section h2{
+    font-size:14pt;
+    border-bottom:1px solid #000;
+    padding-bottom:4px;
+    margin-bottom:8px;
   }
 
+  .signatures{
+    margin-top:40px;
+    page-break-inside:avoid;
+  }
+
+  .signature-line{
+    margin-top:30px;
+  }
 }
 </style>
 </head>
@@ -197,169 +127,103 @@ button.secondary{
 <body>
 
 <header>
-  <img src="logo-monte-do-pasto.png" alt="Monte do Pasto" class="logo">
-  <h1>Avaliação Anual de Colaboradores</h1>
-  <p>Ferramenta interna para avaliação estruturada e profissional.</p>
+  <img src="logo-monte-do-pasto.png" alt="Monte do Pasto">
+  <h2>Avaliação Anual de Colaboradores</h2>
 </header>
 
 <main>
 
 <section class="card form">
-<h2>Dados do colaborador</h2>
+<label>Nome</label><input id="nome">
+<label>Função</label><input id="funcao">
+<label>Tipo</label>
+<select id="tipo">
+  <option value="campo">Operacional / Campo</option>
+  <option value="admin">Administrativa / Apoio</option>
+</select>
+<label>Data</label><input type="date" id="data">
 
-<div class="grid">
-  <div><label>Nome</label><input id="nome"></div>
-  <div><label>Função</label><input id="funcao"></div>
-  <div>
-    <label>Tipo de função</label>
-    <select id="tipo">
-      <option value="campo">Operacional / Campo</option>
-      <option value="admin">Administrativa / Apoio</option>
-    </select>
-  </div>
-  <div><label>Data</label><input type="date" id="data"></div>
-</div>
+<label>Nível de Desempenho</label>
+<select id="nd">
+  <option value="5">5 — Muito bom</option>
+  <option value="4">4 — Bom</option>
+  <option value="3" selected>3 — Suficiente</option>
+  <option value="2">2 — Fraco</option>
+  <option value="1">1 — Muito fraco</option>
+</select>
 
-<h2 style="margin-top:20px">Avaliação com nota</h2>
+<label>Nível de Atitude</label>
+<select id="na">
+  <option value="5">5 — Muito boa</option>
+  <option value="4">4 — Boa</option>
+  <option value="3" selected>3 — Suficiente</option>
+  <option value="2">2 — Fraca</option>
+  <option value="1">1 — Muito fraca</option>
+</select>
 
-<div class="grid">
-  <div>
-    <label>Nível de Desempenho (1–5)</label>
-    <select id="nd">
-      <option value="5">5 — Muito bom</option>
-      <option value="4">4 — Bom</option>
-      <option value="3" selected>3 — Suficiente</option>
-      <option value="2">2 — Fraco</option>
-      <option value="1">1 — Muito fraco</option>
-    </select>
-  </div>
-  <div>
-    <label>Nível de Atitude no Trabalho (1–5)</label>
-    <select id="na">
-      <option value="5">5 — Muito boa</option>
-      <option value="4">4 — Boa</option>
-      <option value="3" selected>3 — Suficiente</option>
-      <option value="2">2 — Fraca</option>
-      <option value="1">1 — Muito fraca</option>
-    </select>
-  </div>
-</div>
+<label>Comentário Desempenho</label><textarea id="tTrab"></textarea>
+<label>Comentário Atitude</label><textarea id="tAti"></textarea>
 
-<label>Comentário sobre o trabalho realizado</label>
-<textarea id="tTrab"></textarea>
-
-<label>Comentário sobre a atitude no trabalho</label>
-<textarea id="tAti"></textarea>
-
-<label>Pontos fortes</label>
-<textarea id="fortes"></textarea>
-
-<label>Aspetos a melhorar</label>
-<textarea id="melhorar"></textarea>
-
-<div class="actions">
-  <button class="secondary" onclick="preencherExemplo()">Preencher com exemplo</button>
-  <button class="primary" onclick="gerar()">Gerar ficha</button>
-  <button onclick="window.print()">Imprimir / PDF</button>
-</div>
+<button onclick="gerar()">Gerar ficha</button>
+<button onclick="window.print()">Imprimir / PDF</button>
 </section>
 
 <section class="card">
-<h2>Ficha gerada</h2>
-<div class="paper" id="out">(À espera de dados)</div>
+<div class="paper" id="out">(Ficha por gerar)</div>
 </section>
 
 </main>
 
 <script>
-/* ================= TEXTO LONGO ================= */
+const labels={5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
 
-const mapaNota = {
-  5:"Muito bom",
-  4:"Bom",
-  3:"Suficiente",
-  2:"Fraco",
-  1:"Muito fraco"
-};
-
-function bloco(titulo, texto){
-  return `<h3>${titulo}</h3><div class="section">${texto}</div>`;
+function blocoLongo(titulo,nota,texto){
+  return `
+<div class="section">
+<h2>${titulo}: ${nota}/5 — ${labels[nota]}</h2>
+<p>
+Ao longo do período avaliado, o colaborador demonstrou um nível enquadrado como ${labels[nota].toLowerCase()}. 
+O desempenho observado reflete a forma como as responsabilidades foram assumidas no dia a dia. 
+A execução das tarefas ocorreu de forma consistente ao longo do período em análise. 
+Foram identificados comportamentos alinhados com as expectativas associadas à função. 
+O texto do avaliador reforça esta análise, indicando que ${texto}. 
+Em determinados momentos, verificaram-se oportunidades de melhoria que devem ser consideradas. 
+Ainda assim, o desempenho global manteve-se estável e coerente. 
+A avaliação atribuída enquadra-se na observação contínua realizada ao longo do ano. 
+Este bloco resume de forma objetiva o nível observado.
+</p>
+</div>`;
 }
 
-/* ================= EXEMPLOS ================= */
-const exemplos=[
-  {
-    nome:"João Silva",
-    funcao:"Trabalhador Agrícola",
-    tipo:"campo",
-    nd:3,
-    na:4,
-    tTrab:"Cumpre as tarefas atribuídas com regularidade, embora possa melhorar a organização do trabalho.",
-    tAti:"Mantém uma atitude positiva e colaborativa.",
-    fortes:"Responsabilidade; disponibilidade; adaptação ao trabalho no terreno.",
-    melhorar:"Organização do trabalho; atenção ao detalhe."
-  }
-];
-
-function preencherExemplo(){
-  const e=exemplos[Math.floor(Math.random()*exemplos.length)];
-  nome.value=e.nome;
-  funcao.value=e.funcao;
-  tipo.value=e.tipo;
-  data.value=new Date().toISOString().slice(0,10);
-  nd.value=e.nd;
-  na.value=e.na;
-  tTrab.value=e.tTrab;
-  tAti.value=e.tAti;
-  fortes.value=e.fortes;
-  melhorar.value=e.melhorar;
-}
-
-/* ================= GERAR ================= */
 function gerar(){
   const v=id=>document.getElementById(id).value;
-  const ndVal=parseInt(v("nd"));
-  const naVal=parseInt(v("na"));
-
-  out.innerHTML = `
-<div class="meta">
-<p><strong>Colaborador:</strong> ${v("nome")}</p>
-<p><strong>Função:</strong> ${v("funcao")}</p>
-<p><strong>Tipo de função:</strong> ${v("tipo")==="campo"?"Operacional / Campo":"Administrativa / Apoio"}</p>
-<p><strong>Data:</strong> ${v("data")}</p>
+  out.innerHTML=`
+<div class="pdf-header">
+<img src="logo-monte-do-pasto.png">
+<h1>Monte do Pasto — Avaliação Anual</h1>
 </div>
 
-${bloco(
-  `Nível de Desempenho: ${ndVal}/5 — ${mapaNota[ndVal]}`,
-  `Ao longo do período avaliado, o colaborador demonstrou um nível de desempenho enquadrado como ${mapaNota[ndVal].toLowerCase()}. 
-   ${v("tTrab")} 
-   De forma global, o desempenho apresentado é coerente com a classificação atribuída, existindo margem para consolidação futura.`
-)}
+<p><strong>Colaborador:</strong> ${v("nome")}<br>
+<strong>Função:</strong> ${v("funcao")}<br>
+<strong>Tipo:</strong> ${v("tipo")}<br>
+<strong>Data:</strong> ${v("data")}</p>
 
-${bloco(
-  `Nível de Atitude no Trabalho: ${naVal}/5 — ${mapaNota[naVal]}`,
-  `No que respeita à atitude no trabalho, foi observada uma postura ${mapaNota[naVal].toLowerCase()}. 
-   ${v("tAti")} 
-   A atitude demonstrada contribui para o enquadramento geral da avaliação.`
-)}
+${blocoLongo("Nível de Desempenho",parseInt(v("nd")),v("tTrab"))}
+${blocoLongo("Nível de Atitude no Trabalho",parseInt(v("na")),v("tAti"))}
 
-${bloco(
-  "Pontos Fortes",
-  v("fortes")
-)}
+<div class="signatures">
+<p><strong>Data:</strong> ____________________________</p>
 
-${bloco(
-  "Aspetos a Melhorar",
-  v("melhorar")
-)}
+<div class="signature-line">
+<strong>Assinatura do Colaborador:</strong><br><br>
+______________________________________________
+</div>
 
-${bloco(
-  "Conclusão e Objetivos",
-  "A avaliação global reflete o desempenho e a atitude observados ao longo do período analisado. " +
-  "Os pontos fortes identificados deverão ser mantidos e consolidados. " +
-  "Os aspetos a melhorar constituem áreas de desenvolvimento prioritárias para o próximo período. " +
-  "Esta avaliação deverá servir de base para acompanhamento e definição de objetivos futuros."
-)}
+<div class="signature-line">
+<strong>Assinatura da Chefia:</strong><br><br>
+______________________________________________
+</div>
+</div>
 `;
 }
 </script>
