@@ -55,6 +55,10 @@
     cursor:pointer;
     font-weight:600;
   }
+  button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+  }
   .hint{
     font-size:12px;color:#666;margin-top:10px;line-height:1.35
   }
@@ -83,9 +87,26 @@
     text-align:center;
   }
 
+  /* NOVO: indicador de geração */
+  #gerando{
+    display:none;
+    font-style:italic;
+    color:#666;
+    margin-bottom:12px;
+  }
+
+  /* NOVO: preview "a escrever" (texto plano) */
+  #typingPreview{
+    white-space:pre-wrap;
+    font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size:12.5px;
+    line-height:1.55;
+    color:#444;
+  }
+
   @page{size:A4;margin:25mm 20mm}
   @media print{
-    header,.card.form,.btn-row,.hint{display:none}
+    header,.card.form,.btn-row,.hint,#gerando{display:none}
     main{display:block;padding:0}
     .paper{border:none;padding:0}
     .pdf-header{
@@ -167,7 +188,7 @@
   <textarea id="tTrab" placeholder="Ex.: Cumpre as tarefas, mas precisa de melhorar a organização e o controlo de qualidade..."></textarea>
 
   <label>Comentário sobre a atitude (texto livre)</label>
-  <textarea id="tAti" placeholder="Ex.: Boa colaboração, mas por vezes reage mal a mudanças..."></textarea>
+  <textarea id="tAti" placeholder="Ex.: Boa colaboração com colegas, mas por vezes reage mal a mudanças..."></textarea>
 
   <label>Pontos fortes (separar por ;)</label>
   <textarea id="fortes" placeholder="Ex.: responsabilidade; autonomia; disponibilidade"></textarea>
@@ -181,14 +202,17 @@
   </div>
 
   <div class="btn-row">
-    <button onclick="preencherExemplo()">Preencher com exemplo</button>
-    <button onclick="gerar()">Gerar ficha</button>
-    <button onclick="toggleEdicao()">Ativar edição do texto</button>
-    <button onclick="window.print()">Imprimir / PDF</button>
+    <button id="btnEx" onclick="preencherExemplo()">Preencher com exemplo</button>
+    <button id="btnGerar" onclick="gerar()">Gerar ficha</button>
+    <button id="btnEditar" onclick="toggleEdicao()">Ativar edição do texto</button>
+    <button id="btnPdf" onclick="window.print()">Imprimir / PDF</button>
   </div>
 </section>
 
 <section class="card">
+  <!-- NOVO: indicador -->
+  <div id="gerando">🤖 A gerar avaliação…</div>
+
   <div class="paper" id="out">(Ficha por gerar)</div>
 </section>
 
@@ -199,9 +223,13 @@
 const labels = {5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
 let edicaoAtiva = false;
 
-/* anti-repetição de inícios (na sessão) */
+/* estado de geração (NOVO) */
+let isGenerating = false;
+let typingTimer = null;
+
+/* memória curta anti-repetição (na sessão) */
 const recentStarts = [];
-const RECENT_LIMIT = 16;
+const RECENT_LIMIT = 14;
 
 /* anti-repetição de exemplos por tipo */
 const ultimoExPorTipo = { campo: -1, admin: -1, chefia: -1 };
@@ -316,6 +344,8 @@ const exemplosPorTipo = {
 };
 
 function preencherExemplo(){
+  if(isGenerating) return;
+
   const tipo = document.getElementById("tipo").value;
   const pool = exemplosPorTipo[tipo] || exemplosPorTipo.campo;
 
@@ -326,20 +356,20 @@ function preencherExemplo(){
   ultimoExPorTipo[tipo] = i;
   const e = pool[i];
 
-  document.getElementById("ano").value = e.ano;
-  document.getElementById("nome").value = e.nome;
-  document.getElementById("funcao").value = e.funcao;
-  document.getElementById("tipo").value = e.tipo;
-  document.getElementById("data").value = new Date().toISOString().slice(0,10);
+  ano.value = e.ano;
+  nome.value = e.nome;
+  funcao.value = e.funcao;
+  tipo.value = e.tipo;
+  data.value = new Date().toISOString().slice(0,10);
 
-  document.getElementById("nd").value = e.nd;
-  document.getElementById("na").value = e.na;
-  document.getElementById("ne").value = e.ne;
+  nd.value = e.nd;
+  na.value = e.na;
+  ne.value = e.ne;
 
-  document.getElementById("tTrab").value = e.tTrab;
-  document.getElementById("tAti").value = e.tAti;
-  document.getElementById("fortes").value = e.fortes;
-  document.getElementById("melhorar").value = e.melhorar;
+  tTrab.value = e.tTrab;
+  tAti.value = e.tAti;
+  fortes.value = e.fortes;
+  melhorar.value = e.melhorar;
 }
 
 /* ===================== UTILITÁRIOS ===================== */
@@ -355,11 +385,87 @@ function lista(txt){
 
 /* ===================== EDIÇÃO DIRETA ===================== */
 function toggleEdicao(){
+  if(isGenerating) return;
+
   edicaoAtiva = !edicaoAtiva;
   const el = document.getElementById("out");
   el.contentEditable = edicaoAtiva ? "true" : "false";
   el.classList.toggle("editable", edicaoAtiva);
   if(edicaoAtiva) el.focus();
+}
+
+/* ===================== BOTÕES (NOVO) ===================== */
+function setButtonsDisabled(disabled){
+  document.getElementById("btnEx").disabled = disabled;
+  document.getElementById("btnGerar").disabled = disabled;
+  document.getElementById("btnEditar").disabled = disabled;
+  document.getElementById("btnPdf").disabled = disabled;
+}
+
+/* ===================== SIMULAÇÃO “IA A ESCREVER” (NOVO) ===================== */
+/* Escreve um preview em texto plano (seguro), e no fim troca para HTML final formatado */
+function simulateAIGeneration(outEl, htmlFinal){
+  const indicador = document.getElementById("gerando");
+
+  // garantir fim de qualquer geração anterior
+  if(typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+
+  indicador.style.display = "block";
+  isGenerating = true;
+  setButtonsDisabled(true);
+
+  // desliga edição durante a geração
+  edicaoAtiva = false;
+  outEl.contentEditable = "false";
+  outEl.classList.remove("editable");
+
+  // cria preview
+  outEl.innerHTML = `<div id="typingPreview"></div>`;
+  const previewEl = document.getElementById("typingPreview");
+
+  // converte HTML em texto “human-friendly”
+  const tmp = document.createElement("div");
+  tmp.innerHTML = htmlFinal
+    .replace(/<\/h1>/gi, "\n\n")
+    .replace(/<\/h2>/gi, "\n")
+    .replace(/<\/p>/gi, "\n\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/div>/gi, "\n")
+    .replace(/<\/li>/gi, "\n");
+
+  const fullText = (tmp.innerText || "").replace(/\n{3,}/g, "\n\n").trim();
+
+  let i = 0;
+
+  // velocidade com jitter (parece “humano”)
+  const base = 9; // ms por caracter (ajusta aqui)
+  const jitter = () => Math.floor(Math.random() * 12); // 0..11
+  const pauseChance = () => Math.random() < 0.02; // pausas raras
+  const pauseTime = () => 120 + Math.floor(Math.random()*220);
+
+  function step(){
+    if(i < fullText.length){
+      previewEl.textContent = fullText.slice(0, i + 1);
+      i++;
+
+      let delay = base + jitter();
+      const ch = fullText[i-1];
+      if(ch === "." || ch === "," || ch === ";" || ch === ":") delay += 40 + jitter();
+      if(ch === "\n") delay += 60 + jitter();
+      if(pauseChance()) delay += pauseTime();
+
+      typingTimer = setTimeout(step, delay);
+    }else{
+      // troca para HTML final formatado
+      outEl.innerHTML = htmlFinal;
+
+      indicador.style.display = "none";
+      isGenerating = false;
+      setButtonsDisabled(false);
+      typingTimer = null;
+    }
+  }
+  step();
 }
 
 /* ===================== PRNG DETERMINÍSTICO ===================== */
@@ -445,8 +551,8 @@ const THEMES = [
   {key:"atencao", label:"atenção ao detalhe", pos:["detalhe","atencao","cuidado"], neg:["distraido","distracao","esquece"]},
   {key:"atitude", label:"atitude/postura", pos:["positivo","respeito","disponibilidade","empenho","motivacao"], neg:["resistencia","desmotivado","reage","irritado"]},
 
-  /* ADN Monte do Pasto (Chefia) */
-  {key:"clientes", label:"relação com clientes", pos:["cliente","clientes","contacto","relacao","confiança","confianca","expectativa","expectativas"], neg:["queixa","queixas","reclamacao","reclamacoes"]},
+  /* Monte do Pasto (Chefia) */
+  {key:"clientes", label:"relação com clientes", pos:["cliente","clientes","contacto","contato","relacao","confianca","expectativa","expectativas"], neg:["queixa","queixas","reclamacao","reclamacoes"]},
   {key:"custos", label:"custos de manutenção", pos:["custo","custos","manutencao","recursos","otimizacao","otimizar","controlo"], neg:["despesa","despesas","excesso","perda","perdas"]},
   {key:"engorda", label:"melhoria na engorda", pos:["engorda","bovinos","bovino","alimentacao","alimentar","ganho","peso","monitorizacao","monitorizar"], neg:["queda","quebra","problema","problemas"]}
 ];
@@ -473,6 +579,7 @@ function correctToken(tok){
   }
   return (bestD <= maxD) ? best : tok;
 }
+
 function extractThemes(text){
   const raw = tokens(text).map(correctToken);
   const counts = {};
@@ -480,7 +587,9 @@ function extractThemes(text){
 
   for(const tok of raw){
     for(const th of THEMES){
-      if(th.pos.map(normalizeText).includes(tok) || th.neg.map(normalizeText).includes(tok)){
+      const pos = th.pos.map(normalizeText);
+      const neg = th.neg.map(normalizeText);
+      if(pos.includes(tok) || neg.includes(tok)){
         counts[th.key] += 1;
       }
     }
@@ -503,6 +612,7 @@ function extractAnchors(text){
   const a2 = pool[1] ? pool[1].slice(0, 90) : "";
   return [a1,a2].filter(Boolean);
 }
+
 function themesPhrase(rng, themes, kind){
   if(!themes.length){
     return kind==="pos"
@@ -765,6 +875,8 @@ function buildConclusion(rng, tipo, nd, na, ne, tTrab, tAti, fortesTxt, melhorar
 
 /* ===================== GERAR ===================== */
 function gerar(){
+  if(isGenerating) return;
+
   const v = id => (document.getElementById(id).value ?? "").trim();
 
   const anoVal = v("ano");
@@ -799,24 +911,23 @@ function gerar(){
     return;
   }
 
-  const nd = parseInt(document.getElementById("nd").value,10);
-  const na = parseInt(document.getElementById("na").value,10);
-  const ne = parseInt(document.getElementById("ne").value,10);
+  const ndVal = parseInt(document.getElementById("nd").value,10);
+  const naVal = parseInt(document.getElementById("na").value,10);
+  const neVal = parseInt(document.getElementById("ne").value,10);
 
   const tTrabTxt = v("tTrab");
   const tAtiTxt  = v("tAti");
   const fortesTxt = v("fortes");
   const melhorarTxt = v("melhorar");
 
-  // seed = ano + inputs -> consistente para o mesmo caso, mas com variação real por conteúdo
-  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,nd,na,ne,tTrabTxt,tAtiTxt,fortesTxt,melhorarTxt].join("|"));
+  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,ndVal,naVal,neVal,tTrabTxt,tAtiTxt,fortesTxt,melhorarTxt].join("|"));
   const rng = makeRng(seed);
 
   const tipoHuman = (tipoVal==="campo") ? "Operacional / Campo" : (tipoVal==="admin" ? "Administrativa / Apoio" : "Chefia");
 
-  const blocoDesempenho = buildScoredBlock(rng, "Nível de Desempenho", nd, tipoVal, tTrabTxt, `${fortesTxt} ${melhorarTxt}`);
-  const blocoAtitude    = buildScoredBlock(rng, "Nível de Atitude no Trabalho", na, tipoVal, tAtiTxt, `${fortesTxt} ${melhorarTxt}`);
-  const blocoEquipa     = buildScoredBlock(rng, "Trabalho em Equipa", ne, tipoVal, `${tAtiTxt}`, `${fortesTxt} ${melhorarTxt}`);
+  const blocoDesempenho = buildScoredBlock(rng, "Nível de Desempenho", ndVal, tipoVal, tTrabTxt, `${fortesTxt} ${melhorarTxt}`);
+  const blocoAtitude    = buildScoredBlock(rng, "Nível de Atitude no Trabalho", naVal, tipoVal, tAtiTxt, `${fortesTxt} ${melhorarTxt}`);
+  const blocoEquipa     = buildScoredBlock(rng, "Trabalho em Equipa", neVal, tipoVal, `${tAtiTxt}`, `${fortesTxt} ${melhorarTxt}`);
 
   const fortesExplain = (() => {
     const th = extractThemes(`${fortesTxt} ${tTrabTxt} ${tAtiTxt}`);
@@ -846,15 +957,9 @@ function gerar(){
     return `<p>${[p1,p2,p3].join(" ")}</p>`;
   })();
 
-  const conclusao = buildConclusion(rng, tipoVal, nd, na, ne, tTrabTxt, tAtiTxt, fortesTxt, melhorarTxt);
+  const conclusao = buildConclusion(rng, tipoVal, ndVal, naVal, neVal, tTrabTxt, tAtiTxt, fortesTxt, melhorarTxt);
 
-  // ao gerar, desligamos edição (evita confusão); pode ser reativada no botão
-  edicaoAtiva = false;
-  const out = document.getElementById("out");
-  out.contentEditable = "false";
-  out.classList.remove("editable");
-
-  out.innerHTML = `
+  const htmlFinal = `
   <div class="pdf-header">
     <img src="logo-monte-do-pasto.png" alt="Monte do Pasto">
     <div>
@@ -898,6 +1003,9 @@ function gerar(){
     TPL Avaliação Monte do Pasto
   </div>
   `;
+
+  const out = document.getElementById("out");
+  simulateAIGeneration(out, htmlFinal);
 }
 </script>
 
