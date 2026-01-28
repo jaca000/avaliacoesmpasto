@@ -46,6 +46,35 @@
   }
   textarea{min-height:92px}
 
+  .row3{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+  }
+  @media(max-width:900px){ .row3{grid-template-columns:1fr} }
+
+  .mini{
+    font-size:12px;
+    color:#666;
+    margin-top:6px;
+    line-height:1.35;
+  }
+  .pill{
+    display:inline-block;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid #ddd;
+    background:#fafafa;
+    font-size:12px;
+    color:#444;
+    margin-top:8px;
+  }
+  .warn{
+    border-color:#e0b4b4;
+    background:#fff3f3;
+    color:#9b2c2c;
+  }
+
   .btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   button{
     padding:10px 16px;
@@ -104,7 +133,7 @@
 
   @page{size:A4;margin:25mm 20mm}
   @media print{
-    header,.card.form,.btn-row,.hint,#gerando{display:none}
+    header,.card.form,.btn-row,.hint,#gerando,.pill{display:none}
     main{display:block;padding:0}
     .paper{border:none;padding:0}
     .pdf-header{
@@ -183,6 +212,24 @@
     <option value="2">2 — Fraco</option>
     <option value="1">1 — Muito fraco</option>
   </select>
+
+  <label>Ponderações (%)</label>
+  <div class="row3">
+    <div>
+      <label style="margin-top:0">Desempenho</label>
+      <input id="w_nd" type="number" min="0" max="100" value="50">
+    </div>
+    <div>
+      <label style="margin-top:0">Atitude</label>
+      <input id="w_na" type="number" min="0" max="100" value="25">
+    </div>
+    <div>
+      <label style="margin-top:0">Equipa</label>
+      <input id="w_ne" type="number" min="0" max="100" value="25">
+    </div>
+  </div>
+  <div id="pesoInfo" class="pill">Ponderações OK (100%)</div>
+  <div class="mini">As ponderações influenciam o <strong>Score Global</strong> e a <strong>Conclusão Geral</strong>.</div>
 
   <label>Comentário sobre o desempenho (texto livre)</label>
   <textarea id="tTrab" placeholder="Ex.: Cumpre as tarefas, mas em picos perde organização e precisa de orientação..."></textarea>
@@ -453,7 +500,54 @@ function pickNonRepeatingStart(rng, arr){
   return fb;
 }
 
-/* ===================== TEXTO MAIS DIRETO (NOVA LINGUAGEM) ===================== */
+/* ===================== PONDERAÇÕES ===================== */
+function numVal(id){
+  const x = parseFloat((document.getElementById(id).value ?? "").toString().replace(",", "."));
+  return isFinite(x) ? x : 0;
+}
+
+function validateWeights(){
+  const w1 = Math.max(0, Math.min(100, numVal("w_nd")));
+  const w2 = Math.max(0, Math.min(100, numVal("w_na")));
+  const w3 = Math.max(0, Math.min(100, numVal("w_ne")));
+  const sum = w1 + w2 + w3;
+
+  const info = document.getElementById("pesoInfo");
+
+  if(sum === 100){
+    info.textContent = "Ponderações OK (100%)";
+    info.classList.remove("warn");
+  }else{
+    info.textContent = `Atenção: soma = ${sum.toFixed(0)}% (deve ser 100%)`;
+    info.classList.add("warn");
+  }
+  return {w1,w2,w3,sum};
+}
+
+// valida em tempo real
+["w_nd","w_na","w_ne"].forEach(id=>{
+  document.addEventListener("input", (e)=>{
+    if(e.target && e.target.id === id) validateWeights();
+  });
+});
+
+function normalizeWeights(w1,w2,w3){
+  const sum = w1+w2+w3;
+  if(sum <= 0){
+    return {w1:34, w2:33, w3:33, sum:100};
+  }
+  // normaliza para 100
+  const n1 = (w1/sum)*100;
+  const n2 = (w2/sum)*100;
+  const n3 = 100 - n1 - n2; // fecha 100 certinho
+  return {w1:n1, w2:n2, w3:n3, sum:100};
+}
+
+function scorePonderado(nd,na,ne,w1,w2,w3){
+  return (nd*(w1/100)) + (na*(w2/100)) + (ne*(w3/100));
+}
+
+/* ===================== TEXTO DIRETO (geração) ===================== */
 function tipoHuman(tipoVal){
   return (
     tipoVal==="campo" ? "CAMPO / OPERAÇÕES PECUÁRIAS" :
@@ -483,7 +577,7 @@ function extractAnchors(text){
   return [a1,a2].filter(Boolean);
 }
 
-function buildBlockDireto(rng, title, nota, tipoVal, freeText, fortesTxt, melhorarTxt){
+function buildBlockDireto(rng, title, nota, tipoVal, freeText){
   const ctx = contexto(tipoVal);
   const anchors = extractAnchors(freeText);
 
@@ -518,7 +612,7 @@ function buildBlockDireto(rng, title, nota, tipoVal, freeText, fortesTxt, melhor
       `De forma prática, observa-se que ${anchors[0].toLowerCase()}.`
     ])
     : pick(rng, [
-      "Os registos do período apontam para padrões claros de execução no dia a dia.",
+      "O período avaliado mostra padrões claros de execução no dia a dia.",
       "A informação recolhida permite identificar com clareza o padrão de trabalho."
     ]);
 
@@ -574,8 +668,8 @@ function buildBlockDireto(rng, title, nota, tipoVal, freeText, fortesTxt, melhor
 
   const s8 = tone==="forte"
     ? pick(rng, [
-      `Direção: manter o padrão e consolidar autonomia, com foco em ${lista(melhorarTxt).includes("—") ? "método e verificação final" : "pontos de melhoria identificados"}.`,
-      "Direção: manter consistência e reforçar capacidade de liderança/apoio à equipa quando necessário."
+      "Direção: manter o padrão e consolidar autonomia, com foco em método e verificação final.",
+      "Direção: manter consistência e reforçar capacidade de apoiar a equipa quando necessário."
     ])
     : tone==="ok"
       ? pick(rng, [
@@ -596,22 +690,54 @@ function buildBlockDireto(rng, title, nota, tipoVal, freeText, fortesTxt, melhor
   </div>`;
 }
 
-/* ===================== CONCLUSÃO GERAL (INTEGRADA) ===================== */
-function buildConclusaoGeral(tipoVal, nd, na, ne){
+/* ===================== CONCLUSÃO GERAL (com base no score ponderado) ===================== */
+function faixaGlobal(score){
+  if(score >= 4.25) return "excelente";
+  if(score >= 3.25) return "boa";
+  if(score >= 2.50) return "suficiente";
+  return "fraca";
+}
+
+function buildConclusaoGeral(tipoVal, nd, na, ne, score, w1, w2, w3){
   const ctx = contexto(tipoVal);
+  const faixa = faixaGlobal(score);
+
+  const p1 = "A presente avaliação reflete o desempenho observado ao longo do período avaliado, considerando os resultados obtidos, o rigor na execução, os comportamentos no trabalho e a capacidade de evolução.";
+  const p2 = `Os níveis atribuídos são: Desempenho ${nd}/5 — ${labels[nd]}, Atitude ${na}/5 — ${labels[na]} e Trabalho em Equipa ${ne}/5 — ${labels[ne]}.`;
+  const p3 = `Ponderações aplicadas: Desempenho ${w1.toFixed(0)}%, Atitude ${w2.toFixed(0)}%, Equipa ${w3.toFixed(0)}%.`;
+  const p4 = `Score Global (ponderado): ${score.toFixed(2)}/5 — ${faixa==="excelente" ? "Muito bom" : faixa==="boa" ? "Bom" : faixa==="suficiente" ? "Suficiente" : "Fraco"}.`;
+
+  const corpo =
+    faixa==="excelente" ? [
+      `De forma global, o desempenho ${ctx} é consistente e acima do esperado, com impacto positivo no funcionamento diário.`,
+      "Mesmo em contextos exigentes, mantém controlo, método e capacidade de resposta, reduzindo necessidade de acompanhamento.",
+      "Para o próximo período, recomenda-se consolidar este padrão e aumentar autonomia/impacto em tarefas de maior responsabilidade.",
+      "A evolução deverá focar melhoria contínua e transferência de boas práticas para a equipa, mantendo qualidade e ritmo sob pressão."
+    ] :
+    faixa==="boa" ? [
+      `De forma global, o desempenho ${ctx} é bom e fiável, garantindo resultados consistentes na maioria das situações.`,
+      "Em momentos de maior pressão podem existir oscilações, mas o padrão geral é positivo e controlado.",
+      "Para o próximo período, é importante reforçar autonomia e método nos picos de trabalho, reduzindo necessidade de intervenção da chefia.",
+      "A evolução depende de consolidar hábitos de verificação final e priorização para manter consistência em contextos menos previsíveis."
+    ] :
+    faixa==="suficiente" ? [
+      `De forma global, o desempenho ${ctx} cumpre o essencial em contextos estáveis e rotineiros, permitindo continuidade normal das operações.`,
+      "No entanto, quando surgem situações de maior pressão, alterações de planeamento ou exigências adicionais, evidenciam-se limitações ao nível da autonomia, da organização e da capacidade de resposta.",
+      "Estas limitações têm impacto direto na eficácia do trabalho, no cumprimento de prazos e na carga de acompanhamento por parte da chefia.",
+      "Para o próximo período, é fundamental reforçar autonomia, priorização e aplicação consistente de métodos de trabalho, mesmo sob pressão."
+    ] : [
+      `De forma global, o desempenho ${ctx} está abaixo do necessário e não garante consistência nem controlo ao longo do período.`,
+      "As falhas repetidas e a resposta insuficiente sob pressão comprometem prazos, qualidade e aumentam o retrabalho.",
+      "É necessário definir um plano corretivo com objetivos claros, acompanhamento regular e verificação frequente de evolução.",
+      "A continuidade e progressão dependem de melhorias concretas em método de trabalho, rigor e capacidade de resposta."
+    ];
+
+  const p = [p1,p2,p3,p4,...corpo].join(" ");
+
   return `
   <div class="section">
     <h2>Conclusão Geral</h2>
-    <p>
-      A presente avaliação reflete o desempenho observado ao longo do período avaliado, considerando os resultados obtidos, o rigor na execução, os comportamentos no trabalho e a capacidade de evolução.
-      Os níveis atribuídos são: Desempenho ${nd}/5 — ${labels[nd]}, Atitude ${na}/5 — ${labels[na]} e Trabalho em Equipa ${ne}/5 — ${labels[ne]}.
-      De forma global, o desempenho ${ctx} cumpre as exigências da função em contextos estáveis e rotineiros, permitindo assegurar a continuidade normal das operações.
-      No entanto, quando surgem situações de maior pressão, alterações de planeamento ou exigências adicionais, evidenciam-se limitações ao nível da autonomia, da organização e da capacidade de resposta.
-      Estas limitações têm impacto direto na eficácia do trabalho, no cumprimento de prazos e na carga de acompanhamento por parte da chefia.
-      O desempenho revela fiabilidade na execução, mas dependência quando o contexto se torna mais exigente.
-      Para o próximo período, é fundamental reforçar a autonomia, a capacidade de priorização e a aplicação consistente de métodos de trabalho, mesmo sob pressão.
-      A evolução dependerá da capacidade de assumir maior responsabilidade na execução das tarefas, na aprendizagem contínua e na adaptação a contextos menos previsíveis.
-    </p>
+    <p>${escapeHtml(p)}</p>
   </div>`;
 }
 
@@ -662,14 +788,28 @@ function gerar(){
   const fortesTxt = v("fortes");
   const melhorarTxt = v("melhorar");
 
-  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,ndVal,naVal,neVal,tTrabTxt,tAtiTxt,fortesTxt,melhorarTxt].join("|"));
+  // ponderações
+  const raw = validateWeights();
+  const norm = (raw.sum === 100) ? raw : normalizeWeights(raw.w1, raw.w2, raw.w3);
+
+  // se normalizou, reflete nos inputs (para ficar transparente)
+  if(raw.sum !== 100){
+    document.getElementById("w_nd").value = norm.w1.toFixed(0);
+    document.getElementById("w_na").value = norm.w2.toFixed(0);
+    document.getElementById("w_ne").value = norm.w3.toFixed(0);
+    validateWeights();
+  }
+
+  const score = scorePonderado(ndVal, naVal, neVal, norm.w1, norm.w2, norm.w3);
+
+  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,ndVal,naVal,neVal,tTrabTxt,tAtiTxt,fortesTxt,melhorarTxt, norm.w1,norm.w2,norm.w3].join("|"));
   const rng = makeRng(seed);
 
-  const blocoDesempenho = buildBlockDireto(rng, "Nível de Desempenho", ndVal, tipoVal, tTrabTxt, fortesTxt, melhorarTxt);
-  const blocoAtitude    = buildBlockDireto(rng, "Nível de Atitude no Trabalho", naVal, tipoVal, tAtiTxt, fortesTxt, melhorarTxt);
-  const blocoEquipa     = buildBlockDireto(rng, "Trabalho em Equipa", neVal, tipoVal, (tAtiTxt || tTrabTxt), fortesTxt, melhorarTxt);
+  const blocoDesempenho = buildBlockDireto(rng, "Nível de Desempenho", ndVal, tipoVal, tTrabTxt);
+  const blocoAtitude    = buildBlockDireto(rng, "Nível de Atitude no Trabalho", naVal, tipoVal, tAtiTxt);
+  const blocoEquipa     = buildBlockDireto(rng, "Trabalho em Equipa", neVal, tipoVal, (tAtiTxt || tTrabTxt));
 
-  const conclusaoGeral = buildConclusaoGeral(tipoVal, ndVal, naVal, neVal);
+  const conclusaoGeral = buildConclusaoGeral(tipoVal, ndVal, naVal, neVal, score, norm.w1, norm.w2, norm.w3);
 
   const htmlFinal = `
   <div class="pdf-header">
@@ -684,7 +824,8 @@ function gerar(){
     <strong>Colaborador:</strong> ${escapeHtml(nomeVal)}<br>
     <strong>Função:</strong> ${escapeHtml(funcaoVal)}<br>
     <strong>Área (Tipo):</strong> ${escapeHtml(tipoHuman(tipoVal))}<br>
-    <strong>Data:</strong> ${escapeHtml(dataVal)}
+    <strong>Data:</strong> ${escapeHtml(dataVal)}<br>
+    <strong>Score Global (ponderado):</strong> ${score.toFixed(2)}/5
   </p>
 
   ${blocoDesempenho}
@@ -717,9 +858,10 @@ function gerar(){
   const out = document.getElementById("out");
   simulateAIGeneration(out, htmlFinal);
 }
+
+// inicializa indicador
+validateWeights();
 </script>
 
 </body>
 </html>
-
-
