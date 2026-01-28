@@ -46,35 +46,6 @@
   }
   textarea{min-height:92px}
 
-  .row3{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:10px;
-  }
-  @media(max-width:900px){ .row3{grid-template-columns:1fr} }
-
-  .mini{
-    font-size:12px;
-    color:#666;
-    margin-top:6px;
-    line-height:1.35;
-  }
-  .pill{
-    display:inline-block;
-    padding:6px 10px;
-    border-radius:999px;
-    border:1px solid #ddd;
-    background:#fafafa;
-    font-size:12px;
-    color:#444;
-    margin-top:8px;
-  }
-  .warn{
-    border-color:#e0b4b4;
-    background:#fff3f3;
-    color:#9b2c2c;
-  }
-
   .btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   button{
     padding:10px 16px;
@@ -131,9 +102,32 @@
     color:#444;
   }
 
+  .mini{
+    font-size:12px;
+    color:#555;
+    margin-top:8px;
+    line-height:1.4;
+  }
+
+  .pill-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media(max-width:900px){.pill-row{grid-template-columns:1fr}}
+
+  .badge{
+    display:inline-block;
+    padding:3px 10px;
+    border:1px solid #bbb;
+    border-radius:999px;
+    font-size:12px;
+    background:#fafafa;
+  }
+
   @page{size:A4;margin:25mm 20mm}
   @media print{
-    header,.card.form,.btn-row,.hint,#gerando,.pill{display:none}
+    header,.card.form,.btn-row,.hint,#gerando,.mini{display:none}
     main{display:block;padding:0}
     .paper{border:none;padding:0}
     .pdf-header{
@@ -168,80 +162,106 @@
   <label>ANO DA AVALIAÇÃO (obrigatório)</label>
   <input id="ano" inputmode="numeric" placeholder="Ex.: 2026">
 
-  <label>Nome</label>
+  <label>Nome (obrigatório)</label>
   <input id="nome" placeholder="Nome do colaborador">
 
-  <label>Função</label>
+  <label>Função (obrigatório)</label>
   <input id="funcao" placeholder="Função / Cargo">
 
-  <label>Área (Tipo)</label>
+  <label>Área Funcional</label>
   <select id="tipo">
-    <option value="campo">CAMPO / OPERAÇÕES PECUÁRIAS</option>
-    <option value="producao">PRODUÇÃO DE CARNE & LOGÍSTICA</option>
-    <option value="vendas">VENDAS & MARKETING</option>
-    <option value="contab">CONTABILIDADE</option>
-    <option value="finpcg">FINANCEIRO & PLANEAMENTO E CONTROLO DE GESTÃO</option>
+    <option value="campo">Campo / Operações Pecuárias</option>
+    <option value="producao">Produção de Carne & Logística</option>
+    <option value="vendas">Vendas & Marketing</option>
+    <option value="contabilidade">Contabilidade</option>
+    <option value="financeiro">Financeiro & Planeamento e Controlo de Gestão</option>
   </select>
 
-  <label>Data</label>
+  <label>Data (obrigatório)</label>
   <input type="date" id="data">
 
-  <label>Nível de Desempenho</label>
-  <select id="nd">
-    <option value="5">5 — Muito bom</option>
-    <option value="4">4 — Bom</option>
-    <option value="3" selected>3 — Suficiente</option>
-    <option value="2">2 — Fraco</option>
-    <option value="1">1 — Muito fraco</option>
-  </select>
+  <div class="mini">
+    <span class="badge" id="badgePesos">Pesos: —</span>
+    <div class="mini" id="miniPesos"></div>
+  </div>
 
-  <label>Nível de Atitude no Trabalho</label>
-  <select id="na">
-    <option value="5">5 — Muito boa</option>
-    <option value="4">4 — Boa</option>
-    <option value="3" selected>3 — Suficiente</option>
-    <option value="2">2 — Fraca</option>
-    <option value="1">1 — Muito fraca</option>
-  </select>
+  <hr style="margin:14px 0;border:none;border-top:1px solid #eee">
 
-  <label>Nível de Trabalho em Equipa</label>
-  <select id="ne">
-    <option value="5">5 — Muito bom</option>
-    <option value="4">4 — Bom</option>
-    <option value="3" selected>3 — Suficiente</option>
-    <option value="2">2 — Fraco</option>
-    <option value="1">1 — Muito fraco</option>
-  </select>
-
-  <label>Ponderações (%)</label>
-  <div class="row3">
+  <div class="pill-row">
     <div>
-      <label style="margin-top:0">Desempenho</label>
-      <input id="w_nd" type="number" min="0" max="100" value="50">
+      <label>1) Resultados Operacionais</label>
+      <select id="res">
+        <option value="5">5 — Excelente</option>
+        <option value="4">4 — Bom</option>
+        <option value="3" selected>3 — Cumpre</option>
+        <option value="2">2 — Insuficiente</option>
+        <option value="1">1 — Abaixo do esperado</option>
+      </select>
     </div>
+
     <div>
-      <label style="margin-top:0">Atitude</label>
-      <input id="w_na" type="number" min="0" max="100" value="25">
+      <label>2) Qualidade & Rigor</label>
+      <select id="qual">
+        <option value="5">5 — Excelente</option>
+        <option value="4">4 — Bom</option>
+        <option value="3" selected>3 — Cumpre</option>
+        <option value="2">2 — Insuficiente</option>
+        <option value="1">1 — Abaixo do esperado</option>
+      </select>
     </div>
+
     <div>
-      <label style="margin-top:0">Equipa</label>
-      <input id="w_ne" type="number" min="0" max="100" value="25">
+      <label>3) Comportamentos & Cultura</label>
+      <select id="comp">
+        <option value="5">5 — Excelente</option>
+        <option value="4">4 — Bom</option>
+        <option value="3" selected>3 — Cumpre</option>
+        <option value="2">2 — Insuficiente</option>
+        <option value="1">1 — Abaixo do esperado</option>
+      </select>
+    </div>
+
+    <div>
+      <label>4) Evolução & Aprendizagem</label>
+      <select id="evol">
+        <option value="5">5 — Excelente</option>
+        <option value="4">4 — Bom</option>
+        <option value="3" selected>3 — Cumpre</option>
+        <option value="2">2 — Insuficiente</option>
+        <option value="1">1 — Abaixo do esperado</option>
+      </select>
     </div>
   </div>
-  <div id="pesoInfo" class="pill">Ponderações OK (100%)</div>
-  <div class="mini">As ponderações influenciam o <strong>Score Global</strong> e a <strong>Conclusão Geral</strong>.</div>
 
-  <label>Comentário sobre o desempenho (texto livre)</label>
-  <textarea id="tTrab" placeholder="Ex.: Cumpre as tarefas, mas em picos perde organização e precisa de orientação..."></textarea>
-
-  <label>Comentário sobre a atitude (texto livre)</label>
-  <textarea id="tAti" placeholder="Ex.: Postura correta, mas sob pressão comunica menos e evita iniciativa..."></textarea>
+  <label>Comentário global (texto livre)</label>
+  <textarea id="tGlobal" placeholder="Ex.: No dia a dia cumpre, mas quando há pressão nota-se..."></textarea>
 
   <label>Pontos fortes (separar por ;)</label>
-  <textarea id="fortes" placeholder="Ex.: responsabilidade; cuidado com animais; fiabilidade; rigor"></textarea>
+  <textarea id="fortes" placeholder="Ex.: fiabilidade; rigor; comunicação"></textarea>
 
   <label>Aspetos a melhorar (separar por ;)</label>
-  <textarea id="melhorar" placeholder="Ex.: autonomia; organização; verificação final; comunicação sob pressão"></textarea>
+  <textarea id="melhorar" placeholder="Ex.: organização; verificação final; reporting"></textarea>
+
+  <hr style="margin:14px 0;border:none;border-top:1px solid #eee">
+
+  <h3 style="margin:8px 0 0;">Plano de Desenvolvimento – Próximo Período</h3>
+
+  <div class="mini">
+    <span class="badge">Sugestões automáticas</span>
+    <div class="mini">Se não preencheres o plano, o sistema sugere com base nos temas detetados. O manual tem sempre prioridade.</div>
+  </div>
+
+  <label>Objetivo</label>
+  <textarea id="pObjetivo" placeholder="(auto) ou escreve tu"></textarea>
+
+  <label>Ação</label>
+  <textarea id="pAcao" placeholder="(auto) ou escreve tu"></textarea>
+
+  <label>Prazo</label>
+  <input id="pPrazo" placeholder="Ex.: até 30/06/2026">
+
+  <label>Indicador de sucesso</label>
+  <textarea id="pIndicador" placeholder="(auto) ou escreve tu"></textarea>
 
   <div class="hint">
     O texto é gerado com base no que é escrito (tolerando alguns erros).<br>
@@ -265,82 +285,132 @@
 
 <script>
 /* ===================== CONSTANTES / ESTADO ===================== */
-const labels = {5:"Muito bom",4:"Bom",3:"Suficiente",2:"Fraco",1:"Muito fraco"};
+const labels5 = {5:"Excelente",4:"Bom",3:"Cumpre",2:"Insuficiente",1:"Abaixo do esperado"};
 let edicaoAtiva = false;
-
 let isGenerating = false;
 let typingTimer = null;
 
+/* memória curta anti-repetição (na sessão) */
 const recentStarts = [];
 const RECENT_LIMIT = 14;
 
-const ultimoExPorTipo = { campo: -1, producao: -1, vendas: -1, contab: -1, finpcg: -1 };
+/* ===================== PESOS (OFICIAL) ===================== */
+const PESOS = {
+  campo:        { res:0.40, qual:0.30, comp:0.20, evol:0.10 },
+  producao:     { res:0.45, qual:0.30, comp:0.15, evol:0.10 },
+  vendas:       { res:0.50, qual:0.20, comp:0.20, evol:0.10 },
+  contabilidade:{ res:0.30, qual:0.45, comp:0.15, evol:0.10 },
+  financeiro:   { res:0.35, qual:0.35, comp:0.15, evol:0.15 }
+};
+
+function tipoHuman(tipo){
+  if(tipo==="campo") return "Campo / Operações Pecuárias";
+  if(tipo==="producao") return "Produção de Carne & Logística";
+  if(tipo==="vendas") return "Vendas & Marketing";
+  if(tipo==="contabilidade") return "Contabilidade";
+  return "Financeiro & Planeamento e Controlo de Gestão";
+}
 
 /* ===================== EXEMPLOS (POR ÁREA) ===================== */
+const ultimoExPorTipo = { campo:-1, producao:-1, vendas:-1, contabilidade:-1, financeiro:-1 };
+
 const exemplosPorTipo = {
   campo: [
     {
-      ano:"2026",
-      nome:"João Silva",
-      funcao:"Operador de Campo",
-      tipo:"campo",
-      nd:3, na:4, ne:3,
-      tTrab:"Cumpre as tarefas no terreno e executa bem as rotinas, mas quando há várias tarefas em simultâneo perde organização e precisa de orientação para definir prioridades.",
-      tAti:"Postura correta e funcional, mas sob pressão comunica menos e evita iniciativa. Precisa de assumir decisões simples no terreno quando o plano muda.",
-      fortes:"fiabilidade nas rotinas; cuidado com animais; disponibilidade",
-      melhorar:"autonomia; organização; priorização; comunicação sob pressão"
+      ano:"2026", nome:"João Silva", funcao:"Operador Pecuário",
+      tipo:"campo", res:3, qual:4, comp:3, evol:3,
+      tGlobal:"No dia a dia cumpre bem as rotinas e trata os animais com cuidado. Quando o ritmo aperta, perde organização e deixa registos por fechar, o que depois dá trabalho extra à equipa.",
+      fortes:"fiabilidade; cuidado no maneio; respeito por regras",
+      melhorar:"organização; registos; antecipação",
+      pObjetivo:"Melhorar registos e fechar tarefas críticas no próprio dia.",
+      pAcao:"Checklist diária simples + validação no fim do turno com chefe de equipa.",
+      pPrazo:"30/06/2026",
+      pIndicador:"Registos completos e menos correções no dia seguinte."
+    },
+    {
+      ano:"2026", nome:"Pedro Santos", funcao:"Trabalhador de Campo",
+      tipo:"campo", res:4, qual:4, comp:3, evol:3,
+      tGlobal:"Entrega bom trabalho e é consistente. Quando há mudanças de plano, precisa de comunicar mais cedo para evitar decisões em cima da hora.",
+      fortes:"cuidado com animais; segurança; fiabilidade",
+      melhorar:"comunicação no terreno; alinhamento em picos",
+      pObjetivo:"Reforçar comunicação e alinhamento em momentos de maior pressão.",
+      pAcao:"Rotina de passagem de informação no início/fim do turno.",
+      pPrazo:"31/05/2026",
+      pIndicador:"Menos retrabalho e menos pedidos de clarificação."
     }
   ],
   producao: [
     {
-      ano:"2026",
-      nome:"Pedro Santos",
-      funcao:"Operador de Produção",
-      tipo:"producao",
-      nd:3, na:3, ne:3,
-      tTrab:"Garante o funcionamento normal do processo, mas em picos de trabalho abranda o ritmo e acumula pendências. Precisa de melhorar resposta quando há alterações ao planeamento.",
-      tAti:"No dia a dia é correto, mas em urgências fecha-se na execução e comunica menos. Deve sinalizar constrangimentos mais cedo para evitar atrasos.",
-      fortes:"cumprimento de procedimentos; postura profissional; estabilidade",
-      melhorar:"gestão de carga; verificação final sob pressão; comunicação em urgências"
+      ano:"2026", nome:"Miguel Costa", funcao:"Operador de Produção",
+      tipo:"producao", res:3, qual:4, comp:3, evol:3,
+      tGlobal:"Cumpre o essencial e respeita procedimentos. Em dias de maior volume, perde ritmo e começa a deixar detalhes por rever, o que cria atrasos e correções posteriores.",
+      fortes:"procedimentos; higiene; atenção ao detalhe",
+      melhorar:"ritmo; antecipação; verificação final",
+      pObjetivo:"Aumentar ritmo sem perder rigor.",
+      pAcao:"Prioridades por turno + verificação final padrão antes de fechar.",
+      pPrazo:"30/06/2026",
+      pIndicador:"Menos atrasos e estabilidade de qualidade (sem não conformidades)."
+    },
+    {
+      ano:"2026", nome:"Sofia Matos", funcao:"Logística",
+      tipo:"producao", res:4, qual:3, comp:4, evol:3,
+      tGlobal:"Garante prazos e ajuda equipas, mantendo a logística a fluir. Precisa de sistematizar melhor os registos para reduzir falhas repetidas.",
+      fortes:"cumprimento de prazos; articulação; disponibilidade",
+      melhorar:"sistematização; registos; controlo de desvios",
+      pObjetivo:"Reforçar registo e resposta a desvios logísticos.",
+      pAcao:"Registo semanal de ocorrências e medidas corretivas.",
+      pPrazo:"31/07/2026",
+      pIndicador:"Menos ocorrências repetidas e resposta mais rápida."
     }
   ],
   vendas: [
     {
-      ano:"2026",
-      nome:"Ana Costa",
-      funcao:"Comercial",
-      tipo:"vendas",
-      nd:3, na:4, ne:3,
-      tTrab:"Mantém acompanhamento regular da carteira atual, mas a prospeção é irregular. Em metas mais exigentes abranda e perde seguimento de oportunidades.",
-      tAti:"Relaciona-se bem com clientes, mas sob pressão comercial tende a reduzir iniciativa e evita abordagens mais assertivas.",
-      fortes:"boa relação com clientes; comunicação; cumprimento do básico",
-      melhorar:"proatividade; registo e seguimento; resiliência à pressão comercial"
+      ano:"2026", nome:"Ana Costa", funcao:"Comercial",
+      tipo:"vendas", res:4, qual:3, comp:4, evol:3,
+      tGlobal:"Tem boa relação com clientes e foco em objetivos. Falta consistência no reporting e no follow-up, o que faz perder oportunidades.",
+      fortes:"relação com clientes; negociação; foco em objetivos",
+      melhorar:"reporting; planeamento; follow-up",
+      pObjetivo:"Melhorar consistência do reporting e follow-up.",
+      pAcao:"Agenda semanal de follow-up + relatório curto padrão.",
+      pPrazo:"30/04/2026",
+      pIndicador:"Reporting regular e aumento de retenção/recorrência."
+    },
+    {
+      ano:"2026", nome:"Carla Nunes", funcao:"Marketing",
+      tipo:"vendas", res:3, qual:4, comp:3, evol:4,
+      tGlobal:"Trabalho bem feito e com detalhe. Precisa de alinhar melhor conteúdos com objetivos comerciais e calendário, para não andar a apagar fogos.",
+      fortes:"criatividade; rigor; autonomia",
+      melhorar:"alinhamento comercial; calendarização; prioridades",
+      pObjetivo:"Alinhar conteúdos com objetivos comerciais trimestrais.",
+      pAcao:"Plano mensal de conteúdos com métricas e revisão quinzenal.",
+      pPrazo:"30/06/2026",
+      pIndicador:"Melhoria de métricas e consistência de calendário."
     }
   ],
-  contab: [
+  contabilidade: [
     {
-      ano:"2026",
-      nome:"Carla Nunes",
-      funcao:"Contabilista",
-      tipo:"contab",
-      nd:4, na:3, ne:3,
-      tTrab:"Cumpre prazos e assegura registos corretos, mas em picos de trabalho reduz verificação final e surgem inconsistências que exigem correções posteriores.",
-      tAti:"Postura profissional, mas em urgências comunica menos e não sinaliza constrangimentos atempadamente.",
-      fortes:"atenção ao detalhe; cumprimento de prazos; fiabilidade na rotina",
-      melhorar:"verificação sistemática; comunicação em urgências; priorização"
+      ano:"2026", nome:"Rui Almeida", funcao:"Contabilidade",
+      tipo:"contabilidade", res:3, qual:4, comp:3, evol:3,
+      tGlobal:"É rigoroso e fiável nos registos. Quando surgem urgências, falta antecipar e alinhar prioridades com a equipa para evitar fechos em cima do prazo.",
+      fortes:"rigor; atenção ao detalhe; fiabilidade",
+      melhorar:"antecipação; priorização; comunicação em urgências",
+      pObjetivo:"Antecipar pendências e reduzir trabalho de última hora.",
+      pAcao:"Checklist semanal + ponto fixo de alinhamento de prioridades.",
+      pPrazo:"31/05/2026",
+      pIndicador:"Fechos mais atempados e menos correções posteriores."
     }
   ],
-  finpcg: [
+  financeiro: [
     {
-      ano:"2026",
-      nome:"Rui Almeida",
-      funcao:"Financeiro / PCG",
-      tipo:"finpcg",
-      nd:3, na:3, ne:3,
-      tTrab:"Na rotina mantém controlo aceitável, mas em pedidos urgentes perde ritmo e algumas respostas ficam fora do prazo esperado, afetando a decisão da gestão.",
-      tAti:"Postura correta, mas sob pressão tende a fechar-se na execução e partilha informação tarde demais.",
-      fortes:"organização base; postura profissional; estabilidade",
-      melhorar:"priorização; resposta rápida; sinalização de riscos; comunicação proativa"
+      ano:"2026", nome:"Tiago Pires", funcao:"Planeamento e Controlo",
+      tipo:"financeiro", res:4, qual:4, comp:3, evol:4,
+      tGlobal:"Boa capacidade analítica e reporting útil. Precisa de reforçar recolha/validação de dados com a operação para reduzir lacunas e dúvidas.",
+      fortes:"capacidade analítica; reporting; melhoria contínua",
+      melhorar:"articulação com operação; recolha de dados; previsibilidade",
+      pObjetivo:"Melhorar consistência na recolha e validação de dados.",
+      pAcao:"Definir fontes oficiais + calendário mensal de recolha e validação.",
+      pPrazo:"31/07/2026",
+      pIndicador:"Relatórios mais consistentes e menos lacunas."
     }
   ]
 };
@@ -361,17 +431,24 @@ function preencherExemplo(){
   ano.value = e.ano;
   nome.value = e.nome;
   funcao.value = e.funcao;
-  tipo.value = e.tipo;
+  document.getElementById("tipo").value = e.tipo;
   data.value = new Date().toISOString().slice(0,10);
 
-  nd.value = e.nd;
-  na.value = e.na;
-  ne.value = e.ne;
+  res.value = e.res;
+  qual.value = e.qual;
+  comp.value = e.comp;
+  evol.value = e.evol;
 
-  tTrab.value = e.tTrab;
-  tAti.value = e.tAti;
+  tGlobal.value = e.tGlobal;
   fortes.value = e.fortes;
   melhorar.value = e.melhorar;
+
+  pObjetivo.value = e.pObjetivo || "";
+  pAcao.value = e.pAcao || "";
+  pPrazo.value = e.pPrazo || "";
+  pIndicador.value = e.pIndicador || "";
+
+  updatePesosUI();
 }
 
 /* ===================== UTILITÁRIOS ===================== */
@@ -433,7 +510,6 @@ function simulateAIGeneration(outEl, htmlFinal){
   const fullText = (tmp.innerText || "").replace(/\n{3,}/g, "\n\n").trim();
 
   let i = 0;
-
   const base = 9;
   const jitter = () => Math.floor(Math.random() * 12);
   const pauseChance = () => Math.random() < 0.02;
@@ -500,70 +576,119 @@ function pickNonRepeatingStart(rng, arr){
   return fb;
 }
 
-/* ===================== PONDERAÇÕES ===================== */
-function numVal(id){
-  const x = parseFloat((document.getElementById(id).value ?? "").toString().replace(",", "."));
-  return isFinite(x) ? x : 0;
-}
-
-function validateWeights(){
-  const w1 = Math.max(0, Math.min(100, numVal("w_nd")));
-  const w2 = Math.max(0, Math.min(100, numVal("w_na")));
-  const w3 = Math.max(0, Math.min(100, numVal("w_ne")));
-  const sum = w1 + w2 + w3;
-
-  const info = document.getElementById("pesoInfo");
-
-  if(sum === 100){
-    info.textContent = "Ponderações OK (100%)";
-    info.classList.remove("warn");
-  }else{
-    info.textContent = `Atenção: soma = ${sum.toFixed(0)}% (deve ser 100%)`;
-    info.classList.add("warn");
+/* ===================== FUZZY MATCH ===================== */
+function levenshtein(a,b){
+  a = a || ""; b = b || "";
+  const n=a.length, m=b.length;
+  if(n===0) return m;
+  if(m===0) return n;
+  const dp = new Array(m+1);
+  for(let j=0;j<=m;j++) dp[j]=j;
+  for(let i=1;i<=n;i++){
+    let prev = dp[0];
+    dp[0] = i;
+    for(let j=1;j<=m;j++){
+      const temp = dp[j];
+      const cost = a[i-1]===b[j-1] ? 0 : 1;
+      dp[j] = Math.min(dp[j]+1, dp[j-1]+1, prev+cost);
+      prev = temp;
+    }
   }
-  return {w1,w2,w3,sum};
+  return dp[m];
+}
+function normalizeText(s){
+  return (s ?? "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9\s]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+function tokens(s){
+  const t = normalizeText(s);
+  return t ? t.split(" ") : [];
 }
 
-// valida em tempo real
-["w_nd","w_na","w_ne"].forEach(id=>{
-  document.addEventListener("input", (e)=>{
-    if(e.target && e.target.id === id) validateWeights();
-  });
-});
+/* ===================== TEMAS / INTERPRETAÇÃO ===================== */
+const THEMES = [
+  // gerais
+  {key:"organizacao", label:"organização", pos:["organizacao","organizado","planeamento","planear","priorizacao","priorizar","metodo"], neg:["desorganizacao","atrasos","confusao"]},
+  {key:"prazos", label:"cumprimento de prazos", pos:["prazo","prazos","cumprimento","cumprir","pontual","pontualidade"], neg:["atraso","atrasos","tardio"]},
+  {key:"qualidade", label:"qualidade/rigor", pos:["qualidade","rigor","precisao","verificacao","controlo"], neg:["erro","erros","falhas","retrabalho"]},
+  {key:"ritmo", label:"ritmo/produtividade", pos:["ritmo","produtividade","eficiencia","agilidade"], neg:["lento","lentidao","paragens","quebra"]},
+  {key:"autonomia", label:"autonomia/iniciativa", pos:["autonomia","autonomo","iniciativa","proatividade"], neg:["dependente","precisa","orientacao","supervisao"]},
+  {key:"comunicacao", label:"comunicação", pos:["comunicacao","claro","clareza","articulacao","alinhamento"], neg:["malentendido","ruido","falha"]},
+  {key:"equipa", label:"trabalho em equipa", pos:["equipa","colaboracao","colabora","ajuda","entreajuda"], neg:["isolado","conflito","tensao"]},
+  {key:"seguranca", label:"segurança", pos:["seguranca","epi","procedimentos","regras"], neg:["risco","perigo","imprudencia"]},
+  {key:"atencao", label:"atenção ao detalhe", pos:["detalhe","atencao","cuidado"], neg:["distraido","distracao","esquece"]},
+  {key:"atitude", label:"atitude/postura", pos:["positivo","respeito","disponibilidade","empenho","motivacao"], neg:["resistencia","desmotivado","reage","irritado"]},
 
-function normalizeWeights(w1,w2,w3){
-  const sum = w1+w2+w3;
-  if(sum <= 0){
-    return {w1:34, w2:33, w3:33, sum:100};
+  // campo / pecuária
+  {key:"bemestar", label:"bem-estar animal", pos:["bemestar","bem","estar","animal","maneio","manuseamento"], neg:["stress","estresse","brusco"]},
+  {key:"registos", label:"registos e rastreabilidade", pos:["registo","registos","rastreabilidade","identificacao"], neg:["falta","omissao"]},
+  {key:"sanidade", label:"sanidade", pos:["sanidade","tratamento","veterinario","veterinaria","protocolo"], neg:["doenca","doencas"]},
+  {key:"engorda", label:"engorda/ganho", pos:["engorda","ganho","peso","alimentacao","monitorizacao"], neg:["queda","perda"]},
+
+  // produção & logística
+  {key:"haccp", label:"HACCP/segurança alimentar", pos:["haccp","higiene","seguranca","alimentar","contaminacao"], neg:["naoconformidade","nao","conformidade","nconformidade"]},
+  {key:"desperdicio", label:"desperdício/eficiência", pos:["eficiencia","rendimento","aproveitamento"], neg:["desperdicio","quebra","perda"]},
+  {key:"logistica", label:"logística", pos:["logistica","expedicao","entrega","rota"], neg:["atraso","falha"]},
+
+  // vendas & marketing
+  {key:"clientes", label:"relação com clientes", pos:["cliente","clientes","relacao","confianca","fidelizacao","followup"], neg:["queixa","reclamacao"]},
+  {key:"margem", label:"margem/resultado", pos:["margem","resultado","objetivo","objetivos","meta","metas"], neg:["queda","perda"]},
+  {key:"reporting", label:"reporting/planeamento", pos:["reporting","relatorio","crm","planeamento","pipeline"], neg:["falta","omissao"]},
+
+  // contabilidade
+  {key:"fechos", label:"fechos e prazos contabilísticos", pos:["fecho","fechos","balanco","mapa","prazos","conta"], neg:["atraso","pendencia"]},
+  {key:"conformidade", label:"conformidade/controlo", pos:["controlo","conformidade","auditoria","validacao"], neg:["erro","falha"]},
+
+  // financeiro & controlo
+  {key:"analise", label:"análise e apoio à decisão", pos:["analise","analitico","kpi","indicador","decisao","orcamento","forecast"], neg:["incerto","duvida","lacuna"]}
+];
+
+const CANON_WORDS = (() => {
+  const set = new Set();
+  for(const th of THEMES){
+    th.pos.forEach(w=>set.add(normalizeText(w)));
+    th.neg.forEach(w=>set.add(normalizeText(w)));
   }
-  // normaliza para 100
-  const n1 = (w1/sum)*100;
-  const n2 = (w2/sum)*100;
-  const n3 = 100 - n1 - n2; // fecha 100 certinho
-  return {w1:n1, w2:n2, w3:n3, sum:100};
+  return Array.from(set);
+})();
+
+function correctToken(tok){
+  if(!tok || tok.length < 4) return tok;
+  let best = tok, bestD = 99;
+  const maxD = tok.length <= 6 ? 1 : 2;
+  for(const w of CANON_WORDS){
+    const d = levenshtein(tok, w);
+    if(d < bestD){
+      bestD = d; best = w;
+      if(bestD===0) break;
+    }
+  }
+  return (bestD <= maxD) ? best : tok;
 }
 
-function scorePonderado(nd,na,ne,w1,w2,w3){
-  return (nd*(w1/100)) + (na*(w2/100)) + (ne*(w3/100));
-}
+function extractThemes(text){
+  const raw = tokens(text).map(correctToken);
+  const counts = {};
+  THEMES.forEach(t=>counts[t.key]=0);
 
-/* ===================== TEXTO DIRETO (geração) ===================== */
-function tipoHuman(tipoVal){
-  return (
-    tipoVal==="campo" ? "CAMPO / OPERAÇÕES PECUÁRIAS" :
-    tipoVal==="producao" ? "PRODUÇÃO DE CARNE & LOGÍSTICA" :
-    tipoVal==="vendas" ? "VENDAS & MARKETING" :
-    tipoVal==="contab" ? "CONTABILIDADE" :
-    "FINANCEIRO & PLANEAMENTO E CONTROLO DE GESTÃO"
-  );
-}
+  for(const tok of raw){
+    for(const th of THEMES){
+      const pos = th.pos.map(normalizeText);
+      const neg = th.neg.map(normalizeText);
+      if(pos.includes(tok) || neg.includes(tok)){
+        counts[th.key] += 1;
+      }
+    }
+  }
 
-function contexto(tipoVal){
-  if(tipoVal==="campo") return "no trabalho no terreno e operação pecuária";
-  if(tipoVal==="producao") return "na produção de carne e dinâmica logística";
-  if(tipoVal==="vendas") return "na atividade comercial e acompanhamento de clientes";
-  if(tipoVal==="contab") return "nos processos contabilísticos e prazos de fecho";
-  return "na gestão financeira e suporte à decisão (planeamento e controlo)";
+  return Object.entries(counts)
+    .filter(([,c])=>c>0)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([k,c])=>({key:k,count:c,label:THEMES.find(t=>t.key===k).label}));
 }
 
 function extractAnchors(text){
@@ -572,174 +697,372 @@ function extractAnchors(text){
   const parts = t.replace(/\s+/g," ").split(/[.!?;]/).map(s=>s.trim()).filter(s=>s.length >= 18);
   const pool = parts.length ? parts : [t.slice(0, 90)];
   pool.sort((a,b)=>b.length-a.length);
-  const a1 = pool[0] ? pool[0].slice(0, 120) : "";
-  const a2 = pool[1] ? pool[1].slice(0, 95) : "";
+  const a1 = pool[0] ? pool[0].slice(0, 110) : "";
+  const a2 = pool[1] ? pool[1].slice(0, 90) : "";
   return [a1,a2].filter(Boolean);
 }
 
-function buildBlockDireto(rng, title, nota, tipoVal, freeText){
-  const ctx = contexto(tipoVal);
-  const anchors = extractAnchors(freeText);
-
-  const tone =
-    (nota>=4) ? "forte" :
-    (nota===3) ? "ok" : "fraco";
-
-  const s1 = pickNonRepeatingStart(rng, [
-    `No dia a dia, o desempenho ${ctx} é ${tone==="forte" ? "consistente e acima do esperado" : tone==="ok" ? "adequado para a rotina" : "abaixo do necessário"}.`,
-    `De forma geral, o trabalho ${ctx} é ${tone==="forte" ? "sólido e fiável" : tone==="ok" ? "suficiente, mas com limitações" : "irregular e exige correções frequentes"}.`,
-    `Ao longo do período avaliado, o desempenho ${ctx} manteve-se ${tone==="forte" ? "bom e previsível" : tone==="ok" ? "aceitável na rotina" : "frágil e inconsistente"}.`
-  ]);
-
-  const s2 = tone==="forte"
-    ? pick(rng, [
-      "Cumpre objetivos e entrega resultados com pouca necessidade de acompanhamento.",
-      "Mantém ritmo, método e qualidade de forma estável ao longo do tempo."
-    ])
-    : tone==="ok"
+/* ===================== FRASES MAIS PERCETÍVEIS ===================== */
+function themesPhrase(rng, themes, kind){
+  if(!themes.length){
+    return kind==="pos"
       ? pick(rng, [
-        "Cumpre o essencial e garante o funcionamento normal do dia a dia.",
-        "Entrega o básico com estabilidade quando o contexto é previsível."
+        "Há pontos positivos claros no trabalho apresentado e isso nota-se na rotina.",
+        "Foram identificados aspetos positivos com impacto real no dia a dia."
       ])
       : pick(rng, [
-        "Falha no cumprimento do essencial com regularidade e exige acompanhamento próximo.",
-        "O trabalho não mantém o nível necessário e gera retrabalho."
+        "Há oportunidades de melhoria que, se forem trabalhadas, vão tornar o trabalho mais consistente.",
+        "Existem áreas a desenvolver que estão a limitar resultados em momentos de maior exigência."
       ]);
+  }
+  const top = themes.slice(0,3).map(t=>t.label);
+  const join = top.length===1 ? top[0] : top.length===2 ? `${top[0]} e ${top[1]}` : `${top[0]}, ${top[1]} e ${top[2]}`;
+  return kind==="pos"
+    ? pick(rng, [
+      `Os pontos mais fortes aparecem em ${join} e isso sente-se no funcionamento diário.`,
+      `Destacam-se aspetos ligados a ${join}, com impacto direto no desempenho.`
+    ])
+    : pick(rng, [
+      `As melhorias mais urgentes estão em ${join}, porque aí é onde se perde consistência.`,
+      `As áreas a desenvolver concentram-se em ${join} e isso está a travar a evolução.`
+    ]);
+}
+
+function chooseStyleProfile(rng){ return pick(rng, ["direto","descritivo","processual","pratico"]); }
+function chooseFocus(rng){ return pick(rng, ["processo","resultado","comportamento","impacto"]); }
+
+function contextForTipo(rng, tipo){
+  if(tipo==="campo"){
+    return pick(rng, [
+      "no terreno, com foco em bem-estar animal, rotinas e registos",
+      "nas operações pecuárias, com exigência de cuidado e fiabilidade",
+      "no trabalho diário de campo, onde consistência é tudo"
+    ]);
+  }
+  if(tipo==="producao"){
+    return pick(rng, [
+      "na produção e logística, com foco em qualidade, HACCP e prazos",
+      "na operação produtiva, onde rigor e ritmo têm de andar juntos",
+      "na logística do dia a dia, com exigência de método e estabilidade"
+    ]);
+  }
+  if(tipo==="vendas"){
+    return pick(rng, [
+      "no comercial, com foco em clientes, objetivos e follow-up",
+      "em vendas e marketing, onde consistência e planeamento contam",
+      "no mercado, onde comunicação e disciplina fazem diferença"
+    ]);
+  }
+  if(tipo==="contabilidade"){
+    return pick(rng, [
+      "na contabilidade, com foco em rigor, fechos e conformidade",
+      "na gestão contabilística, onde precisão e prazos são críticos",
+      "no suporte contabilístico, onde erros custam tempo e dinheiro"
+    ]);
+  }
+  return pick(rng, [
+    "no financeiro e controlo, com foco em análise, reporting e apoio à decisão",
+    "no planeamento e controlo de gestão, onde dados consistentes são chave",
+    "na leitura financeira do negócio, onde previsibilidade faz diferença"
+  ]);
+}
+
+/* ===================== BLOCO COM NOTA (9 FRASES) ===================== */
+function buildScoredBlock(rng, title, nota, tipo, freeText, extraText){
+  const tone = (nota>=4) ? "positivo" : (nota===3 ? "equilibrado" : "corretivo");
+  const ctx = contextForTipo(rng, tipo);
+  const profile = chooseStyleProfile(rng);
+  const focus = chooseFocus(rng);
+
+  const fullText = `${freeText ?? ""} ${extraText ?? ""}`.trim();
+  const themes = extractThemes(fullText);
+  const anchors = extractAnchors(freeText).concat(extractAnchors(extraText)).slice(0,2);
+
+  const openerOptions = [
+    `Neste período, o nível observado foi ${labels5[nota].toLowerCase()} ${ctx}.`,
+    `Ao longo do ano, o desempenho ficou num nível ${labels5[nota].toLowerCase()} ${ctx}.`,
+    `No período avaliado, o resultado enquadra-se num nível ${labels5[nota].toLowerCase()} ${ctx}.`
+  ];
+  const s1 = pickNonRepeatingStart(rng, openerOptions);
+
+  const s2 = pick(rng, [
+    "Na maioria das situações, responde ao que a função exige.",
+    "De forma geral, entrega o que é esperado para o posto.",
+    "O desempenho global acompanha as responsabilidades da função."
+  ]);
 
   const s3 = anchors.length
     ? pick(rng, [
-      `Em concreto, ficou registado que ${anchors[0].toLowerCase()}.`,
-      `De forma prática, observa-se que ${anchors[0].toLowerCase()}.`
+      `Na prática, ficou claro que ${anchors[0].toLowerCase()}.`,
+      `No dia a dia, observou-se que ${anchors[0].toLowerCase()}.`
     ])
     : pick(rng, [
-      "O período avaliado mostra padrões claros de execução no dia a dia.",
-      "A informação recolhida permite identificar com clareza o padrão de trabalho."
+      "Há informação suficiente para sustentar esta avaliação.",
+      "Os factos observados ao longo do período permitem enquadrar a nota."
     ]);
 
-  const s4 = pick(rng, [
-    "Quando o plano se mantém estável, o trabalho avança sem problemas relevantes.",
-    "Em condições normais, o fluxo de trabalho mantém-se controlado."
+  const s4 =
+    tone==="positivo" ? pick(rng, [
+      "Mostra consistência e isso dá estabilidade ao serviço.",
+      "Mantém um padrão sólido e previsível, mesmo em fases exigentes.",
+      "Entrega com qualidade e reduz necessidade de correções."
+    ]) :
+    tone==="equilibrado" ? pick(rng, [
+      "Cumpre o essencial, mas quando a pressão aumenta perde consistência e método.",
+      "Cumpre no normal, mas em picos de trabalho nota-se quebra de organização ou controlo.",
+      "O trabalho aparece feito, mas falta estabilidade para manter o mesmo nível sempre."
+    ]) :
+    pick(rng, [
+      "Ficam falhas visíveis e isso obriga a acompanhamento e correções frequentes.",
+      "O padrão não é estável e isso cria retrabalho e insegurança na equipa.",
+      "O resultado fica abaixo do esperado e precisa de um plano claro de melhoria."
+    ]);
+
+  const s5 = themesPhrase(rng, themes, "pos");
+  const s6 = tone==="positivo"
+    ? pick(rng, [
+      "Mesmo assim, é importante manter disciplina de verificação, sobretudo em picos.",
+      "O segredo agora é não relaxar: manter método, controlo e consistência.",
+      "Manter estes hábitos evita falhas pontuais quando o trabalho aperta."
+    ])
+    : themesPhrase(rng, themes, "neg");
+
+  const s7 = (() => {
+    if(focus==="processo") return pick(rng, [
+      "O método de trabalho é o que vai separar “cumpre” de “bom” neste próximo ciclo.",
+      "Se houver rotina e verificação, os erros descem e o serviço estabiliza.",
+      "Organização e consistência são o que evita apagar fogos mais tarde."
+    ]);
+    if(focus==="resultado") return pick(rng, [
+      "Os resultados refletem exatamente este nível: cumpre, mas ainda com margem de melhoria.",
+      "O impacto final fica aceitável, mas perde-se consistência em momentos críticos.",
+      "O resultado está lá, mas ainda não é previsível ao longo do tempo."
+    ]);
+    if(focus==="comportamento") return pick(rng, [
+      "A postura diária ajuda, mas em pressão precisa de mais controlo e clareza.",
+      "A forma como reage a mudanças influencia diretamente o desempenho.",
+      "Comportamento consistente = equipa mais estável e menos tensão."
+    ]);
+    return pick(rng, [
+      "Quando há clareza e método, o trabalho dos outros também melhora.",
+      "O impacto no funcionamento do serviço depende de consistência e comunicação.",
+      "Pequenas falhas aqui acabam por virar problemas maiores ali à frente."
+    ]);
+  })();
+
+  const s8 = (() => {
+    if(profile==="direto") return pick(rng, [
+      "A nota serve para ser usada: manter o que está bem e atacar o que está a falhar.",
+      "O que interessa agora é transformar isto em ações práticas no próximo período.",
+      "Este enquadramento deve orientar prioridades claras e acompanhamento regular."
+    ]);
+    if(profile==="descritivo") return pick(rng, [
+      "O retrato do período mostra pontos fortes claros e pontos a consolidar.",
+      "No dia a dia, há práticas positivas e outras que ainda não estão estáveis.",
+      "A descrição do período é consistente com a nota atribuída."
+    ]);
+    if(profile==="processual") return pick(rng, [
+      "Objetivos simples e verificação regular fazem mais diferença do que teoria.",
+      "Se houver rotina de controlo, o nível sobe de forma natural.",
+      "Medidas pequenas, repetidas, dão resultados grandes ao fim do ciclo."
+    ]);
+    return pick(rng, [
+      "O passo seguinte é escolher 1–2 prioridades e trabalhar nelas com disciplina.",
+      "O progresso depende de foco e repetição, não de “força de vontade”.",
+      "O objetivo é estabilidade: fazer bem sempre, não só quando dá."
+    ]);
+  })();
+
+  const s9 = `A classificação (${nota}/5 — ${labels5[nota]}) resume o nível observado neste período.`;
+
+  const sentences = [s1,s2,s3,s4,s5,s6,s7,s8,s9].map(s=>String(s).replace(/\s+/g," ").trim());
+
+  return `
+  <div class="section">
+    <h2>${escapeHtml(title)}: ${nota}/5 — ${labels5[nota]}</h2>
+    <p>${sentences.join(" ")}</p>
+  </div>`;
+}
+
+/* ===================== CÁLCULO PONDERADO ===================== */
+function calcGlobal(tipo, res, qual, comp, evol){
+  const w = PESOS[tipo] || PESOS.campo;
+  return (res*w.res + qual*w.qual + comp*w.comp + evol*w.evol);
+}
+
+function globalLabel(score){
+  if(score >= 4.50) return "Excelente / Referência";
+  if(score >= 3.75) return "Muito bom";
+  if(score >= 3.00) return "Cumpre";
+  if(score >= 2.25) return "A desenvolver";
+  return "Abaixo do esperado";
+}
+
+/* ===================== SUGESTÕES AUTOMÁTICAS (POR TEMA) ===================== */
+const OBJETIVOS_POR_TEMA = {
+  organizacao: {
+    objetivo:"Melhorar organização e priorização do trabalho",
+    acao:"Definir prioridades por dia/turno e fechar tarefas críticas antes de mudar de tema",
+    indicador:"Menos atrasos e menos tarefas reabertas no dia seguinte"
+  },
+  prazos: {
+    objetivo:"Reforçar cumprimento de prazos de forma consistente",
+    acao:"Criar pontos intermédios de controlo (antes do prazo final) e sinalizar riscos cedo",
+    indicador:"Entregas dentro do prazo com menos urgências de última hora"
+  },
+  qualidade: {
+    objetivo:"Aumentar rigor e reduzir erros/retrabalho",
+    acao:"Aplicar verificação final padrão (checklist) antes de dar a tarefa como concluída",
+    indicador:"Redução de correções posteriores e diminuição de falhas recorrentes"
+  },
+  comunicacao: {
+    objetivo:"Melhorar comunicação e alinhamento em momentos de pressão",
+    acao:"Sinalizar constrangimentos assim que surgem e confirmar prioridades com chefia",
+    indicador:"Menos mal-entendidos e menos retrabalho por falta de informação"
+  },
+  autonomia: {
+    objetivo:"Aumentar autonomia na execução",
+    acao:"Assumir decisões simples no âmbito da função e validar apenas exceções",
+    indicador:"Menos interrupções e maior fluidez na rotina"
+  },
+  registos: {
+    objetivo:"Melhorar registos e rastreabilidade",
+    acao:"Fechar registos no próprio dia e validar campos obrigatórios",
+    indicador:"Registos completos e menos pedidos de correção"
+  },
+  haccp: {
+    objetivo:"Reforçar segurança alimentar e cumprimento de HACCP",
+    acao:"Aplicar rotina de higiene/controlo e registar não conformidades quando existirem",
+    indicador:"Zero não conformidades e maior estabilidade de qualidade"
+  },
+  reporting: {
+    objetivo:"Aumentar consistência no reporting e planeamento",
+    acao:"Relatório curto semanal (padrão) + atualização de pipeline/planeamento",
+    indicador:"Informação atualizada e menos oportunidades perdidas por falta de follow-up"
+  },
+  fechos: {
+    objetivo:"Antecipar fechos e reduzir trabalho em cima do prazo",
+    acao:"Checklist semanal de pendências + ponto fixo de alinhamento",
+    indicador:"Fechos mais previsíveis e menos correções posteriores"
+  },
+  analise: {
+    objetivo:"Melhorar consistência de dados e apoio à decisão",
+    acao:"Definir fontes oficiais e calendário de recolha/validação",
+    indicador:"Relatórios mais estáveis e menos lacunas de informação"
+  }
+};
+
+function sugerirPlanoAutomatico(texto){
+  const th = extractThemes(texto);
+  if(!th.length) return null;
+
+  // escolhe o tema mais presente que tenha mapeamento
+  for(const t of th){
+    if(OBJETIVOS_POR_TEMA[t.key]){
+      const cfg = OBJETIVOS_POR_TEMA[t.key];
+      return { obj: cfg.objetivo, acao: cfg.acao, ind: cfg.indicador, tema: t.label };
+    }
+  }
+  return null;
+}
+
+/* ===================== CONCLUSÃO (com plano) ===================== */
+function buildConclusion(rng, tipo, score, tGlobal, fortesTxt, melhorarTxt, plano, planoAuto){
+  const ctx = contextForTipo(rng, tipo);
+  const tone = score >= 3.75 ? "forte" : (score >= 3.0 ? "estavel" : "critico");
+
+  const themesStrong = extractThemes(`${fortesTxt} ${tGlobal}`);
+  const themesImprove = extractThemes(`${melhorarTxt} ${tGlobal}`);
+  const keep = themesPhrase(rng, themesStrong, "pos");
+  const improve = themesPhrase(rng, themesImprove, "neg");
+  const anchor = extractAnchors(`${tGlobal}`)[0];
+
+  const s1 = pickNonRepeatingStart(rng, [
+    `Esta avaliação resume o período observado ${ctx}, juntando resultados, rigor, comportamentos e evolução.`,
+    `Esta ficha sintetiza o período ${ctx}, com foco em execução, qualidade, cultura e aprendizagem.`,
+    `A avaliação anual enquadra o período ${ctx}, apontando o que está bem e o que precisa de subir de nível.`
   ]);
 
-  const s5 = tone==="forte"
-    ? pick(rng, [
-      "Mesmo em picos de trabalho, mantém controlo, organiza prioridades e fecha tarefas corretamente.",
-      "Sob pressão, mantém disciplina e evita falhas por falta de verificação."
-    ])
-    : tone==="ok"
-      ? pick(rng, [
-        "Quando há pressão ou várias tarefas em simultâneo, perde organização e precisa de orientação para priorizar.",
-        "Em períodos mais exigentes, abranda o ritmo e deixa tarefas por fechar."
-      ])
-      : pick(rng, [
-        "Sob pressão, perde controlo do trabalho e aumenta significativamente o número de falhas.",
-        "Em situações exigentes, bloqueia, atrasa decisões e não consegue manter o ritmo."
-      ]);
+  const s2 = `A classificação global ponderada é ${score.toFixed(2)}/5, enquadrada como “${globalLabel(score)}”.`;
 
-  const s6 = tone==="forte"
-    ? pick(rng, [
-      "Isto reduz risco operacional e dá previsibilidade à equipa e à gestão.",
-      "O impacto é positivo: menos correções, menos retrabalho e melhor controlo."
-    ])
-    : tone==="ok"
-      ? pick(rng, [
-        "Isto gera atrasos e obriga a intervenções frequentes da chefia para garantir fecho correto.",
-        "Isto cria retrabalho e aumenta a carga de acompanhamento."
-      ])
-      : pick(rng, [
-        "Isto compromete prazos, qualidade e aumenta o risco de erros passarem despercebidos.",
-        "O impacto é direto: atrasos, correções repetidas e perda de controlo."
-      ]);
+  const s3 =
+    tone==="forte" ? pick(rng, [
+      "O resultado global é claramente positivo e mostra consistência ao longo do ano.",
+      "O desempenho foi sólido e com contributo relevante para o funcionamento do serviço.",
+      "Há previsibilidade e qualidade: o trabalho aparece bem feito e estável."
+    ]) :
+    tone==="estavel" ? pick(rng, [
+      "O resultado global é aceitável e cumpre, mas ainda não é estável em todos os contextos.",
+      "Cumpre no geral, mas há pontos que estão a travar a subida para um nível mais alto.",
+      "Há base, mas falta consistência em momentos críticos para o desempenho subir."
+    ]) :
+    pick(rng, [
+      "O resultado global mostra necessidade de intervenção clara e acompanhamento regular.",
+      "Há fragilidades que estão a causar retrabalho e variabilidade, e isso tem de ser atacado.",
+      "O foco do próximo ciclo deve ser estabilidade e correção de falhas recorrentes."
+    ]);
 
-  const s7 = tone==="forte"
+  const s4 = anchor
     ? pick(rng, [
-      "O perfil mostra autonomia e capacidade para assumir maior responsabilidade.",
-      "Está preparado para aumentar autonomia e assumir tarefas com maior exigência."
+      `Na prática, ficou registado que ${anchor.toLowerCase()}.`,
+      `Um ponto que ficou claro foi que ${anchor.toLowerCase()}.`
     ])
-    : tone==="ok"
-      ? pick(rng, [
-        "O perfil é fiável na rotina, mas limitado quando é exigida autonomia.",
-        "O desempenho é seguro no básico, mas não aguenta bem contextos de maior exigência."
-      ])
-      : pick(rng, [
-        "O perfil revela limitações que exigem plano corretivo e acompanhamento consistente.",
-        "Sem intervenção prática, o padrão atual tende a repetir-se e a manter o problema."
-      ]);
+    : pick(rng, [
+      "O período analisado deixa claros pontos fortes e pontos a melhorar com impacto no dia a dia.",
+      "Há informação suficiente para identificar o que manter e o que corrigir no próximo ciclo."
+    ]);
 
-  const s8 = tone==="forte"
-    ? pick(rng, [
-      "Direção: manter o padrão e consolidar autonomia, com foco em método e verificação final.",
-      "Direção: manter consistência e reforçar capacidade de apoiar a equipa quando necessário."
-    ])
-    : tone==="ok"
-      ? pick(rng, [
-        "Direção: melhorar autonomia, priorização e verificação final, mesmo quando há pressão.",
-        "Direção: reduzir dependência da chefia, organizar o trabalho e fechar tarefas sem deixar pendências."
-      ])
-      : pick(rng, [
-        "Direção: definir objetivos corretivos claros e acompanhamento regular, com foco em método, ritmo e qualidade.",
-        "Direção: estabilizar execução e reduzir falhas com rotinas de controlo e registo."
-      ]);
+  const s5 = keep;
 
-  const p = [s1,s2,s3,s4,s5,s6,s7,s8].map(s=>String(s).replace(/\s+/g," ").trim()).join(" ");
+  const s6 = pick(rng, [
+    "O que está bem deve ser mantido, porque sustenta o serviço e reduz problemas a jusante.",
+    "Manter estes pontos evita regressões e dá estabilidade à equipa e ao processo.",
+    "Consolidar o que funciona é tão importante como corrigir o que falha."
+  ]);
+
+  const s7 = improve;
+
+  const s8 = pick(rng, [
+    "O próximo passo é escolher 1–2 prioridades e trabalhar nelas com disciplina e controlo regular.",
+    "Para subir de nível, o plano tem de ser simples, repetível e acompanhado pela chefia.",
+    "A melhoria vem de rotinas pequenas e consistentes, não de esforços pontuais."
+  ]);
+
+  const planText = (() => {
+    const obj = plano.obj ? `Objetivo: ${plano.obj}` : "Objetivo: —";
+    const acao = plano.acao ? `Ação: ${plano.acao}` : "Ação: —";
+    const prazo = plano.prazo ? `Prazo: ${plano.prazo}` : "Prazo: —";
+    const ind = plano.ind ? `Indicador: ${plano.ind}` : "Indicador: —";
+    const auto = planoAuto?.tema ? ` (Sugestão automática baseada em: ${planoAuto.tema})` : "";
+    return `${obj} ${acao} ${prazo} ${ind}${auto}`;
+  })();
+
+  const s9 = pick(rng, [
+    `Plano de desenvolvimento definido: ${planText}`,
+    `Plano de desenvolvimento para o próximo período: ${planText}`,
+    `Compromisso para o próximo ciclo: ${planText}`
+  ]);
+
+  const sentences = [s1,s2,s3,s4,s5,s6,s7,s8,s9].map(s=>String(s).replace(/\s+/g," ").trim());
 
   return `
   <div class="section">
-    <h2>${escapeHtml(title)}: ${nota}/5 — ${labels[nota]}</h2>
-    <p>${escapeHtml(p)}</p>
+    <h2>Conclusão e Objetivos</h2>
+    <p>${sentences.join(" ")}</p>
   </div>`;
 }
 
-/* ===================== CONCLUSÃO GERAL (com base no score ponderado) ===================== */
-function faixaGlobal(score){
-  if(score >= 4.25) return "excelente";
-  if(score >= 3.25) return "boa";
-  if(score >= 2.50) return "suficiente";
-  return "fraca";
+/* ===================== UI PESOS ===================== */
+function updatePesosUI(){
+  const tipo = document.getElementById("tipo").value;
+  const w = PESOS[tipo] || PESOS.campo;
+  const badge = document.getElementById("badgePesos");
+  const mini = document.getElementById("miniPesos");
+  badge.textContent = `Pesos: ${Math.round(w.res*100)}% / ${Math.round(w.qual*100)}% / ${Math.round(w.comp*100)}% / ${Math.round(w.evol*100)}%`;
+  mini.textContent = `Resultados ${Math.round(w.res*100)}% · Qualidade ${Math.round(w.qual*100)}% · Comportamentos ${Math.round(w.comp*100)}% · Evolução ${Math.round(w.evol*100)}%`;
 }
-
-function buildConclusaoGeral(tipoVal, nd, na, ne, score, w1, w2, w3){
-  const ctx = contexto(tipoVal);
-  const faixa = faixaGlobal(score);
-
-  const p1 = "A presente avaliação reflete o desempenho observado ao longo do período avaliado, considerando os resultados obtidos, o rigor na execução, os comportamentos no trabalho e a capacidade de evolução.";
-  const p2 = `Os níveis atribuídos são: Desempenho ${nd}/5 — ${labels[nd]}, Atitude ${na}/5 — ${labels[na]} e Trabalho em Equipa ${ne}/5 — ${labels[ne]}.`;
-  const p3 = `Ponderações aplicadas: Desempenho ${w1.toFixed(0)}%, Atitude ${w2.toFixed(0)}%, Equipa ${w3.toFixed(0)}%.`;
-  const p4 = `Score Global (ponderado): ${score.toFixed(2)}/5 — ${faixa==="excelente" ? "Muito bom" : faixa==="boa" ? "Bom" : faixa==="suficiente" ? "Suficiente" : "Fraco"}.`;
-
-  const corpo =
-    faixa==="excelente" ? [
-      `De forma global, o desempenho ${ctx} é consistente e acima do esperado, com impacto positivo no funcionamento diário.`,
-      "Mesmo em contextos exigentes, mantém controlo, método e capacidade de resposta, reduzindo necessidade de acompanhamento.",
-      "Para o próximo período, recomenda-se consolidar este padrão e aumentar autonomia/impacto em tarefas de maior responsabilidade.",
-      "A evolução deverá focar melhoria contínua e transferência de boas práticas para a equipa, mantendo qualidade e ritmo sob pressão."
-    ] :
-    faixa==="boa" ? [
-      `De forma global, o desempenho ${ctx} é bom e fiável, garantindo resultados consistentes na maioria das situações.`,
-      "Em momentos de maior pressão podem existir oscilações, mas o padrão geral é positivo e controlado.",
-      "Para o próximo período, é importante reforçar autonomia e método nos picos de trabalho, reduzindo necessidade de intervenção da chefia.",
-      "A evolução depende de consolidar hábitos de verificação final e priorização para manter consistência em contextos menos previsíveis."
-    ] :
-    faixa==="suficiente" ? [
-      `De forma global, o desempenho ${ctx} cumpre o essencial em contextos estáveis e rotineiros, permitindo continuidade normal das operações.`,
-      "No entanto, quando surgem situações de maior pressão, alterações de planeamento ou exigências adicionais, evidenciam-se limitações ao nível da autonomia, da organização e da capacidade de resposta.",
-      "Estas limitações têm impacto direto na eficácia do trabalho, no cumprimento de prazos e na carga de acompanhamento por parte da chefia.",
-      "Para o próximo período, é fundamental reforçar autonomia, priorização e aplicação consistente de métodos de trabalho, mesmo sob pressão."
-    ] : [
-      `De forma global, o desempenho ${ctx} está abaixo do necessário e não garante consistência nem controlo ao longo do período.`,
-      "As falhas repetidas e a resposta insuficiente sob pressão comprometem prazos, qualidade e aumentam o retrabalho.",
-      "É necessário definir um plano corretivo com objetivos claros, acompanhamento regular e verificação frequente de evolução.",
-      "A continuidade e progressão dependem de melhorias concretas em método de trabalho, rigor e capacidade de resposta."
-    ];
-
-  const p = [p1,p2,p3,p4,...corpo].join(" ");
-
-  return `
-  <div class="section">
-    <h2>Conclusão Geral</h2>
-    <p>${escapeHtml(p)}</p>
-  </div>`;
-}
+document.getElementById("tipo").addEventListener("change", updatePesosUI);
+updatePesosUI();
 
 /* ===================== GERAR ===================== */
 function gerar(){
@@ -779,37 +1102,71 @@ function gerar(){
     return;
   }
 
-  const ndVal = parseInt(document.getElementById("nd").value,10);
-  const naVal = parseInt(document.getElementById("na").value,10);
-  const neVal = parseInt(document.getElementById("ne").value,10);
+  const resVal = parseInt(document.getElementById("res").value,10);
+  const qualVal = parseInt(document.getElementById("qual").value,10);
+  const compVal = parseInt(document.getElementById("comp").value,10);
+  const evolVal = parseInt(document.getElementById("evol").value,10);
 
-  const tTrabTxt = v("tTrab");
-  const tAtiTxt  = v("tAti");
+  const tGlobalTxt = v("tGlobal");
   const fortesTxt = v("fortes");
   const melhorarTxt = v("melhorar");
 
-  // ponderações
-  const raw = validateWeights();
-  const norm = (raw.sum === 100) ? raw : normalizeWeights(raw.w1, raw.w2, raw.w3);
+  // Sugestão automática baseada sobretudo no que falta + comentário global
+  const planoAuto = sugerirPlanoAutomatico(`${melhorarTxt} ${tGlobalTxt}`);
 
-  // se normalizou, reflete nos inputs (para ficar transparente)
-  if(raw.sum !== 100){
-    document.getElementById("w_nd").value = norm.w1.toFixed(0);
-    document.getElementById("w_na").value = norm.w2.toFixed(0);
-    document.getElementById("w_ne").value = norm.w3.toFixed(0);
-    validateWeights();
-  }
+  // Plano manual tem prioridade. Se vazio, preenche com sugestão automática.
+  const plano = {
+    obj: v("pObjetivo") || (planoAuto?.obj ?? ""),
+    acao: v("pAcao") || (planoAuto?.acao ?? ""),
+    prazo: v("pPrazo"),
+    ind: v("pIndicador") || (planoAuto?.ind ?? "")
+  };
 
-  const score = scorePonderado(ndVal, naVal, neVal, norm.w1, norm.w2, norm.w3);
+  // opcional: se o utilizador ainda não escreveu nada no plano, mostra logo nos campos
+  if(!v("pObjetivo") && planoAuto?.obj) document.getElementById("pObjetivo").value = planoAuto.obj;
+  if(!v("pAcao") && planoAuto?.acao) document.getElementById("pAcao").value = planoAuto.acao;
+  if(!v("pIndicador") && planoAuto?.ind) document.getElementById("pIndicador").value = planoAuto.ind;
 
-  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,ndVal,naVal,neVal,tTrabTxt,tAtiTxt,fortesTxt,melhorarTxt, norm.w1,norm.w2,norm.w3].join("|"));
+  const seed = hashString([anoVal,nomeVal,funcaoVal,dataVal,tipoVal,resVal,qualVal,compVal,evolVal,tGlobalTxt,fortesTxt,melhorarTxt,plano.obj,plano.acao,plano.prazo,plano.ind].join("|"));
   const rng = makeRng(seed);
 
-  const blocoDesempenho = buildBlockDireto(rng, "Nível de Desempenho", ndVal, tipoVal, tTrabTxt);
-  const blocoAtitude    = buildBlockDireto(rng, "Nível de Atitude no Trabalho", naVal, tipoVal, tAtiTxt);
-  const blocoEquipa     = buildBlockDireto(rng, "Trabalho em Equipa", neVal, tipoVal, (tAtiTxt || tTrabTxt));
+  const score = calcGlobal(tipoVal, resVal, qualVal, compVal, evolVal);
+  const w = PESOS[tipoVal] || PESOS.campo;
 
-  const conclusaoGeral = buildConclusaoGeral(tipoVal, ndVal, naVal, neVal, score, norm.w1, norm.w2, norm.w3);
+  const blocoRes   = buildScoredBlock(rng, "1) Resultados Operacionais", resVal, tipoVal, tGlobalTxt, `${fortesTxt} ${melhorarTxt}`);
+  const blocoQual  = buildScoredBlock(rng, "2) Qualidade & Rigor", qualVal, tipoVal, tGlobalTxt, `${fortesTxt} ${melhorarTxt}`);
+  const blocoComp  = buildScoredBlock(rng, "3) Comportamentos & Cultura", compVal, tipoVal, tGlobalTxt, `${fortesTxt} ${melhorarTxt}`);
+  const blocoEvol  = buildScoredBlock(rng, "4) Evolução & Aprendizagem", evolVal, tipoVal, tGlobalTxt, `${fortesTxt} ${melhorarTxt}`);
+
+  const fortesExplain = (() => {
+    const th = extractThemes(`${fortesTxt} ${tGlobalTxt}`);
+    const p1 = pick(rng, [
+      "Os pontos fortes listados aparecem no dia a dia e ajudam a manter o serviço estável.",
+      "Os pontos fortes indicados são claros e têm impacto real na rotina e na equipa."
+    ]);
+    const p2 = themesPhrase(rng, th, "pos");
+    const p3 = pick(rng, [
+      "O foco deve ser manter isto estável ao longo do próximo ciclo, sem deixar cair em picos de trabalho.",
+      "Manter estes pontos evita regressões e facilita a subida de nível nas áreas a melhorar."
+    ]);
+    return `<p>${[p1,p2,p3].join(" ")}</p>`;
+  })();
+
+  const melhorarExplain = (() => {
+    const th = extractThemes(`${melhorarTxt} ${tGlobalTxt}`);
+    const p1 = pick(rng, [
+      "Os aspetos a melhorar são oportunidades práticas: se forem trabalhados, a consistência sobe rápido.",
+      "As melhorias apontadas são concretas e, com rotina e controlo, dão resultado no próximo ciclo."
+    ]);
+    const p2 = themesPhrase(rng, th, "neg");
+    const p3 = pick(rng, [
+      "O ideal é escolher 1–2 prioridades e acompanhar com regularidade, em vez de tentar mudar tudo de uma vez.",
+      "Com foco e repetição (rotinas simples), estas áreas evoluem de forma visível ao longo do período."
+    ]);
+    return `<p>${[p1,p2,p3].join(" ")}</p>`;
+  })();
+
+  const conclusao = buildConclusion(rng, tipoVal, score, tGlobalTxt, fortesTxt, melhorarTxt, plano, planoAuto);
 
   const htmlFinal = `
   <div class="pdf-header">
@@ -823,26 +1180,53 @@ function gerar(){
     <strong>Ano da Avaliação:</strong> ${escapeHtml(anoVal)}<br>
     <strong>Colaborador:</strong> ${escapeHtml(nomeVal)}<br>
     <strong>Função:</strong> ${escapeHtml(funcaoVal)}<br>
-    <strong>Área (Tipo):</strong> ${escapeHtml(tipoHuman(tipoVal))}<br>
-    <strong>Data:</strong> ${escapeHtml(dataVal)}<br>
-    <strong>Score Global (ponderado):</strong> ${score.toFixed(2)}/5
+    <strong>Área Funcional:</strong> ${escapeHtml(tipoHuman(tipoVal))}<br>
+    <strong>Data:</strong> ${escapeHtml(dataVal)}
   </p>
 
-  ${blocoDesempenho}
-  ${blocoAtitude}
-  ${blocoEquipa}
+  <div class="section">
+    <h2>Classificação Global (ponderada)</h2>
+    <p>
+      <strong>${score.toFixed(2)}/5 — ${escapeHtml(globalLabel(score))}</strong><br>
+      Pesos aplicados: Resultados ${Math.round(w.res*100)}% · Qualidade ${Math.round(w.qual*100)}% ·
+      Comportamentos ${Math.round(w.comp*100)}% · Evolução ${Math.round(w.evol*100)}%
+    </p>
+  </div>
+
+  ${blocoRes}
+  ${blocoQual}
+  ${blocoComp}
+  ${blocoEvol}
+
+  <div class="section">
+    <h2>Comentário Global</h2>
+    <p>${escapeHtml(tGlobalTxt) || "—"}</p>
+  </div>
 
   <div class="section">
     <h2>Pontos Fortes</h2>
     <p>${lista(fortesTxt)}</p>
+    ${fortesExplain}
   </div>
 
   <div class="section">
     <h2>Aspetos a Melhorar</h2>
     <p>${lista(melhorarTxt)}</p>
+    ${melhorarExplain}
   </div>
 
-  ${conclusaoGeral}
+  <div class="section">
+    <h2>Plano de Desenvolvimento – Próximo Período</h2>
+    <p>
+      <strong>Objetivo:</strong> ${escapeHtml(plano.obj) || "—"}<br>
+      <strong>Ação:</strong> ${escapeHtml(plano.acao) || "—"}<br>
+      <strong>Prazo:</strong> ${escapeHtml(plano.prazo) || "—"}<br>
+      <strong>Indicador de sucesso:</strong> ${escapeHtml(plano.ind) || "—"}<br>
+      ${planoAuto?.tema ? `<span style="font-size:10.5pt;color:#555"><em>(Sugestão automática baseada em: ${escapeHtml(planoAuto.tema)})</em></span>` : ""}
+    </p>
+  </div>
+
+  ${conclusao}
 
   <div class="section">
     <p><strong>Data:</strong> ____________________________</p>
@@ -851,17 +1235,19 @@ function gerar(){
   </div>
 
   <div class="footer-doc">
-    TPL Avaliação Monte do Pasto
+    Avaliação realizada ao abrigo do Sistema Interno de Avaliação Monte do Pasto.<br>
+    Texto gerado com apoio de automação e validado por chefia.<br>
+    Versão do modelo: 1.0 | Ano ${escapeHtml(anoVal)}
   </div>
   `;
 
   const out = document.getElementById("out");
   simulateAIGeneration(out, htmlFinal);
 }
-
-// inicializa indicador
-validateWeights();
 </script>
 
 </body>
 </html>
+
+
+
